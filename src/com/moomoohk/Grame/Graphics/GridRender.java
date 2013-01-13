@@ -19,11 +19,7 @@ public class GridRender implements Render
 				Coordinates currSquare = new Coordinates(pixelX, pixelY);
 				if (b.isInMap(currSquare))
 				{
-					// pixels[x + y * width] =
-					// b.getColor(currSquare).getRGB();
-					Color temp=new Color(Color.red.getRGB()<<14, true);
-					System.out.println(temp.getAlpha());
-					pixels[x + y * width] = temp.getRGB();
+					pixels[x + y * width] = b.getColor(currSquare).getRGB();
 				}
 				if (x % (width / b.getColumns()) == 0 || (x + 1) % (width / b.getColumns()) == 0 || y % (height / b.getRows()) == 0 || (y + 1) % (height / b.getRows()) == 0)
 				{

@@ -53,12 +53,13 @@ public class CrashManager
 	{
 		if (isOpen)
 			return;
+		e.printStackTrace();
 		isOpen = true;
 		GrameUtils.print("Crash detected.", "Crash Manager", false);
 		try
 		{
-			GrameManager.stop();
 			GrameUtils.print("Stopping main thread...", "Crash Manager", true);
+			GrameManager.stop();
 			GrameManager.input = null;
 		}
 		catch (Exception ex)

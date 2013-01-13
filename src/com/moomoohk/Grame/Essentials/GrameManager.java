@@ -49,10 +49,10 @@ public class GrameManager implements Runnable
 	{
 		if (running)
 			return;
-		GrameUtils.print("Initialized successfully.", "Grame Manager", false);
 		running = true;
 		thread = new Thread(this, "Game");
 		thread.start();
+		GrameUtils.print("Initialized successfully.", "Grame Manager", false);
 	}
 
 	public static synchronized void stop()
@@ -160,7 +160,19 @@ public class GrameManager implements Runnable
 
 	private static void tickBases()
 	{
-
+		try
+		{
+			for (Base b : baseList)
+			{
+				if (b == null)
+					continue;
+				b.tick();
+			}
+		}
+		catch (Exception e)
+		{
+			CrashManager.showException(e);
+		}
 	}
 
 	public static void disposeAll()
@@ -186,6 +198,7 @@ public class GrameManager implements Runnable
 	public static int add(Base b)
 	{
 		baseList.add(b);
+		GrameUtils.print("Added a Base to the Entity list (ID:"+(baseList.size()-1)+")", "Grame Manager", false);
 		return baseList.size()-1;
 	}
 

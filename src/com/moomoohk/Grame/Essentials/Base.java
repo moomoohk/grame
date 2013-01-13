@@ -43,8 +43,11 @@ public class Base
 		
 		for(int x=0; x<width; x++)
 			for(int y=0; y<height; y++)
-				floor.setColor(new Coordinates(x, y), GrameUtils.randomColor());
-
+			{
+				//this.floor.setColor(new Coordinates(x, y), GrameUtils.randomColor());
+				this.colors[x+y*width]=this.floor.getColor(new Coordinates(x, y));
+			}
+		
 		this.pos.add(new GrameObjectLayer(width, height)); // coin layer
 		this.coinLayer = 0;
 		this.pos.add(new GrameObjectLayer(width, height)); // entity layer
@@ -58,7 +61,7 @@ public class Base
 		for(int x=0; x<width; x++)
 			for(int y=0; y<height; y++)
 			{
-				
+				this.colors[x+y*width]=calcColor(new Coordinates(x, y), pos.size()-1);
 			}
 	}
 	private Color calcColor(Coordinates pos, int i)
@@ -66,9 +69,10 @@ public class Base
 		if(i==0)
 			return floor.getColor(pos);
 		GrameObject temp=GrameManager.findBase(ID).pos.get(i).getObject(pos);
-		Color front=Color.white;
+		Color front=this.floor.getColor(pos);
 		if(temp!=null)
 			front=temp.getColor();
+		return front;
 	}
 	public int getRows()
 	{
@@ -87,8 +91,8 @@ public class Base
 
 	public Color getColor(Coordinates pos)
 	{
-		return this.floor.getColor(pos);
-		//return this.colors[pos.x + pos.y + width];
+		//return this.floor.getColor(pos);
+		return this.colors[pos.x + pos.y + width];
 	}
 
 	public void addGOLayer(GrameObjectLayer gol, int place)
@@ -133,5 +137,8 @@ public class Base
 	{
 		return GrameManager.findBase(ID).pos.get(GrameManager.findBase(ID).entLayer).getObjectPos(eID);
 	}
-
+	public GrameObjectLayer getPos()
+	{
+		return this.pos.get(entLayer);
+	}
 }

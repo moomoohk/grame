@@ -33,7 +33,6 @@ public class RenderTest
 		Entity ent = new Entity(b);
 		ent.makePlayer(true);
 		b.render(ent);*/
-		Entity ent=new Entity();
 		f = new JFrame("This is my new base");
 		c = new Canvas();
 		int width=230, height=222;
@@ -79,7 +78,8 @@ public class RenderTest
 		});
 		c.requestFocus();
 		Base b=new Base(20, 20);
-		System.out.println(f.getContentPane().getWidth());
+		Entity ent=new Entity();
+		b.getPos().setObject(new Coordinates(), ent);
 		for (;;)
 		{
 			draw(b, width, height, new GridRender());

@@ -11,6 +11,7 @@ public class GrameObjectLayer
 	{
 		this.width = width;
 		this.height = height;
+		this.objects=new GrameObject[width*height];
 	}
 
 	public void setObject(Coordinates pos, GrameObject go)
