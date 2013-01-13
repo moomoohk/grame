@@ -248,6 +248,9 @@ public class GrameUtils
 			wordQueue.add("[" + sender + "]: " + st);
 			System.out.println((String) wordQueue.get(0));
 			wordQueue.remove(0);
+			/*if(GrameManager.debug)
+				for (StackTraceElement ste : Thread.currentThread().getStackTrace())
+					System.out.println(ste);*/
 		}
 	}
 
