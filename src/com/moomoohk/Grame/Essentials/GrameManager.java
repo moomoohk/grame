@@ -3,6 +3,8 @@ package com.moomoohk.Grame.Essentials;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.moomoohk.Grame.Graphics.RenderManager;
+
 public class GrameManager implements Runnable
 {
 	public static ArrayList<Entity> entList;
@@ -38,6 +40,8 @@ public class GrameManager implements Runnable
 		baseList = new ArrayList<Base>();
 		input = new InputHandler();
 		render = new HashMap<Integer, ArrayList<Integer>>();
+		new RenderManager();
+		GrameUtils.print("Render Manager initialized.", "Grame Manager", true);
 		start();
 	}
 
@@ -141,7 +145,7 @@ public class GrameManager implements Runnable
 				int playerspeed = 5;
 				if (ent == null)
 					continue;
-				if (((ent.isPlayer()) && (time % playerspeed == 0)) || ((time % ent.getSpeed() == 0L) && (!ent.isPaused()) && render.containsKey(ent)))
+				if (((ent.isPlayer()) && (time % playerspeed == 0)) || ((time % ent.getSpeed() == 0) && (!ent.isPaused()) && render.containsKey(ent)))
 				{
 					for (int bID : render.get(ent))
 						ent.tick(bID);
@@ -175,13 +179,14 @@ public class GrameManager implements Runnable
 	public static int add(Entity ent)
 	{
 		entList.add(ent);
-		return entList.size();
+		GrameUtils.print("Added "+ent.getName()+" to the Entity list (ID:"+(entList.size()-1)+")", "Grame Manager", false);
+		return entList.size()-1;
 	}
 
 	public static int add(Base b)
 	{
 		baseList.add(b);
-		return baseList.size();
+		return baseList.size()-1;
 	}
 
 	public static Entity findEntity(int id)
