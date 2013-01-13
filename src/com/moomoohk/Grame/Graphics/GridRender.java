@@ -21,7 +21,9 @@ public class GridRender implements Render
 				{
 					// pixels[x + y * width] =
 					// b.getColor(currSquare).getRGB();
-					pixels[x + y * width] = Color.blue.getRGB();
+					Color temp=new Color(Color.red.getRGB()<<14, true);
+					System.out.println(temp.getAlpha());
+					pixels[x + y * width] = temp.getRGB();
 				}
 				if (x % (width / b.getColumns()) == 0 || (x + 1) % (width / b.getColumns()) == 0 || y % (height / b.getRows()) == 0 || (y + 1) % (height / b.getRows()) == 0)
 				{

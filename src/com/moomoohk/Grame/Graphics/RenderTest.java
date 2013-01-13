@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 
 import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
+import com.moomoohk.Grame.Essentials.Entity;
 import com.moomoohk.Grame.Essentials.GrameManager;
 import com.moomoohk.Grame.Essentials.GrameUtils;
 import com.moomoohk.Grame.Interfaces.Render;
@@ -25,12 +26,14 @@ public class RenderTest
 	public static void main(String[] args)
 	{
 		new GrameManager();
+		GrameManager.debug=true;
 		/*Base b = new Base(20, 20, 30, "This is a normal grame base", false);
 		b.setWraparound(true);
 		b.loadSchem(5);
 		Entity ent = new Entity(b);
 		ent.makePlayer(true);
 		b.render(ent);*/
+		Entity ent=new Entity();
 		f = new JFrame("This is my new base");
 		c = new Canvas();
 		int width=230, height=222;
@@ -79,7 +82,7 @@ public class RenderTest
 		System.out.println(f.getContentPane().getWidth());
 		for (;;)
 		{
-			draw(b, width, height, new RandomRender());
+			draw(b, width, height, new GridRender());
 			width = f.getContentPane().getWidth();
 			height = f.getContentPane().getHeight();
 		}
@@ -95,7 +98,7 @@ public class RenderTest
 		}
 		BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		int[] pixels = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
-		// pixels = plainGridify(pixels, width, height, b);
+		 //pixels = plainGridify(pixels, b, width, height);
 		pixels = render.getPixels(pixels, b, width, height);
 		Graphics g = bs.getDrawGraphics();
 		g.drawImage(img, 0, 0, width, height, null);
@@ -115,9 +118,9 @@ public class RenderTest
 		for (int x = 0; x < width; x++)
 			for (int y = 0; y < height; y++)
 			{
-				/*Coordinates currSquare = new Coordinates((x - 4) / (width / b.getColumns()), (y - 4) / (height / b.getRows()));
+				Coordinates currSquare = new Coordinates((x - 4) / (width / b.getColumns()), (y - 4) / (height / b.getRows()));
 				if (b.isInMap(currSquare))
-					pixels[x + y * width] = b.getColor(currSquare).getRGB();*/
+					pixels[x + y * width] = b.getColor(currSquare).getRGB();
 			}
 		return pixels;
 	}
