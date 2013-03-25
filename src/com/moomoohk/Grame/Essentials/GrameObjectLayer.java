@@ -35,7 +35,7 @@ public class GrameObjectLayer
 		for (int i = 0; i < this.objects.length; i++)
 			if (this.objects[i] != null && this.objects[i].getID() == goID)
 			{
-				return new Coordinates((i / width), (i % width));
+				return new Coordinates((i % width), (i / width));
 			}
 		GrameUtils.print("Couldn't locate GrameObject with ID:" + goID + ". Returning null.", "Layer Class", false);
 		return null;

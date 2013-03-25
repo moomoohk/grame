@@ -13,6 +13,7 @@ public class Base
 	private Color[] colors;
 	private ArrayList<MovementAI> AIs;
 	private int width, height, coinLayer, entLayer;
+	private boolean wraparound;
 	public final int ID;
 	private String title;
 
@@ -53,6 +54,7 @@ public class Base
 		this.pos.add(new GrameObjectLayer(width, height)); // entity layer
 		this.entLayer = 1;
 		this.title = title;
+		this.wraparound=false;
 		this.ID = GrameManager.add(this);
 	}
 
@@ -173,6 +175,7 @@ public class Base
 				this.pos.get(i).setObject(prev, null);
 				calcColor(prev);
 				this.pos.get(i).setObject(pos, GrameManager.findEntity(eID));
+				GrameManager.findEntity(eID).setPos(ID, pos);
 				calcColor(pos);
 			}
 	}
@@ -183,5 +186,13 @@ public class Base
 			if(this.pos.get(i).getObject(pos)!=null)
 				return true;
 		return false;
+	}
+	public void setWraparound(boolean f)
+	{
+		GrameManager.findBase(ID).wraparound=f;
+	}
+	public boolean getWraparound()
+	{
+		return GrameManager.findBase(ID).wraparound;
 	}
 }

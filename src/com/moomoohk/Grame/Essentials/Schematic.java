@@ -2,6 +2,8 @@ package com.moomoohk.Grame.Essentials;
 
 import java.awt.Color;
 
+import com.moomoohk.Grame.Interfaces.GrameObject;
+
 public class Schematic
 {
 	private Color[][] map;

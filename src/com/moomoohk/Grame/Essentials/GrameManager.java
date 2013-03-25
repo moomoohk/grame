@@ -31,6 +31,7 @@ public class GrameManager implements Runnable
 	public static HashMap<Integer, ArrayList<Integer>> render;
 	public static final String VERSION_NUMBER = "2.1";
 	public static boolean showConsole = false;
+	public static int playerSpeed = 4;
 
 	static
 	{
@@ -157,13 +158,12 @@ public class GrameManager implements Runnable
 			{
 				for (Entity ent : entList)
 				{
-					int playerspeed = 5;
-					if (ent == null)
+					if (ent == null||render==null||(render!=null&&render.get(ent.ID).size()==0))
 						continue;
 					for (int bID : render.get(ent.ID))
 					{
 						if (ent.isPlayer(bID))
-							if (time % playerspeed == 0)
+							if (time % playerSpeed == 0)
 								ent.tick(bID);
 							else
 								if (time % ent.getSpeed() == 0 && !ent.isPaused() && render.containsKey(ent.ID))

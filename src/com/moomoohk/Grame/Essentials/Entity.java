@@ -104,7 +104,6 @@ public class Entity implements GrameObject
 	{
 		if ((GrameManager.findEntity(ID).AI.get(bID)==null&&GrameManager.findEntity(ID).overrideAI.get(bID)==null)||(GrameManager.findEntity(ID).AI.get(bID)!=null&&GrameManager.findEntity(ID).AI.get(bID).size() == 0 && GrameManager.findEntity(ID).overrideAI.get(bID) == null))
 		{
-//			System.out.println("hi");
 			GrameManager.findEntity(ID).activeAI.remove(bID);
 			return;
 		}

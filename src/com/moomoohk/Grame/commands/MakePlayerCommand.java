@@ -16,7 +16,14 @@ public class MakePlayerCommand extends Command<Console>
 	public void execute(Console arg0, String[] arg1)
 	{
 		this.message="";
-		GrameManager.findEntity(Integer.parseInt(arg1[0])).makePlayer(Boolean.parseBoolean(arg1[2]), Integer.parseInt(arg1[1]));
+		//ent base boolean
+		if(arg1[0].equalsIgnoreCase("all"))
+		{
+			for(int i=0; i<GrameManager.entList.size(); i++)
+				GrameManager.findEntity(i).makePlayer(Boolean.parseBoolean(arg1[2]), Integer.parseInt(arg1[1]));
+		}
+		else
+			GrameManager.findEntity(Integer.parseInt(arg1[0])).makePlayer(Boolean.parseBoolean(arg1[2]), Integer.parseInt(arg1[1]));
 	}
 }
 

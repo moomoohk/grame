@@ -10,9 +10,24 @@ public class PlayerMovementAI extends MovementAI
 {
 	public Coordinates getNext(Coordinates pos, Coordinates target, Base b, Entity ent1, Entity ent2)
 	{
-		System.out.println("hi");
 		if (GrameManager.dir == null)
 			return pos;
+		if(!b.isInMap(pos.addDir(GrameManager.dir)))
+			if(b.getWraparound())
+			{
+				Coordinates temp=pos;
+				if (pos.getX() == -1)
+					temp= new Coordinates(b.getColumns() - 1, pos.getY());
+				if (pos.getY() == -1)
+					temp= new Coordinates(pos.getX(), b.getRows() - 1);
+				if (pos.getX() == b.getColumns())
+					temp= new Coordinates(0, pos.getY());
+				if (pos.getY() == b.getRows())
+					temp= new Coordinates(pos.getX(), 0);
+				return temp;
+			}
+			else
+				return pos;
 		return pos.addDir(GrameManager.dir);
 	}
 

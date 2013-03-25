@@ -1,6 +1,8 @@
 package com.moomoohk.Grame.Graphics;
 
 import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -19,6 +21,7 @@ public class RenderManager
 	public static JFrame mainFrame = new JFrame();
 	public static Canvas mainCanvas=null;
 	public static int mainBase = -1;
+	public static boolean drawCoordinates=false;
 
 	public RenderManager()
 	{
@@ -61,6 +64,17 @@ public class RenderManager
 		}
 		Graphics g = bs.getDrawGraphics();
 		g.drawImage(img, 0, 0, mainCanvas.getWidth(), mainCanvas.getHeight(), null);
+		if(drawCoordinates)
+		{
+			g.setColor(Color.black);
+			g.setFont(new Font("LucidaTypewriter", 1, 8));
+			int squaresize=mainCanvas.getWidth()/GrameManager.findBase(bID).getColumns();
+			for(int x=0; x<GrameManager.findBase(bID).getColumns(); x++)
+				for(int y=0; y<GrameManager.findBase(bID).getRows(); y++)
+				{
+					g.drawString("("+y+", "+x+")", y*squaresize+5, (x+1)*squaresize-(squaresize/2));
+				}
+		}
 		g.dispose();
 		bs.show();
 	}
