@@ -1,75 +1,24 @@
 
 package com.moomoohk.Grame.Essentials;
 
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
 
-public class InputHandler implements KeyListener, FocusListener, MouseListener, MouseMotionListener
+public class InputHandler implements KeyEventDispatcher, FocusListener
 {
 	public boolean[] key=new boolean[68836];
-	public static int mouseX;
-	public static int mouseY;
-	public static int mouseDx;
-	public static int mouseDy;
-	public static int mousePx;
-	public static int mousePy;
-	public static int mouseButton=0;
-	public static boolean dragged=false;
 	public static boolean isFocused=false;
-	public void mouseDragged(MouseEvent e)
-	{
-		dragged=true;
-		mouseDx=e.getX();
-		mouseDy=e.getY();
-	}
-
-	public void mouseMoved(MouseEvent e)
-	{
-		mouseX=e.getX();
-		mouseY=e.getY();
-	}
-
-	public void mouseClicked(MouseEvent e)
-	{
-		
-	}
-	public void mouseEntered(MouseEvent e)
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-	public void mouseExited(MouseEvent e)
-	{
-		// TODO Auto-generated method stub
-
-	}
-
 	
-	public void mousePressed(MouseEvent e)
+	public InputHandler()
 	{
-		mouseButton=e.getButton();
-		mousePx=e.getX();
-		mousePy=e.getY();
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(this);
 	}
-
-	
-	public void mouseReleased(MouseEvent e)
-	{
-		dragged=false;
-		mouseButton=0;
-	}
-
-	
 	public void focusGained(FocusEvent e)
 	{
-		// TODO Auto-generated method stub
 		isFocused=true;
 	}
 
@@ -81,27 +30,33 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener, 
 			key[i]=false;
 	}
 
-	
-	public void keyPressed(KeyEvent e)
-	{
-		int keyCode=e.getKeyCode();
-		if((keyCode>0)&&(keyCode<key.length))
-			key[keyCode]=true;
-		
-	}
 
-	
-	public void keyReleased(KeyEvent e)
+	public boolean dispatchKeyEvent(KeyEvent e)
 	{
+		/*System.out.println(e.getID());
+		System.out.println("Key pressed: "+KeyEvent.KEY_PRESSED);
+		System.out.println("Key released: "+KeyEvent.KEY_RELEASED);
+		System.out.println("Key typed: "+KeyEvent.KEY_TYPED);*/
 		int keyCode=e.getKeyCode();
-		if((keyCode>0)&&(keyCode<key.length))
-			key[keyCode]=false;
-	}
-
-	
-	public void keyTyped(KeyEvent e)
-	{
-		
+		switch(e.getID())
+		{
+		case KeyEvent.KEY_PRESSED:
+			if((keyCode>0)&&(keyCode<key.length))
+				key[keyCode]=true;
+			GrameUtils.print("Key pressed: "+e.getKeyCode(), "Input Handler", true);
+			break;
+		case KeyEvent.KEY_RELEASED:
+			if((keyCode>0)&&(keyCode<key.length))
+				key[keyCode]=false;
+			GrameUtils.print("Key released: "+e.getKeyCode(), "Input Handler", true);
+			break;
+		case KeyEvent.KEY_TYPED:
+			if((keyCode>0)&&(keyCode<key.length))
+				key[keyCode]=true;
+			GrameUtils.print("Key pressed: "+e.getKeyCode(), "Input Handler", true);
+			break;
+		}
+		return false;
 	}
 
 }

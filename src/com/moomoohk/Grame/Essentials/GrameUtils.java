@@ -5,8 +5,8 @@ import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
@@ -28,6 +28,23 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
+import com.moomoohk.Grame.AI.PlayerMovementAI;
+import com.moomoohk.Grame.AI.StrollAI;
+import com.moomoohk.Grame.commands.AddEntityAICommand;
+import com.moomoohk.Grame.commands.ClearEntityAI;
+import com.moomoohk.Grame.commands.HelpCommand;
+import com.moomoohk.Grame.commands.MakePlayerCommand;
+import com.moomoohk.Grame.commands.MoveEntityCommand;
+import com.moomoohk.Grame.commands.PrintEntityAICommand;
+import com.moomoohk.Grame.commands.QuitCommand;
+import com.moomoohk.Grame.commands.RenderBaseCommand;
+import com.moomoohk.Grame.commands.SetEntityOverrideAICommand;
+import com.moomoohk.Grame.commands.SetMainBaseCommand;
+import com.moomoohk.Grame.commands.isOccupiedCommand;
+import com.moomoohk.Grame.commands.setVisibleCommand;
+import com.moomoohk.MooCommands.Command;
+import com.moomoohk.MooConsole.Console;
+
 public class GrameUtils
 {
 	public static final String VERSION_NUMBER = "2.0";
@@ -35,6 +52,7 @@ public class GrameUtils
 	public static File soundsFolder = new File("Sounds");
 	private static boolean isDialog = false;
 	public static ArrayList<String> wordQueue = new ArrayList<String>();
+	public static Console console = new Console();
 
 	public static boolean write(File f, String s)
 	{
@@ -245,12 +263,12 @@ public class GrameUtils
 	{
 		if ((!GrameManager.disablePrints) && (((debug) && (GrameManager.debug)) || (!debug)))
 		{
-			wordQueue.add("[" + sender + "]: " + st);
-			System.out.println((String) wordQueue.get(0));
+			StackTraceElement caller = Thread.currentThread().getStackTrace()[2];
+			wordQueue.add("[" + caller.getFileName().subSequence(0, caller.getFileName().indexOf(".java")) + ":" + caller.getLineNumber() + "] " + st);
+			// System.out.println((String) wordQueue.get(0));
+			console.setConsoleTextColor(Color.white);
+			console.addText(wordQueue.get(0) + "\n");
 			wordQueue.remove(0);
-			/*if(GrameManager.debug)
-				for (StackTraceElement ste : Thread.currentThread().getStackTrace())
-					System.out.println(ste);*/
 		}
 	}
 
@@ -271,7 +289,7 @@ public class GrameUtils
 		if (!toolTip.equals(""))
 			link.setToolTipText(toolTip);
 		link.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		link.addMouseListener(new MouseListener()
+		link.addMouseListener(new MouseAdapter()
 		{
 			public void mouseExited(MouseEvent arg0)
 			{
@@ -303,16 +321,31 @@ public class GrameUtils
 					dialog.setVisible(true);
 				}
 			}
-
-			public void mousePressed(MouseEvent e)
-			{
-			}
-
-			public void mouseReleased(MouseEvent e)
-			{
-			}
 		});
 		return link;
 	}
 
+	public static void loadBasicCommands()
+	{
+		ArrayList<Command<?>> commands = new ArrayList<Command<?>>();
+		commands.add(new setVisibleCommand(console, "setvisible", "Toggles the visibility of the main window. Usage: setvisible [true/false]", 0, 1));
+		commands.add(new MoveEntityCommand(console, "move", "Moves an Entity. Usage: move <ent ID> <base ID> <dir>", 3, 4));
+		commands.add(new HelpCommand(console, "help", "Will print the help of a command. Leave blank for all the commands. Usage: help [command name]", 0, 1));
+		commands.add(new RenderBaseCommand(console, "render", "Will render a base using a render in the Render list. Usage: render <base ID> <render name>", 2, 2));
+		commands.add(new QuitCommand(console, "quit", "Quits the program. Usage: quit", 0, 0));
+		commands.add(new SetMainBaseCommand(console, "setmainbase", "Sets the main Base to display. Usage: setmainbase <base ID>", 1, 1));
+		commands.add(new AddEntityAICommand(console, "addentityai", "Adds a MovememntAI to an Entity's AI list. Usage: addentityai <entity ID> <base ID> <movementai name>", 3, 3));
+		commands.add(new MakePlayerCommand(console, "makeplayer", "Turns an Entity into a controllable \"player\". Usage: makeplayer <entity ID> <base ID> <true/false>", 3, 3));
+		commands.add(new SetEntityOverrideAICommand(console, "setentityoverrideai", "Sets the override AI for a given Entity. Usage: setentityoverrideai <entity ID> <base ID> <override movementai name>", 3, 3));
+		commands.add(new ClearEntityAI(console, "clearentityai", "Clears the AI list of an Entity. Usage: clearentityai <entity ID>", 1, 1));
+		commands.add(new PrintEntityAICommand(console, "printentityai", "Prints the AI list for a given Entity. Usage: printentityai <entity ID>", 1, 1));
+		commands.add(new isOccupiedCommand(console, "isoccupied", "Checks whether Coordinates in a Base are occupied by a Grame object. Usage: isoccupied <base ID> <coordinates x> <coordinates y>", 3, 3));
+		console.loadCommands(commands);
+		print("Loaded " + Command.commands.size() + " commands.", "GrameUtils", false);
+	}
+	public static void loadBasicAIs()
+	{
+		GrameManager.addAI(new StrollAI());
+		GrameManager.addAI(new PlayerMovementAI());
+	}
 }

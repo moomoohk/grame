@@ -2,8 +2,7 @@ package com.moomoohk.Grame.Essentials;
 
 import java.awt.Color;
 import java.util.ArrayList;
-
-import sun.net.www.content.text.Generic;
+import java.util.HashMap;
 
 import com.moomoohk.Grame.AI.PlayerMovementAI;
 import com.moomoohk.Grame.Interfaces.EntityGenerator;
@@ -19,35 +18,38 @@ public class Entity implements GrameObject
 	private int points;
 	public final int ID;
 	private Color color;
-	private boolean player;
+	private HashMap<Integer, Boolean> player;
 	private boolean isRendered;
 	private boolean showRange;
 	private boolean paused;
 	private int targetID;
 	private int speed;
 	protected EntityGenerator randomGen;
-	private ArrayList<MovementAI> AI;
+	// private ArrayList<MovementAI> AI;
 	public ArrayList<Object> mods;
-	private MovementAI activeAI;
-	private MovementAI overrideAI;
+	private HashMap<Integer, MovementAI> activeAI;
+	private HashMap<Integer, MovementAI> overrideAI;
 	private Coordinates next;
+	private HashMap<Integer, ArrayList<MovementAI>> AI;
+
+	// private HashMap<Integer, Coordinates> pos;
 
 	public Entity()
 	{
-		this("", "", 1, GrameUtils.randomColor(), false, new DefaultRandomGen());
+		this("", "", 1, GrameUtils.randomColor(), new DefaultRandomGen());
 	}
 
 	public Entity(EntityGenerator entGen)
 	{
-		this("", "", 1, GrameUtils.randomColor(), false, entGen);
+		this("", "", 1, GrameUtils.randomColor(), entGen);
 	}
 
 	public Entity(String type, String name, int level, Color color)
 	{
-		this(type, name, level, color, false, new DefaultRandomGen());
+		this(type, name, level, color, new DefaultRandomGen());
 	}
 
-	public Entity(String type, String name, int level, Color color, boolean player, EntityGenerator entGen)
+	public Entity(String type, String name, int level, Color color, EntityGenerator entGen)
 	{
 		if (entGen != null)
 		{
@@ -58,7 +60,7 @@ public class Entity implements GrameObject
 		this.name = name;
 		this.level = level;
 		this.color = color;
-		this.player = player;
+		this.player = new HashMap<Integer, Boolean>();
 		this.targetID = -1;
 		this.speed = 100;
 		this.range = 5;
@@ -67,11 +69,12 @@ public class Entity implements GrameObject
 		this.points = 0;
 		this.showRange = false;
 		this.paused = false;
-		this.AI = new ArrayList<MovementAI>();
+		this.AI = new HashMap<Integer, ArrayList<MovementAI>>();
 		this.mods = new ArrayList<Object>();
-		this.activeAI = null;
-		this.overrideAI = null;
+		this.activeAI = new HashMap<Integer, MovementAI>();
+		this.overrideAI = new HashMap<Integer, MovementAI>();
 		this.next = null;
+		// this.pos=new HashMap<Integer, Coordinates>();
 		ID = GrameManager.add(this);
 	}
 
@@ -87,89 +90,101 @@ public class Entity implements GrameObject
 		Coordinates target = null;
 		if (GrameManager.findEntity(targetID) != null)
 			target = GrameManager.findEntity(targetID).getPos(bID);
-		if (GrameManager.findEntity(ID).activeAI != null)
-			c = GrameManager.findEntity(ID).activeAI.getNext(getPos(bID), target, GrameManager.findBase(bID), this, GrameManager.findEntity(targetID));
+		if (GrameManager.findEntity(ID).activeAI.size()!=0&&GrameManager.findEntity(ID).activeAI.get(bID) != null)
+			c = GrameManager.findEntity(ID).activeAI.get(bID).getNext(getPos(bID), target, GrameManager.findBase(bID), this, GrameManager.findEntity(targetID));
 		/*
 		 * if (this.showRange) { this.b.drawCircle(this.range, this.pos,
 		 * this.color); if (!this.b.isOccupied(c)) {
 		 * this.b.drawCircle(this.range, this.pos, null); } }
 		 */
-		//GrameManager.findBase(bID).render(this, c);
+		GrameManager.findBase(bID).moveEnt(ID, c);
 	}
 
 	private void determineAI(int bID)
 	{
-		if ((GrameManager.findEntity(ID).AI.size() == 0) && (GrameManager.findEntity(ID).overrideAI == null))
+		if (GrameManager.findEntity(ID).AI.get(bID)==null||(GrameManager.findEntity(ID).AI.get(bID).size() == 0 && GrameManager.findEntity(ID).overrideAI.get(bID) == null))
 		{
-			GrameManager.findEntity(ID).activeAI = null;
+			GrameManager.findEntity(ID).activeAI.remove(bID);
 			return;
 		}
-		if (GrameManager.findEntity(ID).overrideAI == null)
+		if (GrameManager.findEntity(ID).overrideAI.size()==0||GrameManager.findEntity(ID).overrideAI.get(bID) == null)
 		{
 			MovementAI temp = null;
 			boolean done = false;
-			for (int i = 0; i < GrameManager.findEntity(ID).AI.size(); i++)
+			for (int i = 0; i < GrameManager.findEntity(ID).AI.get(bID).size(); i++)
 			{
 				if (done)
 					continue;
 				Coordinates target = null;
 				if (targetID != -1)
 					target = GrameManager.findEntity(targetID).getPos(bID);
-				if (!GrameManager.findEntity(ID).AI.get(i).isValid(getPos(bID), target, GrameManager.findBase(bID), GrameManager.findEntity(ID), GrameManager.findEntity(targetID)))
+				if (!GrameManager.findEntity(ID).AI.get(bID).get(i).isValid(getPos(bID), target, GrameManager.findBase(bID), GrameManager.findEntity(ID), GrameManager.findEntity(targetID)))
 					continue;
 				done = true;
-				temp = (MovementAI) GrameManager.findEntity(ID).AI.get(i);
+				temp = (MovementAI) GrameManager.findEntity(ID).AI.get(bID).get(i);
 			}
-
-			GrameManager.findEntity(ID).activeAI = temp;
+			GrameManager.findEntity(ID).activeAI.put(bID, temp);
 		}
 		else
 		{
-			GrameManager.findEntity(ID).activeAI = GrameManager.findEntity(ID).overrideAI;
+			GrameManager.findEntity(ID).activeAI.put(bID, GrameManager.findEntity(ID).overrideAI.get(bID));
 		}
 	}
 
 	public void printAI()
 	{
-		String st = "null";
-		if (GrameManager.findEntity(ID).activeAI != null)
-			st = GrameManager.findEntity(ID).activeAI + " (" + GrameManager.findEntity(ID).activeAI.author() + ")";
-		GrameUtils.print("Active: " + st, getName(), false);
-		st = "null";
-		if (GrameManager.findEntity(ID).overrideAI != null)
-			st = GrameManager.findEntity(ID).overrideAI + " (" + GrameManager.findEntity(ID).overrideAI.author() + ")";
-		GrameUtils.print("Override: " + st, getName(), false);
-		if (GrameManager.findEntity(ID).AI.size() == 0)
-			GrameUtils.print("My AI list is empty!", getName(), false);
+		GrameUtils.print("Override AIs:", "Entity", false);
+		if(overrideAI.size()!=0)
+			for(int bID:overrideAI.keySet())
+				GrameUtils.print(bID+": "+overrideAI.get(bID)+" ("+overrideAI.get(bID).author()+")", "Entity", false);
 		else
-			for (int i = 0; i < GrameManager.findEntity(ID).AI.size(); i++)
-			{
-				st = "null";
-				if (GrameManager.findEntity(ID).AI.get(i) != null)
-					st = GrameManager.findEntity(ID).AI.get(i) + " (" + ((MovementAI) GrameManager.findEntity(ID).AI.get(i)).author() + ")";
-				GrameUtils.print(i + 1 + ") " + st, getName(), false);
-			}
+			GrameUtils.print("[Empty]", "Entity", false);
+		GrameUtils.print("Active AIs:", "Entity", false);
+		if(activeAI.size()!=0)
+			for(int bID:activeAI.keySet())
+				GrameUtils.print(bID+": "+activeAI.get(bID)+" ("+activeAI.get(bID).author()+")", "Entity", false);
+		else
+			GrameUtils.print("[Empty]", "Entity", false);
+		for(int bID:AI.keySet())
+		{
+			GrameUtils.print("For base ID:"+bID, getName(), false);
+			String st = "null";
+			if (GrameManager.findEntity(ID).AI.size() == 0)
+				GrameUtils.print("My AI list is empty!", getName(), false);
+			else
+				for (int i = 0; i < GrameManager.findEntity(ID).AI.size(); i++)
+				{
+					st = "null";
+					if (GrameManager.findEntity(ID).AI.get(i) != null)
+						st = GrameManager.findEntity(ID).AI.get(i) + " (" + ((MovementAI) GrameManager.findEntity(ID).AI.get(bID).get(i)).author() + ")";
+					GrameUtils.print(i + 1 + ") " + st, getName(), false);
+				}
+		}
 	}
 
-	public void addAI(MovementAI AI)
+	public void addAI(MovementAI AI, int bID)
 	{
 		if (!AI.isOverride())
-			GrameManager.findEntity(ID).AI.add(AI);
+		{
+			if(GrameManager.findEntity(ID).AI.get(bID)==null)
+				GrameManager.findEntity(ID).AI.put(bID, new ArrayList<MovementAI>());
+			GrameManager.findEntity(ID).AI.get(bID).add(AI);
+		}
 		else
 			GrameUtils.print(AI + " is an override AI, it doens't belong in my AI list!", getName(), false);
 	}
 
 	public void clearAI()
 	{
-		GrameManager.findEntity(ID).AI = new ArrayList<MovementAI>();
+		GrameManager.findEntity(ID).AI = new HashMap<Integer, ArrayList<MovementAI>>();
 		GrameManager.findEntity(ID).activeAI = null;
 		GrameManager.findEntity(ID).overrideAI = null;
 	}
 
-	public void setOverrideAI(MovementAI mai)
+	public void setOverrideAI(MovementAI mai, int bID)
 	{
 		if (mai.isOverride())
-			GrameManager.findEntity(ID).overrideAI = mai;
+			GrameManager.findEntity(ID).overrideAI.put(bID, mai);
 		else
 			GrameUtils.print(mai + " is not an override AI!", getName(), false);
 	}
@@ -181,16 +196,24 @@ public class Entity implements GrameObject
 
 	public Coordinates getPos(int bID)
 	{
+		/*
+		 * if(GrameManager.findEntity(ID).pos.containsKey(bID)) return
+		 * GrameManager.findEntity(ID).pos.get(bID);
+		 */
 		if (GrameManager.findBase(bID).containsEnt(ID))
 			return GrameManager.findBase(bID).getEntPos(ID);
 		GrameUtils.print("Base with ID:" + bID + " does not contain Entity with ID:" + ID + ". Returning null.", "Entity class", false);
 		return null;
 	}
 
-	/*
-	 * public void move(Coordinates c) { if (this.rendered) {
-	 * this.b.render(this, c); } }
-	 */
+	public void setPos(int bID, Coordinates pos)
+	{
+		if (GrameManager.findBase(bID).containsEnt(ID))
+		{
+			GrameManager.findBase(bID).moveEnt(ID, pos);
+			return;
+		}
+	}
 
 	public void setName(String name)
 	{
@@ -212,29 +235,28 @@ public class Entity implements GrameObject
 		return GrameManager.findEntity(ID).color;
 	}
 
-	public boolean isPlayer()
+	public boolean isPlayer(int bID)
 	{
-		return GrameManager.findEntity(ID).player;
+		if(GrameManager.findEntity(ID).player.get(bID)==null)
+			return false;
+		return GrameManager.findEntity(ID).player.get(bID);
 	}
 
-	public void makePlayer(boolean f)
+	public void makePlayer(boolean f, int bID)
 	{
-		GrameManager.findEntity(ID).player = f;
 		if (f)
 		{
-			//GrameManager.findEntity(ID).b.addPlayer();
-			GrameManager.findEntity(ID).overrideAI = new PlayerMovementAI();
+			GrameManager.findEntity(ID).player.put(bID, true);
+			GrameManager.findEntity(ID).overrideAI.put(bID, new PlayerMovementAI());
 		}
-		else 
-			if (GrameManager.findEntity(ID).player)
+		else
+			if (GrameManager.findEntity(ID).player.get(bID))
 			{
-				GrameManager.findEntity(ID).player = false;
-				GrameManager.findEntity(ID).overrideAI = null;
+				GrameManager.findEntity(ID).player.put(bID, false);
+				GrameManager.findEntity(ID).overrideAI.remove(bID);
 			}
 			else
-			{
 				GrameUtils.print("Not a player!", getName(), false);
-			}
 	}
 
 	public void setTarget(int eID)
@@ -253,14 +275,16 @@ public class Entity implements GrameObject
 	public void setRange(int range)
 	{
 		GrameManager.findEntity(ID).range = range;
-		/*if (range == 0)
-		{
-			Coordinates ul = new Coordinates(0, 0);
-			Coordinates ur = new Coordinates(GrameManager.findEntity(ID).b.getColumns() - 1, 0);
-			Coordinates dl = new Coordinates(0, GrameManager.findEntity(ID).b.getRows() - 1);
-			Coordinates dr = new Coordinates(GrameManager.findEntity(ID).b.getColumns() - 1, GrameManager.findEntity(ID).b.getRows() - 1);
-			GrameManager.findEntity(ID).range = Math.max(ul.distance(dr), ur.distance(dl));
-		}*/
+		/*
+		 * if (range == 0) { Coordinates ul = new Coordinates(0, 0); Coordinates
+		 * ur = new Coordinates(GrameManager.findEntity(ID).b.getColumns() - 1,
+		 * 0); Coordinates dl = new Coordinates(0,
+		 * GrameManager.findEntity(ID).b.getRows() - 1); Coordinates dr = new
+		 * Coordinates(GrameManager.findEntity(ID).b.getColumns() - 1,
+		 * GrameManager.findEntity(ID).b.getRows() - 1);
+		 * GrameManager.findEntity(ID).range = Math.max(ul.distance(dr),
+		 * ur.distance(dl)); }
+		 */
 	}
 
 	public void setSpeed(int speed)
@@ -292,4 +316,15 @@ public class Entity implements GrameObject
 	{
 		return ID;
 	}
+
+	/*
+	 * public void addPos(int bID, Coordinates c) {
+	 * GrameManager.findEntity(ID).pos.put(bID, c); }
+	 * 
+	 * public Coordinates getPos(int bID) {
+	 * if(!GrameManager.findEntity(ID).pos.containsKey(bID)) {
+	 * GrameUtils.print("Entity with ID:"
+	 * +ID+" not found in Base with ID:"+bID+". Returning null.", "ID:"+ID,
+	 * false); return null; } return GrameManager.findEntity(ID).pos.get(bID); }
+	 */
 }

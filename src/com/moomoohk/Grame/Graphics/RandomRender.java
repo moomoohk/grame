@@ -7,12 +7,16 @@ import com.moomoohk.Grame.Interfaces.Render;
 
 public class RandomRender implements Render
 {
-
 	public int[] getPixels(int[] pixels, Base b, int width, int height)
 	{
 		for (int i = 0; i < pixels.length; i++)
 			pixels[i] = GrameUtils.randomColor().getRGB();
 		return pixels;
+	}
+
+	public String getName()
+	{
+		return "Random_render";
 	}
 
 }

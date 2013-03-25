@@ -25,7 +25,7 @@ public class Base
 	{
 		this(width, height, Color.white, title);
 	}
-	
+
 	public Base(int width, int height, Color floorColor)
 	{
 		this(width, height, floorColor, "");
@@ -40,14 +40,14 @@ public class Base
 		this.AIs = new ArrayList<MovementAI>();
 		this.width = width;
 		this.height = height;
-		
-		for(int x=0; x<width; x++)
-			for(int y=0; y<height; y++)
+
+		for (int x = 0; x < width; x++)
+			for (int y = 0; y < height; y++)
 			{
-				//this.floor.setColor(new Coordinates(x, y), GrameUtils.randomColor());
-				this.colors[x+y*width]=this.floor.getColor(new Coordinates(x, y));
+				//this.floor.setColor(new Coordinates(x, y),GrameUtils.randomColor());
+				this.colors[x + y * width] = this.floor.getColor(new Coordinates(x, y));
 			}
-		
+
 		this.pos.add(new GrameObjectLayer(width, height)); // coin layer
 		this.coinLayer = 0;
 		this.pos.add(new GrameObjectLayer(width, height)); // entity layer
@@ -58,22 +58,31 @@ public class Base
 
 	public void tick()
 	{
-		for(int x=0; x<width; x++)
-			for(int y=0; y<height; y++)
+		for (int x = 0; x < width; x++)
+			for (int y = 0; y < height; y++)
 			{
-				this.colors[x+y*width]=calcColor(new Coordinates(x, y), pos.size()-1);
+				// this.colors[x + y * width] = calcColor(new Coordinates(x, y),
+				// pos.size() - 1);
+				this.colors[x + y * width] = calcColor(new Coordinates(x, y));
 			}
 	}
-	private Color calcColor(Coordinates pos, int i)
+
+	private Color calcColor(Coordinates pos)
 	{
-		if(i==0)
-			return floor.getColor(pos);
-		GrameObject temp=GrameManager.findBase(ID).pos.get(i).getObject(pos);
-		Color front=this.floor.getColor(pos);
-		if(temp!=null)
-			front=temp.getColor();
-		return front;
+		for (int i = this.pos.size() - 1; i >= 0; i--)
+			if (this.pos.get(i).getObject(pos) != null)
+				return this.pos.get(entLayer).getObject(pos).getColor();
+		return floor.getColor(pos);
 	}
+
+	/*
+	 * private Color calcColor(Coordinates pos, int i) { if (i == 0) return
+	 * floor.getColor(pos); GrameObject temp =
+	 * GrameManager.findBase(ID).pos.get(i).getObject(pos); Color front =
+	 * this.floor.getColor(pos); if (temp != null) front = temp.getColor();
+	 * return front; }
+	 */
+
 	public int getRows()
 	{
 		return this.height;
@@ -91,8 +100,8 @@ public class Base
 
 	public Color getColor(Coordinates pos)
 	{
-		//return this.floor.getColor(pos);
-		return this.colors[pos.x + pos.y + width];
+		// return this.floor.getColor(pos);
+		return this.colors[pos.x + pos.y * width];
 	}
 
 	public void addGOLayer(GrameObjectLayer gol, int place)
@@ -125,6 +134,18 @@ public class Base
 		GrameManager.findBase(ID).floor.setColor(pos, c);
 	}
 
+	public void addGrameObject(GrameObject go, Coordinates pos)
+	{
+		this.pos.get(entLayer).setObject(pos, go);
+		calcColor(pos);
+	}
+	public void addEntity(int eID, Coordinates pos)
+	{
+		addGrameObject(GrameManager.findEntity(eID), pos);
+		if(GrameManager.render.get(eID)==null)
+			GrameManager.render.put(eID, new ArrayList<Integer>());
+		GrameManager.render.get(eID).add(ID);
+	}
 	public boolean containsEnt(int eID)
 	{
 		for (GrameObjectLayer gol : GrameManager.findBase(ID).pos)
@@ -137,8 +158,30 @@ public class Base
 	{
 		return GrameManager.findBase(ID).pos.get(GrameManager.findBase(ID).entLayer).getObjectPos(eID);
 	}
+
 	public GrameObjectLayer getPos()
 	{
 		return this.pos.get(entLayer);
+	}
+
+	public void moveEnt(int eID, Coordinates pos)
+	{
+		for(int i=0; i<this.pos.size(); i++)
+			if(this.pos.get(i).contains(eID)&&this.pos.get(i).getObject(pos)==null)
+			{
+				Coordinates prev=this.pos.get(i).getObjectPos(eID);
+				this.pos.get(i).setObject(prev, null);
+				calcColor(prev);
+				this.pos.get(i).setObject(pos, GrameManager.findEntity(eID));
+				calcColor(pos);
+			}
+	}
+
+	public boolean isOccupied(Coordinates pos)
+	{
+		for(int i=0; i<this.pos.size(); i++)
+			if(this.pos.get(i).getObject(pos)!=null)
+				return true;
+		return false;
 	}
 }

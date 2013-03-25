@@ -7,11 +7,10 @@ import com.moomoohk.Grame.Interfaces.Render;
 
 public class PlainGridRender implements Render
 {
-
 	public int[] getPixels(int[] pixels, Base b, int width, int height)
 	{
-		for (int x = 0; x < width-1; x++)
-			for (int y = 0; y < height-1; y++)
+		for (int x = 0; x < width; x++)
+			for (int y = 0; y < height; y++)
 			{
 				Coordinates currSquare = new Coordinates((x ) / ((width) /( b.getColumns())), (y ) / (height / b.getRows()));
 				if(currSquare.getX()>=b.getColumns())
@@ -29,6 +28,11 @@ public class PlainGridRender implements Render
 				}
 			}
 		return pixels;
+	}
+
+	public String getName()
+	{
+		return "Plain_grid_render";
 	}
 	
 }
