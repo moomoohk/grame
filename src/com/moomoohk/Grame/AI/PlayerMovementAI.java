@@ -11,7 +11,7 @@ public class PlayerMovementAI extends MovementAI
 	public Coordinates getNext(Coordinates pos, Coordinates target, Base b, Entity ent1, Entity ent2)
 	{
 		System.out.println("hi");
-		if (GrameManager.dir == null) 
+		if (GrameManager.dir == null)
 			return pos;
 		return pos.addDir(GrameManager.dir);
 	}

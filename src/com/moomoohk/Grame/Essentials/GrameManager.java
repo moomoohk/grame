@@ -1,6 +1,5 @@
 package com.moomoohk.Grame.Essentials;
 
-import java.awt.KeyboardFocusManager;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -162,8 +161,14 @@ public class GrameManager implements Runnable
 					if (ent == null)
 						continue;
 					for (int bID : render.get(ent.ID))
-						if((ent.isPlayer(bID) && (time % playerspeed == 0))||	((time % ent.getSpeed() == 0) && (!ent.isPaused()) && render.containsKey(ent.ID)))
-							ent.tick(bID);
+					{
+						if (ent.isPlayer(bID))
+							if (time % playerspeed == 0)
+								ent.tick(bID);
+							else
+								if (time % ent.getSpeed() == 0 && !ent.isPaused() && render.containsKey(ent.ID))
+									ent.tick(bID);
+					}
 				}
 			}
 			catch (Exception e)
@@ -175,7 +180,7 @@ public class GrameManager implements Runnable
 
 	private static void tickBases()
 	{
-		if(baseList==null)
+		if (baseList == null)
 			return;
 		synchronized (baseList)
 		{
@@ -225,7 +230,7 @@ public class GrameManager implements Runnable
 			GrameUtils.print("Added a Base to the Base list (ID:" + (baseList.size() - 1) + ")", "Grame Manager", false);
 			return baseList.size() - 1;
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
 			CrashManager.showException(e);
 		}
@@ -284,12 +289,12 @@ public class GrameManager implements Runnable
 	{
 		if (ai == null)
 			return;
-		String name=ai.toString().toLowerCase().trim().replace(' ', '_');
+		String name = ai.toString().toLowerCase().trim().replace(' ', '_');
 		for (String temp : ais.keySet())
 			if (ais.get(temp).toString().equals(ai.toString()))
 				return;
 		ais.put(name, ai);
-		GrameUtils.print("Added " + name + " to the render list.", "Grame Manager", false);
+		GrameUtils.print("Added " + name + " to the AI list.", "Grame Manager", false);
 	}
 
 	private class OutputOverride extends PrintStream

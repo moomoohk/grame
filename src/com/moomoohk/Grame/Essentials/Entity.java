@@ -102,26 +102,24 @@ public class Entity implements GrameObject
 
 	private void determineAI(int bID)
 	{
-		if (GrameManager.findEntity(ID).AI.get(bID)==null||(GrameManager.findEntity(ID).AI.get(bID).size() == 0 && GrameManager.findEntity(ID).overrideAI.get(bID) == null))
+		if ((GrameManager.findEntity(ID).AI.get(bID)==null&&GrameManager.findEntity(ID).overrideAI.get(bID)==null)||(GrameManager.findEntity(ID).AI.get(bID)!=null&&GrameManager.findEntity(ID).AI.get(bID).size() == 0 && GrameManager.findEntity(ID).overrideAI.get(bID) == null))
 		{
+//			System.out.println("hi");
 			GrameManager.findEntity(ID).activeAI.remove(bID);
 			return;
 		}
 		if (GrameManager.findEntity(ID).overrideAI.size()==0||GrameManager.findEntity(ID).overrideAI.get(bID) == null)
 		{
 			MovementAI temp = null;
-			boolean done = false;
 			for (int i = 0; i < GrameManager.findEntity(ID).AI.get(bID).size(); i++)
 			{
-				if (done)
-					continue;
 				Coordinates target = null;
 				if (targetID != -1)
 					target = GrameManager.findEntity(targetID).getPos(bID);
 				if (!GrameManager.findEntity(ID).AI.get(bID).get(i).isValid(getPos(bID), target, GrameManager.findBase(bID), GrameManager.findEntity(ID), GrameManager.findEntity(targetID)))
 					continue;
-				done = true;
 				temp = (MovementAI) GrameManager.findEntity(ID).AI.get(bID).get(i);
+				break;
 			}
 			GrameManager.findEntity(ID).activeAI.put(bID, temp);
 		}
