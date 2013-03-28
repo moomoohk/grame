@@ -45,7 +45,8 @@ public class Base
 		for (int x = 0; x < width; x++)
 			for (int y = 0; y < height; y++)
 			{
-				//this.floor.setColor(new Coordinates(x, y),GrameUtils.randomColor());
+				// this.floor.setColor(new Coordinates(x,
+				// y),GrameUtils.randomColor());
 				this.colors[x + y * width] = this.floor.getColor(new Coordinates(x, y));
 			}
 
@@ -54,7 +55,7 @@ public class Base
 		this.pos.add(new GrameObjectLayer(width, height)); // entity layer
 		this.entLayer = 1;
 		this.title = title;
-		this.wraparound=false;
+		this.wraparound = false;
 		this.ID = GrameManager.add(this);
 	}
 
@@ -138,16 +139,18 @@ public class Base
 
 	public void addGrameObject(GrameObject go, Coordinates pos)
 	{
-		this.pos.get(entLayer).setObject(pos, go);
-		calcColor(pos);
+		if (this.pos.get(entLayer).setObject(pos, go))
+			calcColor(pos);
 	}
+
 	public void addEntity(int eID, Coordinates pos)
 	{
 		addGrameObject(GrameManager.findEntity(eID), pos);
-		if(GrameManager.render.get(eID)==null)
+		if (GrameManager.render.get(eID) == null)
 			GrameManager.render.put(eID, new ArrayList<Integer>());
 		GrameManager.render.get(eID).add(ID);
 	}
+
 	public boolean containsEnt(int eID)
 	{
 		for (GrameObjectLayer gol : GrameManager.findBase(ID).pos)
@@ -168,10 +171,10 @@ public class Base
 
 	public void moveEnt(int eID, Coordinates pos)
 	{
-		for(int i=0; i<this.pos.size(); i++)
-			if(this.pos.get(i).contains(eID)&&this.pos.get(i).getObject(pos)==null)
+		for (int i = 0; i < this.pos.size(); i++)
+			if (this.pos.get(i).contains(eID) && this.pos.get(i).getObject(pos) == null)
 			{
-				Coordinates prev=this.pos.get(i).getObjectPos(eID);
+				Coordinates prev = this.pos.get(i).getObjectPos(eID);
 				this.pos.get(i).setObject(prev, null);
 				calcColor(prev);
 				this.pos.get(i).setObject(pos, GrameManager.findEntity(eID));
@@ -182,17 +185,28 @@ public class Base
 
 	public boolean isOccupied(Coordinates pos)
 	{
-		for(int i=0; i<this.pos.size(); i++)
-			if(this.pos.get(i).getObject(pos)!=null)
+		for (int i = 0; i < this.pos.size(); i++)
+			if (this.pos.get(i).getObject(pos) != null)
 				return true;
 		return false;
 	}
+
 	public void setWraparound(boolean f)
 	{
-		GrameManager.findBase(ID).wraparound=f;
+		GrameManager.findBase(ID).wraparound = f;
 	}
+
 	public boolean getWraparound()
 	{
 		return GrameManager.findBase(ID).wraparound;
+	}
+
+	public int getDiagonal()
+	{
+		Coordinates ul = new Coordinates(0, 0);
+		Coordinates ur = new Coordinates(GrameManager.findBase(ID).getColumns() - 1, 0);
+		Coordinates dl = new Coordinates(0, GrameManager.findBase(ID).getRows() - 1);
+		Coordinates dr = new Coordinates(GrameManager.findBase(ID).getColumns() - 1, GrameManager.findBase(ID).getRows() - 1);
+		return Math.max(ul.distance(dr), ur.distance(dl));
 	}
 }

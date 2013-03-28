@@ -1,12 +1,12 @@
 
 package com.moomoohk.Grame.test;
 
-import com.moomoohk.Grame.AI.StrollAI;
+import com.moomoohk.Grame.AI.SimpleChaseAI;
+import com.moomoohk.Grame.AI.SimpleStrollAI;
 import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
 import com.moomoohk.Grame.Essentials.Entity;
 import com.moomoohk.Grame.Essentials.GrameUtils;
-import com.moomoohk.Grame.Essentials.Wall;
 import com.moomoohk.Grame.Graphics.RenderManager;
 
 public class AISystemTest
@@ -16,7 +16,6 @@ public class AISystemTest
 		GrameUtils.loadBasicCommands();
 		GrameUtils.loadBasicAIs();
 		Base b=new Base(20, 20);
-		//fix inverted issue (x y mixup)
 		Entity ent=new Entity();
 		Entity ent2=new Entity();
 		Entity ent3=new Entity();
@@ -33,8 +32,22 @@ public class AISystemTest
 		b.addEntity(ent5.ID, new Coordinates( 8, 2));
 		b.addEntity(ent6.ID, new Coordinates( 3, 12));
 		b.addEntity(ent7.ID, new Coordinates( 15, 18));
-		ent2.addAI(new StrollAI(), b.ID);
-		ent.makePlayer(true, b.ID); 
+		ent4.addAI(new SimpleStrollAI(), b.ID);
+		ent5.addAI(new SimpleStrollAI(), b.ID);
+		ent6.addAI(new SimpleStrollAI(), b.ID);
+		ent7.addAI(new SimpleStrollAI(), b.ID);
+		ent2.setSpeed(4);
+		ent3.setSpeed(4);
+		ent4.setSpeed(4);
+		ent5.setSpeed(4);
+		ent6.setSpeed(4);
+		ent7.setSpeed(4);
+		ent3.setTarget(ent2.ID);
+		ent3.setSpeed(10);
+		ent3.setRange(b.getDiagonal());
+		ent3.addAI(new SimpleChaseAI(), b.ID);
+		ent.makePlayer(2, true, b.ID); 
+		ent2.makePlayer(1, true, b.ID);
 		ent.printAI();
 		RenderManager.render(b.ID);
 		RenderManager.setVisible(true);

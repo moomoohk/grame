@@ -4,6 +4,9 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Toolkit;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
@@ -82,7 +85,7 @@ public class RenderManager
 	public static Canvas generateCanvas(int bID)
 	{
 		Canvas c = new Canvas();
-		int width = 30 * GrameManager.findBase(bID).getColumns(), height = 30 * GrameManager.findBase(bID).getRows();
+		int width = Math.min(30 * GrameManager.findBase(bID).getColumns(), Toolkit.getDefaultToolkit().getScreenSize().width), height = Math.min(30 * GrameManager.findBase(bID).getRows(), Toolkit.getDefaultToolkit().getScreenSize().height-50);
 		c.setSize(width, height);
 		return c;
 	}
@@ -92,12 +95,23 @@ public class RenderManager
 		{
 			if(mainCanvas==null)
 				mainCanvas=generateCanvas(bID);
-			mainFrame.getContentPane().setSize(mainCanvas.getWidth(), mainCanvas.getHeight());
 			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			mainFrame.setResizable(false);
 			mainFrame.add(mainCanvas);
 			mainFrame.pack();
 			mainFrame.setLocationRelativeTo(null);
+			mainFrame.addFocusListener(new FocusListener()
+			{
+				
+				public void focusLost(FocusEvent paramFocusEvent)
+				{
+					GrameManager.input.resetKeys();
+				}
+				
+				public void focusGained(FocusEvent paramFocusEvent)
+				{
+				}
+			});
 		}
 	}
 

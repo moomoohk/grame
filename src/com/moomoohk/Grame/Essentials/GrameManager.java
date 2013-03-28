@@ -26,7 +26,7 @@ public class GrameManager implements Runnable
 	public static Thread thread;
 	public static int fps = 0;
 	public static int time = 1;
-	public static Dir dir = null;
+	public static Dir dir1 = null, dir2 = null;
 	public static Render defaultRender = new GridRender();
 	public static HashMap<Integer, ArrayList<Integer>> render;
 	public static final String VERSION_NUMBER = "2.1";
@@ -59,6 +59,7 @@ public class GrameManager implements Runnable
 		input = new InputHandler();
 		render = new HashMap<Integer, ArrayList<Integer>>();
 		new RenderManager();
+		GrameUtils.console.setAlwaysOnTop(true);
 		start();
 	}
 
@@ -129,23 +130,41 @@ public class GrameManager implements Runnable
 	public void tick(boolean[] key)
 	{
 		time += 1;
-		dir = null;
-		if ((key[83]) || (key[40]))
-			dir = Dir.DOWN;
-		if ((key[65]) || (key[37]))
-			dir = Dir.LEFT;
-		if ((key[68]) || (key[39]))
-			dir = Dir.RIGHT;
-		if ((key[87]) || (key[38]))
-			dir = Dir.UP;
-		if (((key[83]) || (key[40])) && ((key[65]) || (key[37])))
-			dir = new Dir(-1, 1);
-		if (((key[83]) || (key[40])) && ((key[68]) || (key[39])))
-			dir = new Dir(1, 1);
-		if (((key[87]) || (key[38])) && ((key[65]) || (key[37])))
-			dir = new Dir(-1, -1);
-		if (((key[87]) || (key[38])) && ((key[68]) || (key[39])))
-			dir = new Dir(1, -1);
+		dir1 = null;
+		dir2 = null;
+		if (key[83])
+			dir1 = Dir.DOWN;
+		if (key[65])
+			dir1 = Dir.LEFT;
+		if (key[68])
+			dir1 = Dir.RIGHT;
+		if (key[87])
+			dir1 = Dir.UP;
+		if (key[83] && key[65])
+			dir1 = new Dir(-1, 1);
+		if (key[83] && key[68])
+			dir1 = new Dir(1, 1);
+		if (key[87] && key[65])
+			dir1 = new Dir(-1, -1);
+		if (key[87] && key[68])
+			dir1 = new Dir(1, -1);
+
+		if (key[40])
+			dir2 = Dir.DOWN;
+		if (key[37])
+			dir2 = Dir.LEFT;
+		if (key[39])
+			dir2 = Dir.RIGHT;
+		if (key[38])
+			dir2 = Dir.UP;
+		if (key[40] && key[37])
+			dir2 = new Dir(-1, 1);
+		if (key[40]&&key[39])
+			dir2 = new Dir(1, 1);
+		if (key[38]&&key[37])
+			dir2 = new Dir(-1, -1);
+		if (key[38]&&key[39])
+			dir2 = new Dir(1, -1);
 		if (key[27])
 			System.exit(0);
 	}
@@ -158,16 +177,18 @@ public class GrameManager implements Runnable
 			{
 				for (Entity ent : entList)
 				{
-					if (ent == null||render==null||(render!=null&&render.get(ent.ID).size()==0))
+					if (ent == null || render == null || (render != null && render.get(ent.ID) == null))
 						continue;
 					for (int bID : render.get(ent.ID))
 					{
 						if (ent.isPlayer(bID))
+						{
 							if (time % playerSpeed == 0)
 								ent.tick(bID);
-							else
-								if (time % ent.getSpeed() == 0 && !ent.isPaused() && render.containsKey(ent.ID))
-									ent.tick(bID);
+						}
+						else
+							if (time % ent.getSpeed() == 0 && !ent.isPaused() && render.containsKey(ent.ID))
+								ent.tick(bID);
 					}
 				}
 			}
@@ -310,7 +331,7 @@ public class GrameManager implements Runnable
 			super.write(b);
 			String text = new String(b).trim();
 			if (!text.equals("") && !text.equals("\n"))
-				GrameUtils.console.addText("[From Console] " + text + "\n");
+				GrameUtils.console.addText("[From Console (" + Thread.currentThread().getStackTrace()[9].getFileName().subSequence(0, Thread.currentThread().getStackTrace()[9].getFileName().indexOf(".java")) + ":" + Thread.currentThread().getStackTrace()[9].getLineNumber() + ")] " + text + "\n");
 		}
 
 		@Override
@@ -319,7 +340,7 @@ public class GrameManager implements Runnable
 			super.write(buf, off, len);
 			String text = new String(buf, off, len).trim();
 			if (!text.equals("") && !text.equals("\n"))
-				GrameUtils.console.addText("[From Console] " + text + "\n");
+				GrameUtils.console.addText("[From Console (" + Thread.currentThread().getStackTrace()[9].getFileName().subSequence(0, Thread.currentThread().getStackTrace()[9].getFileName().indexOf(".java")) + ":" + Thread.currentThread().getStackTrace()[9].getLineNumber() + ")] " + text + "\n");
 		}
 
 		@Override

@@ -14,7 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JToggleButton;
 
-import com.moomoohk.Grame.AI.StrollAI;
+import com.moomoohk.Grame.AI.SimpleStrollAI;
 import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
 import com.moomoohk.Grame.Essentials.Dir;
@@ -56,7 +56,7 @@ public class RenderTest
 		b.addEntity(ent.ID, new Coordinates(3, 3));
 		b.addEntity(ent2.ID, new Coordinates(5, 5));
 		b.addEntity(ent3.ID, new Coordinates(10, 5));
-		ent.addAI(new StrollAI(), b.ID);
+		ent.addAI(new SimpleStrollAI(), b.ID);
 		//b2.addGrameObject(ent, new Coordinates(10, 10));
 		System.out.println(b.getEntPos(ent.ID));
 		RenderManager.render(b.ID, new PlainGridRender());

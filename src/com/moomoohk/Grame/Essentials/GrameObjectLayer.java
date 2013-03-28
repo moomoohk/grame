@@ -14,15 +14,16 @@ public class GrameObjectLayer
 		this.objects = new GrameObject[width * height];
 	}
 
-	public void setObject(Coordinates pos, GrameObject go)
+	public boolean setObject(Coordinates pos, GrameObject go)
 	{
 		int place = pos.x + pos.y * this.width;
 		if (place < 0 || place >= this.objects.length)
 		{
 			GrameUtils.print(pos.toString() + " is out of range. Returning.", "Layer Class", false);
-			return;
+			return false;
 		}
 		this.objects[place] = go;
+		return true;
 	}
 
 	public GrameObject getObject(Coordinates pos)

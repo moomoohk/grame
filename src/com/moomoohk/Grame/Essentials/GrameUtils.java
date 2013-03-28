@@ -29,9 +29,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import com.moomoohk.Grame.AI.PlayerMovementAI;
-import com.moomoohk.Grame.AI.StrollAI;
+import com.moomoohk.Grame.AI.SimpleChaseAI;
+import com.moomoohk.Grame.AI.SimpleStrollAI;
 import com.moomoohk.Grame.commands.AddEntityAICommand;
+import com.moomoohk.Grame.commands.AddEntityCommand;
 import com.moomoohk.Grame.commands.ClearEntityAI;
+import com.moomoohk.Grame.commands.CreateEntityCommand;
 import com.moomoohk.Grame.commands.HelpCommand;
 import com.moomoohk.Grame.commands.MakePlayerCommand;
 import com.moomoohk.Grame.commands.MoveEntityCommand;
@@ -125,6 +128,10 @@ public class GrameUtils
 	{
 		Random r = new Random();
 		return new Color(r.nextFloat(), r.nextFloat(), r.nextFloat());
+	}
+	public static Coordinates randomCoordinates(Base b)
+	{
+		return new Coordinates(new Random().nextInt(b.getColumns()), new Random().nextInt(b.getRows()));
 	}
 
 	public static void deleteEntFolder()
@@ -266,7 +273,6 @@ public class GrameUtils
 		{
 			StackTraceElement caller = Thread.currentThread().getStackTrace()[2];
 			wordQueue.add("[" + caller.getFileName().subSequence(0, caller.getFileName().indexOf(".java")) + ":" + caller.getLineNumber() + "] " + st);
-			// System.out.println((String) wordQueue.get(0));
 			console.setConsoleTextColor(Color.white);
 			console.addText(wordQueue.get(0) + "\n");
 			wordQueue.remove(0);
@@ -335,8 +341,10 @@ public class GrameUtils
 		commands.add(new RenderBaseCommand(console, "render", "Will render a base using a render in the Render list. Usage: render <base ID> <render name>", 2, 2));
 		commands.add(new QuitCommand(console, "quit", "Quits the program. Usage: quit", 0, 0));
 		commands.add(new SetMainBaseCommand(console, "setmainbase", "Sets the main Base to display. Usage: setmainbase <base ID>", 1, 1));
+		commands.add(new CreateEntityCommand(console, "createentity", "Creates a new Entity. Usage: createentity [n:name] [t:type] [l:level] [c:color]", 0, 4));
+		commands.add(new AddEntityCommand(console, "addentity", "Adds an Entity to a Base. Usage: addentity <ent ID> <base ID> <x> <y>", 4, 4));
 		commands.add(new AddEntityAICommand(console, "addentityai", "Adds a MovememntAI to an Entity's AI list. Usage: addentityai <entity ID> <base ID> <movementai name>", 3, 3));
-		commands.add(new MakePlayerCommand(console, "makeplayer", "Turns an Entity into a controllable \"player\". Usage: makeplayer <entity ID> <base ID> <true/false>", 3, 3));
+		commands.add(new MakePlayerCommand(console, "makeplayer", "Turns an Entity into a controllable \"player\". Usage: makeplayer <entity ID> <player 1/2> <base ID> <true/false>", 4, 4));
 		commands.add(new SetEntityOverrideAICommand(console, "setentityoverrideai", "Sets the override AI for a given Entity. Usage: setentityoverrideai <entity ID> <base ID> <override movementai name>", 3, 3));
 		commands.add(new ClearEntityAI(console, "clearentityai", "Clears the AI list of an Entity. Usage: clearentityai <entity ID>", 1, 1));
 		commands.add(new PrintEntityAICommand(console, "printentityai", "Prints the AI list for a given Entity. Usage: printentityai <entity ID>", 1, 1));
@@ -347,8 +355,9 @@ public class GrameUtils
 	}
 	public static void loadBasicAIs()
 	{
-		GrameManager.addAI(new StrollAI());
-		GrameManager.addAI(new PlayerMovementAI());
+		GrameManager.addAI(new SimpleStrollAI());
+		GrameManager.addAI(new PlayerMovementAI(1));
+		GrameManager.addAI(new SimpleChaseAI());
 	}
 	public static void dumpStackTrace()
 	{

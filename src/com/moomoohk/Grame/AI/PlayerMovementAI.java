@@ -2,33 +2,30 @@ package com.moomoohk.Grame.AI;
 
 import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
+import com.moomoohk.Grame.Essentials.Dir;
 import com.moomoohk.Grame.Essentials.Entity;
 import com.moomoohk.Grame.Essentials.GrameManager;
 import com.moomoohk.Grame.Interfaces.MovementAI;
 
 public class PlayerMovementAI extends MovementAI
 {
+	private int player=0;
+	public PlayerMovementAI(int player)
+	{
+		super();
+		this.player=player;
+	}
 	public Coordinates getNext(Coordinates pos, Coordinates target, Base b, Entity ent1, Entity ent2)
 	{
-		if (GrameManager.dir == null)
+		Dir d=player==1?GrameManager.dir1:player==2?GrameManager.dir2:null;
+		if (d == null)
 			return pos;
-		if(!b.isInMap(pos.addDir(GrameManager.dir)))
+		if(!b.isInMap(pos.addDir(d)))
 			if(b.getWraparound())
-			{
-				Coordinates temp=pos;
-				if (pos.getX() == -1)
-					temp= new Coordinates(b.getColumns() - 1, pos.getY());
-				if (pos.getY() == -1)
-					temp= new Coordinates(pos.getX(), b.getRows() - 1);
-				if (pos.getX() == b.getColumns())
-					temp= new Coordinates(0, pos.getY());
-				if (pos.getY() == b.getRows())
-					temp= new Coordinates(pos.getX(), 0);
-				return temp;
-			}
+				return MovementAI.wraparound(b, pos, d);
 			else
 				return pos;
-		return pos.addDir(GrameManager.dir);
+		return pos.addDir(d);
 	}
 
 	public boolean isValid(Coordinates pos, Coordinates target, Base b, Entity ent1, Entity ent2)
