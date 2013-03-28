@@ -19,60 +19,47 @@ public class Entity implements GrameObject
 	public final int ID;
 	private Color color;
 	private HashMap<Integer, Boolean> player;
-	private boolean isRendered;
 	private boolean showRange;
 	private boolean paused;
 	private int targetID;
 	private int speed;
 	protected EntityGenerator randomGen;
-	// private ArrayList<MovementAI> AI;
 	public ArrayList<Object> mods;
 	private HashMap<Integer, MovementAI> activeAI;
 	private HashMap<Integer, MovementAI> overrideAI;
-	private Coordinates next;
 	private HashMap<Integer, ArrayList<MovementAI>> AI;
 
 	public Entity()
 	{
-		this("", "", 1, GrameUtils.randomColor(), new DefaultRandomGen());
+		this(new DefaultRandomGen().nameGen(), new DefaultRandomGen().typeGen(), 1, GrameUtils.randomColor());
+	}
+	public Entity(Color c)
+	{
+		this(new DefaultRandomGen().nameGen(), new DefaultRandomGen().typeGen(), 1, c);
 	}
 
 	public Entity(EntityGenerator entGen)
 	{
-		this("", "", 1, GrameUtils.randomColor(), entGen);
+		this(entGen.nameGen(), entGen.typeGen(), 1, GrameUtils.randomColor());
 	}
 
-	public Entity(String type, String name, int level, Color color)
+	public Entity(String name, String type, int level, Color color)
 	{
-		this(type, name, level, color, new DefaultRandomGen());
-	}
-
-	public Entity(String type, String name, int level, Color color, EntityGenerator entGen)
-	{
-		if (entGen != null)
-		{
-			name = entGen.nameGen();
-			type = entGen.typeGen();
-		}
-		this.type = type;
+		this.setType(type);
 		this.name = name;
-		this.level = level;
+		this.setLevel(level);
 		this.color = color;
 		this.player = new HashMap<Integer, Boolean>();
 		this.targetID = -1;
 		this.speed = 100;
 		this.range = 5;
-		this.isRendered = false;
-
-		this.points = 0;
+		this.setPoints(0);
 		this.showRange = false;
 		this.paused = false;
 		this.AI = new HashMap<Integer, ArrayList<MovementAI>>();
 		this.mods = new ArrayList<Object>();
 		this.activeAI = new HashMap<Integer, MovementAI>();
 		this.overrideAI = new HashMap<Integer, MovementAI>();
-		this.next = null;
-		// this.pos=new HashMap<Integer, Coordinates>();
 		ID = GrameManager.add(this);
 	}
 
@@ -297,15 +284,28 @@ public class Entity implements GrameObject
 	{
 		return ID;
 	}
-
-	/*
-	 * public void addPos(int bID, Coordinates c) {
-	 * GrameManager.findEntity(ID).pos.put(bID, c); }
-	 * 
-	 * public Coordinates getPos(int bID) {
-	 * if(!GrameManager.findEntity(ID).pos.containsKey(bID)) {
-	 * GrameUtils.print("Entity with ID:"
-	 * +ID+" not found in Base with ID:"+bID+". Returning null.", "ID:"+ID,
-	 * false); return null; } return GrameManager.findEntity(ID).pos.get(bID); }
-	 */
+	public void setType(String type)
+	{
+		this.type = type;
+	}
+	public String getType()
+	{
+		return type;
+	}
+	public void setLevel(int level)
+	{
+		this.level = level;
+	}
+	public int getLevel()
+	{
+		return level;
+	}
+	public void setPoints(int points)
+	{
+		this.points = points;
+	}
+	public int getPoints()
+	{
+		return points;
+	}
 }

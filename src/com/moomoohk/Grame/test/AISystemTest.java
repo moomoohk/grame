@@ -1,6 +1,8 @@
 
 package com.moomoohk.Grame.test;
 
+import java.awt.Color;
+
 import com.moomoohk.Grame.AI.SimpleChaseAI;
 import com.moomoohk.Grame.AI.SimpleStrollAI;
 import com.moomoohk.Grame.Essentials.Base;
@@ -18,6 +20,8 @@ public class AISystemTest
 		Base b=new Base(20, 20);
 		Entity ent=new Entity();
 		Entity ent2=new Entity();
+		ent2.setColor(Color.green);
+		ent.setColor(Color.blue);
 		Entity ent3=new Entity();
 		Entity ent4=new Entity();
 		Entity ent5=new Entity();
@@ -36,18 +40,17 @@ public class AISystemTest
 		ent5.addAI(new SimpleStrollAI(), b.ID);
 		ent6.addAI(new SimpleStrollAI(), b.ID);
 		ent7.addAI(new SimpleStrollAI(), b.ID);
-		ent2.setSpeed(4);
 		ent3.setSpeed(4);
 		ent4.setSpeed(4);
 		ent5.setSpeed(4);
 		ent6.setSpeed(4);
 		ent7.setSpeed(4);
-		ent3.setTarget(ent2.ID);
-		ent3.setSpeed(10);
-		ent3.setRange(b.getDiagonal());
-		ent3.addAI(new SimpleChaseAI(), b.ID);
+		ent2.setTarget(ent2.ID);
+		ent2.setSpeed(10);
+		ent2.setRange(b.getDiagonal());
+		ent2.addAI(new SimpleStrollAI(), b.ID);
 		ent.makePlayer(2, true, b.ID); 
-		ent2.makePlayer(1, true, b.ID);
+		//ent2.makePlayer(1, true, b.ID);
 		ent.printAI();
 		RenderManager.render(b.ID);
 		RenderManager.setVisible(true);

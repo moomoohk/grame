@@ -7,20 +7,20 @@ public class DefaultRandomGen implements EntityGenerator
 	public String nameGen()
 	{
 		String random = "";
-		int length = (int) (Math.random() * 5.0D) + 3;
+		int length = (int) (Math.random() * 5) + 3;
 		int p = 0;
 		char[] letters = new char[26];
 		char letter = 'a';
 		for (int i = 0; i < letters.length; i++)
 		{
 			letters[i] = letter;
-			letter = (char) (letter + '\001');
+			letter +=1;
 		}
 		for (int i = 0; i < length; i++)
 		{
-			p = (int) (Math.random() * 26.0D);
+			p = (int) (Math.random() * 26);
 			while (!checkLetter(random, letters[p], i))
-				p = (int) (Math.random() * 26.0D);
+				p = (int) (Math.random() * 26);
 			random = random + letters[p];
 			if (i == 0)
 				random = random.toUpperCase();
@@ -34,9 +34,9 @@ public class DefaultRandomGen implements EntityGenerator
 			if (random.charAt(random.length() - 1) == vowels[i])
 				lastVowel = true;
 		if (!lastVowel)
-			random = random + vowels[(int) (Math.random() * 5.0D)];
-		random = random + suffixes[(int) (Math.random() * 6.0D)];
-		int pick = (int) (Math.random() * 98.0D);
+			random = random + vowels[(int) (Math.random() * 5)];
+		random = random + suffixes[(int) (Math.random() * 6)];
+		int pick = (int) (Math.random() * 98);
 		if (pick == 70)
 			random = "Meshuly";
 		if (pick == 10)
@@ -48,7 +48,7 @@ public class DefaultRandomGen implements EntityGenerator
 	{
 		String[] types =
 		{ "elf", "orc", "human" };
-		return types[(int) (Math.random() * 3.0D)];
+		return types[(int) (Math.random() * 3)];
 	}
 
 	private static boolean checkLetter(String random, char letter, int i)

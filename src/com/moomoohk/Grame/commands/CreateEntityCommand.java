@@ -2,6 +2,7 @@
 package com.moomoohk.Grame.commands;
 
 import java.awt.Color;
+import java.util.HashMap;
 
 import com.moomoohk.Grame.Essentials.DefaultRandomGen;
 import com.moomoohk.Grame.Essentials.Entity;
@@ -23,20 +24,13 @@ public class CreateEntityCommand extends Command<Console>
 		String type=new DefaultRandomGen().typeGen(), name=new DefaultRandomGen().nameGen();
 		int level=0;
 		Color color=GrameUtils.randomColor();
-		for(String arg:arg1)
-		{
-			switch(arg.charAt(0))
-			{
-			case 't':
-				type=arg.substring(arg.indexOf(":"));
-				break;
-			case 'n':
-				name=arg.substring(arg.indexOf(":"));
-				break;
-			case 'l':
-				level=Integer.parseInt(arg.substring(arg.indexOf(":")));
-			}
-		}
+		HashMap<String, String> flags=Command.parseFlags(arg1);
+		if(flags.get("t")!=null)
+			type=flags.get("t");
+		if(flags.get("n")!=null)
+			name=flags.get("n");
+		if(flags.get("l")!=null)
+			level=Integer.parseInt(flags.get("l"));
 		new Entity(type, name, level, color);
 	}
 	public boolean check(Console handler, String[] params)

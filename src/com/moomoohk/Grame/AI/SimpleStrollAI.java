@@ -2,6 +2,7 @@ package com.moomoohk.Grame.AI;
 
 import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
+import com.moomoohk.Grame.Essentials.Dir;
 import com.moomoohk.Grame.Essentials.Entity;
 import com.moomoohk.Grame.Interfaces.MovementAI;
 
@@ -15,9 +16,12 @@ public class SimpleStrollAI extends MovementAI
 		{
 			if ((int) (Math.random() * 5.0D) > 2)
 			{
-				if (!b.isInMap(next) || b.isOccupied(next))
-					for (int i = 0; i < sur.length && (!b.isInMap(next) || b.isOccupied(next)); i++)
-						next = sur[(int) (Math.random() * sur.length)];
+				if ((!b.getWraparound()&&!b.isInMap(next)) || b.isOccupied(next))
+					for (int i = 0; i < sur.length && ((!b.getWraparound()&&!b.isInMap(next)) || b.isOccupied(next)); i++)
+						if(b.getWraparound())
+							next=MovementAI.wraparound(b, sur[(int)(Math.random()*sur.length)], new Dir(pos, next));
+						else
+							next = sur[(int) (Math.random() * sur.length)];
 			}
 			else
 				next = pos;

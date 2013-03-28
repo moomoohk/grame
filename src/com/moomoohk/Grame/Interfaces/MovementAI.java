@@ -15,6 +15,14 @@ public abstract class MovementAI
 	
 	public static Coordinates wraparound(Base b, Coordinates pos, Dir d)
 	{
+		if(pos.addDir(d).getX() == -1&&pos.addDir(d).getY() == -1)
+			return new Coordinates(b.getColumns()-1, b.getRows()-1);
+		if(pos.addDir(d).getX() == -1&&pos.addDir(d).getY() == b.getRows())
+			return new Coordinates(b.getColumns()-1, 0);
+		if(pos.addDir(d).getX()==b.getColumns()&&pos.addDir(d).getY()==-1)
+			return new Coordinates(0, b.getRows()-1);
+		if(pos.addDir(d).getX()==b.getColumns()&&pos.addDir(d).getY()==b.getRows())
+			return new Coordinates(0, 0);
 		if (pos.addDir(d).getX() == -1)
 			return new Coordinates(b.getColumns() - 1, pos.getY());
 		if (pos.addDir(d).getY() == -1)

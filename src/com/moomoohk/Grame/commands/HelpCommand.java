@@ -1,5 +1,7 @@
 package com.moomoohk.Grame.commands;
 
+import java.awt.Color;
+
 import com.moomoohk.MooCommands.Command;
 import com.moomoohk.MooConsole.Console;
 
@@ -21,6 +23,7 @@ public class HelpCommand extends Command<Console>
 		}
 		if (Command.getCommand(params[0]) == null)
 		{
+			handler.setConsoleTextColor(Color.red);
 			this.message = "Command not found!";
 			return;
 		}

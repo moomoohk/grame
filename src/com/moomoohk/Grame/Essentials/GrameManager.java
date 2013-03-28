@@ -226,7 +226,6 @@ public class GrameManager implements Runnable
 		GrameUtils.print("Disposing of all the Bases in the Base list...", "Grame Manager", false);
 		for (int i = 0; i < baseList.size(); i++)
 		{
-			// baseList.get(i).close();
 			GrameUtils.print("Disposing of " + baseList.get(i).ID, "Grame Manager", true);
 			baseList.remove(i);
 		}
