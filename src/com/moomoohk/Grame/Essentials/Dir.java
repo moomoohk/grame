@@ -131,4 +131,14 @@ public class Dir extends Coordinates
 		}
 		return a;
 	}
+	public boolean equals(Dir d)
+	{
+		if(this.x==d.x&&this.y==d.y)
+			return true;
+		return false;
+	}
+	public static Dir[] getAllDirs()
+	{
+		return new Dir[]{UP, DOWN, LEFT, RIGHT, new Dir(1, 1), new Dir(1, -1), new Dir(-1, -1), new Dir(-1, 1)};
+	}
 }

@@ -5,6 +5,8 @@ import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 
+import com.moomoohk.Grame.Graphics.RenderManager;
+
 
 public class InputHandler implements KeyEventDispatcher
 {
@@ -24,8 +26,8 @@ public class InputHandler implements KeyEventDispatcher
 
 	public boolean dispatchKeyEvent(KeyEvent e)
 	{
-//		if(!RenderManager.mainFrame.isFocusOwner())
-//			return false;
+		if(!RenderManager.mainFrame.isFocusOwner()&&!RenderManager.mainFrame.hasFocus())
+			return false;
 		int keyCode=e.getKeyCode();
 		switch(e.getID())
 		{

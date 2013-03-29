@@ -35,6 +35,7 @@ import com.moomoohk.Grame.commands.AddEntityAICommand;
 import com.moomoohk.Grame.commands.AddEntityCommand;
 import com.moomoohk.Grame.commands.ClearEntityAI;
 import com.moomoohk.Grame.commands.CreateEntityCommand;
+import com.moomoohk.Grame.commands.DrawCoordinatesCommand;
 import com.moomoohk.Grame.commands.HelpCommand;
 import com.moomoohk.Grame.commands.MakePlayerCommand;
 import com.moomoohk.Grame.commands.MoveEntityCommand;
@@ -350,6 +351,7 @@ public class GrameUtils
 		commands.add(new PrintEntityAICommand(console, "printentityai", "Prints the AI list for a given Entity. Usage: printentityai <entity ID>", 1, 1));
 		commands.add(new isOccupiedCommand(console, "isoccupied", "Checks whether Coordinates in a Base are occupied by a Grame object. Usage: isoccupied <base ID> <coordinates x> <coordinates y>", 3, 3));
 		commands.add(new SetPlayerSpeedCommand(console, "setplayerspeed", "Sets the global player speed. Usage: setplayerspeed <speed>", 1, 1));
+		commands.add(new DrawCoordinatesCommand(console, "drawcoordinates", "Draws the coordinates in each square. Usage: drawcoordinates <true/false>", 1, 1));
 		console.loadCommands(commands);
 		print("Loaded " + Command.commands.size() + " commands.", "GrameUtils", false);
 	}

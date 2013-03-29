@@ -28,7 +28,6 @@ public class GrameManager implements Runnable
 	public static int time = 1;
 	public static Dir dir1 = null, dir2 = null;
 	public static Render defaultRender = new GridRender();
-	public static HashMap<Integer, ArrayList<Integer>> render;
 	public static final String VERSION_NUMBER = "2.1";
 	public static boolean showConsole = false;
 	public static int playerSpeed = 4;
@@ -57,7 +56,6 @@ public class GrameManager implements Runnable
 		entList = new ArrayList<Entity>();
 		baseList = new ArrayList<Base>();
 		input = new InputHandler();
-		render = new HashMap<Integer, ArrayList<Integer>>();
 		new RenderManager();
 		GrameUtils.console.setAlwaysOnTop(true);
 		start();
@@ -159,11 +157,11 @@ public class GrameManager implements Runnable
 			dir2 = Dir.UP;
 		if (key[40] && key[37])
 			dir2 = new Dir(-1, 1);
-		if (key[40]&&key[39])
+		if (key[40] && key[39])
 			dir2 = new Dir(1, 1);
-		if (key[38]&&key[37])
+		if (key[38] && key[37])
 			dir2 = new Dir(-1, -1);
-		if (key[38]&&key[39])
+		if (key[38] && key[39])
 			dir2 = new Dir(1, -1);
 		if (key[27])
 			System.exit(0);
@@ -171,31 +169,21 @@ public class GrameManager implements Runnable
 
 	private static void tickEnts()
 	{
-		synchronized (entList)
+		try
 		{
-			try
+			for (int i=0; i<entList.size(); i++)
 			{
-				for (Entity ent : entList)
-				{
-					if (ent == null || render == null || (render != null && render.get(ent.ID) == null))
-						continue;
-					for (int bID : render.get(ent.ID))
-					{
-						if (ent.isPlayer(bID))
-						{
-							if (time % playerSpeed == 0)
-								ent.tick(bID);
-						}
-						else
-							if (time % ent.getSpeed() == 0 && !ent.isPaused() && render.containsKey(ent.ID))
-								ent.tick(bID);
-					}
-				}
+				Entity ent=entList.get(i);
+				if (ent == null )
+					continue;
+ 				for(int j=0; j<baseList.size(); j++)
+					if (time % ent.getSpeed() == 0 && !ent.isPaused())
+						ent.tick(j);
 			}
-			catch (Exception e)
-			{
-				CrashManager.showException(e);
-			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
 		}
 	}
 
@@ -237,7 +225,6 @@ public class GrameManager implements Runnable
 	{
 		entList.add(ent);
 		GrameUtils.print("Added " + ent.getName() + " to the Entity list (ID:" + (entList.size() - 1) + ")", "Grame Manager", false);
-		render.put(ent.ID, new ArrayList<Integer>());
 		GrameUtils.print("Made " + ent.getName() + " a render list", "Grame Manager", false);
 		return entList.size() - 1;
 	}
@@ -315,6 +302,12 @@ public class GrameManager implements Runnable
 				return;
 		ais.put(name, ai);
 		GrameUtils.print("Added " + name + " to the AI list.", "Grame Manager", false);
+	}
+
+	public static void pauseAllEntities(boolean f)
+	{
+		for (Entity ent : entList)
+			ent.pause(f);
 	}
 
 	private class OutputOverride extends PrintStream

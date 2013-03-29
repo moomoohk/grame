@@ -87,6 +87,10 @@ public class Coordinates
 			temp[i] = sur.get(i);
 		return temp;
 	}
+	public Coordinates[] getAllSurrounding(Base b)
+	{
+		return new Coordinates[]{this.addDir(Dir.UP),this.addDir( Dir.LEFT), this.addDir(Dir.RIGHT), this.addDir(Dir.DOWN), this.addDir(new Dir(1, 1)), this.addDir(new Dir(-1, 1)), this.addDir(new Dir(1, -1)), this.addDir(new Dir(-1, -1))};
+	}
 
 	public boolean isSurrounded(Base b)
 	{

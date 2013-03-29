@@ -145,10 +145,12 @@ public class Base
 
 	public void addEntity(int eID, Coordinates pos)
 	{
+		if(this.pos.get(entLayer).getObject(pos)!=null)
+		{
+			GrameUtils.print(pos+" is occupied. Returning.", "Entity", false);
+			return;
+		}
 		addGrameObject(GrameManager.findEntity(eID), pos);
-		if (GrameManager.render.get(eID) == null)
-			GrameManager.render.put(eID, new ArrayList<Integer>());
-		GrameManager.render.get(eID).add(ID);
 	}
 
 	public boolean containsEnt(int eID)
