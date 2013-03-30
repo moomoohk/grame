@@ -6,9 +6,12 @@ import com.moomoohk.Grame.AI.PlayerSimAI;
 import com.moomoohk.Grame.AI.SimpleChaseAI;
 import com.moomoohk.Grame.AI.SimpleStrollAI;
 import com.moomoohk.Grame.Essentials.Base;
+import com.moomoohk.Grame.Essentials.Coordinates;
 import com.moomoohk.Grame.Essentials.Entity;
 import com.moomoohk.Grame.Essentials.GrameManager;
 import com.moomoohk.Grame.Essentials.GrameUtils;
+import com.moomoohk.Grame.Essentials.Schematic;
+import com.moomoohk.Grame.Essentials.Wall;
 import com.moomoohk.Grame.Graphics.RenderManager;
 
 public class AISystemTest
@@ -18,9 +21,12 @@ public class AISystemTest
 		GrameUtils.loadBasicCommands();
 		GrameUtils.loadBasicAIs();
 		Base b = new Base(20, 20);
+		Schematic s=new Schematic();
+		s.load(b, GrameUtils.randomCoordinates(b));
 		b.setWraparound(true);
 		generatePlayers(1, 1, b);
-		generatePlayerSims(1, b);
+		//generateWalls(30, b);
+		generatePlayerSims(5, b);
 		generateStrollers(5, b);
 		generateChasers(b, 5, GrameManager.findEntity(0));
 		generateChasers(b, 5, GrameManager.findEntity(1));
@@ -36,7 +42,10 @@ public class AISystemTest
 			ent.addAI(new SimpleStrollAI(), b.ID);
 			ent.setSpeed(5);
 			ent.setColor(Color.blue);
-			b.addEntity(ent.ID, GrameUtils.randomCoordinates(b));
+			Coordinates temp=GrameUtils.randomCoordinates(b);
+			while(b.isOccupied(temp))
+				temp=GrameUtils.randomCoordinates(b);
+			b.addEntity(ent.ID, temp);
 		}
 	}
 
@@ -50,7 +59,10 @@ public class AISystemTest
 			ent.setTarget(target.ID);
 			ent.setColor(Color.red);
 			ent.setSpeed(5);
-			b.addEntity(ent.ID, GrameUtils.randomCoordinates(b));
+			Coordinates temp=GrameUtils.randomCoordinates(b);
+			while(b.isOccupied(temp))
+				temp=GrameUtils.randomCoordinates(b);
+			b.addEntity(ent.ID, temp);
 		}
 	}
 
@@ -59,10 +71,13 @@ public class AISystemTest
 		for (int i = 1; i <= amount; i++)
 		{
 			Entity ent = new Entity();
-			b.addEntity(ent.ID, GrameUtils.randomCoordinates(b));
 			ent.makePlayer(number, true, b.ID);
-			ent.setSpeed(2);
+			ent.setSpeed(3);
 			ent.setColor(Color.green);
+			Coordinates temp=GrameUtils.randomCoordinates(b);
+			while(b.isOccupied(temp))
+				temp=GrameUtils.randomCoordinates(b);
+			b.addEntity(ent.ID, temp);
 		}
 	}
 
@@ -74,7 +89,15 @@ public class AISystemTest
 			ent.setColor(Color.yellow);
 			ent.setOverrideAI(new PlayerSimAI(), b.ID);
 			ent.setSpeed(4);
-			b.addEntity(ent.ID, GrameUtils.randomCoordinates(b));
+			Coordinates temp=GrameUtils.randomCoordinates(b);
+			while(b.isOccupied(temp))
+				temp=GrameUtils.randomCoordinates(b);
+			b.addEntity(ent.ID, temp);
 		}
+	}
+	public static void generateWalls(int amount, Base b)
+	{
+		for(int i=1; i<=amount; i++)
+			b.addGrameObject(new Wall(), GrameUtils.randomCoordinates(b));
 	}
 }

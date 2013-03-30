@@ -52,6 +52,8 @@ public class SimpleStrollAI extends MovementAI
 
 	public boolean isValid(Coordinates pos, Coordinates target, Base b, Entity ent1, Entity ent2)
 	{
+		if(pos==null)
+			return false;
 		return !pos.isSurrounded(b);
 	}
 

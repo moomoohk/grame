@@ -30,6 +30,6 @@ public class Wall implements GrameObject
 
 	public int getID()
 	{
-		return 0;
+		return 1000;
 	}
 }

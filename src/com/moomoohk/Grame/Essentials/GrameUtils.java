@@ -29,6 +29,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import com.moomoohk.Grame.AI.PlayerMovementAI;
+import com.moomoohk.Grame.AI.PlayerSimAI;
 import com.moomoohk.Grame.AI.SimpleChaseAI;
 import com.moomoohk.Grame.AI.SimpleStrollAI;
 import com.moomoohk.Grame.commands.AddEntityAICommand;
@@ -44,7 +45,6 @@ import com.moomoohk.Grame.commands.QuitCommand;
 import com.moomoohk.Grame.commands.RenderBaseCommand;
 import com.moomoohk.Grame.commands.SetEntityOverrideAICommand;
 import com.moomoohk.Grame.commands.SetMainBaseCommand;
-import com.moomoohk.Grame.commands.SetPlayerSpeedCommand;
 import com.moomoohk.Grame.commands.isOccupiedCommand;
 import com.moomoohk.Grame.commands.setVisibleCommand;
 import com.moomoohk.MooCommands.Command;
@@ -350,7 +350,6 @@ public class GrameUtils
 		commands.add(new ClearEntityAI(console, "clearentityai", "Clears the AI list of an Entity. Usage: clearentityai <entity ID>", 1, 1));
 		commands.add(new PrintEntityAICommand(console, "printentityai", "Prints the AI list for a given Entity. Usage: printentityai <entity ID>", 1, 1));
 		commands.add(new isOccupiedCommand(console, "isoccupied", "Checks whether Coordinates in a Base are occupied by a Grame object. Usage: isoccupied <base ID> <coordinates x> <coordinates y>", 3, 3));
-		commands.add(new SetPlayerSpeedCommand(console, "setplayerspeed", "Sets the global player speed. Usage: setplayerspeed <speed>", 1, 1));
 		commands.add(new DrawCoordinatesCommand(console, "drawcoordinates", "Draws the coordinates in each square. Usage: drawcoordinates <true/false>", 1, 1));
 		console.loadCommands(commands);
 		print("Loaded " + Command.commands.size() + " commands.", "GrameUtils", false);
@@ -360,6 +359,7 @@ public class GrameUtils
 		GrameManager.addAI(new SimpleStrollAI());
 		GrameManager.addAI(new PlayerMovementAI(1));
 		GrameManager.addAI(new SimpleChaseAI());
+		GrameManager.addAI(new PlayerSimAI());
 	}
 	public static void dumpStackTrace()
 	{

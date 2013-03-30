@@ -83,6 +83,8 @@ public class SimpleChaseAI extends MovementAI
 	{
 		try
 		{
+			if(pos==null)
+				return false;
 			if (target == null)
 			{
 				GrameUtils.print("Crucial parameters missing! Returning not valid. (" + ent1.getName() + ")", "Simple Chaser", true);

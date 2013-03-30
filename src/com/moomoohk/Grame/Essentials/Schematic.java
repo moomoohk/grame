@@ -2,8 +2,6 @@ package com.moomoohk.Grame.Essentials;
 
 import java.awt.Color;
 
-import com.moomoohk.Grame.Interfaces.GrameObject;
-
 public class Schematic
 {
 	private Color[][] map;
@@ -24,7 +22,7 @@ public class Schematic
 		this.width = this.map[0].length;
 		for (int i = 0; i < this.map.length; i++)
 			for (int j = 0; j < this.map.length; j++)
-				this.map[i][j] = Color.WHITE;
+				this.map[i][j] = null;
 		switch (this.type)
 		{
 		case 0:
@@ -315,19 +313,48 @@ public class Schematic
 					c = new Coordinates(j, sn.width - i - 1);
 				else
 					c = new Coordinates(i, sn.width - j - 1);
-				if (s.isSolid(new Coordinates(i, j)))
-					sn.setSolid(c, true);
-				else
-					sn.setSolid(c, false);
+				sn.setColor(c, s.getColor(new Coordinates(i, j)));
 			}
 		return rotator(d, amount - 1, sn);
 	}
 
-	public void setSolid(Coordinates c, boolean f)
+	public void setColor(Coordinates pos, Color c)
 	{
-		if (f)
-			this.map[c.getY()][c.getX()] = Color.BLACK;
-		else
-			this.map[c.getY()][c.getX()] = Color.WHITE;
+		this.map[pos.getY()][pos.getX()] = c;
 	}
+
+	public void load(Base b, Coordinates loc)
+	{
+		//		if (b.getEdges())
+		//		{
+		//			if (loc.getX() < 3)
+		//				loc = new Coordinates(3, loc.getY());
+		//			if (loc.getX() > getColumns() - 4)
+		//				loc = new Coordinates(getColumns() - 4, loc.getY());
+		//			if (loc.getY() < 3)
+		//				loc = new Coordinates(loc.getX(), 3);
+		//			if (loc.getY() > getRows() - 4)
+		//				loc = new Coordinates(loc.getX(), getRows() - 4);
+		//		}
+		int sx = 0;
+		int sy = 0;
+		int mapx = loc.getX() - 2;
+		int mapy = loc.getY() - 2;
+		for (int i = loc.getY() - 2; i < loc.getY() + 3; i++)
+		{
+			mapy = i;
+			for (int j = loc.getX() - 2; j < loc.getX() + 3; j++)
+			{
+				mapx = j;
+				if(this.map[sy][sx]==null)
+					continue;
+				if (b.isInMap(new Coordinates(mapx, mapy)) && !b.isOccupied(new Coordinates(mapx, mapy)))
+					b.addGrameObject(new Wall(getColor(new Coordinates(sx, sy))), new Coordinates(mapx, mapy));
+				sx++;
+			}
+			sx = 0;
+			sy++;
+		}
+	}
+
 }
