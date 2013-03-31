@@ -1,5 +1,6 @@
 package com.moomoohk.Grame.Essentials;
 
+import com.moomoohk.Grame.Essentials.GrameUtils.MessageLevel;
 import com.moomoohk.Grame.Interfaces.GrameObject;
 
 public class GrameObjectLayer
@@ -19,7 +20,7 @@ public class GrameObjectLayer
 		int place = pos.x + pos.y * this.width;
 		if (place < 0 || place >= this.objects.length)
 		{
-			GrameUtils.print(pos.toString() + " is out of range. Returning.", "Layer Class", false);
+			GrameUtils.print(pos.toString() + " is out of range. Returning.", MessageLevel.ERROR);
 			return false;
 		}
 		this.objects[place] = go;
@@ -34,11 +35,11 @@ public class GrameObjectLayer
 	public Coordinates getObjectPos(int goID)
 	{
 		for (int i = 0; i < this.objects.length; i++)
-			if (this.objects[i] != null && this.objects[i].getID() == goID)
+			if (this.objects[i] != null && this.objects[i].ID == goID)
 			{
 				return new Coordinates((i % width), (i / width));
 			}
-		GrameUtils.print("Couldn't locate GrameObject with ID:" + goID + ". Returning null.", "Layer Class", false);
+		GrameUtils.print("Couldn't locate GrameObject with ID:" + goID + ". Returning null.", MessageLevel.ERROR);
 		return null;
 	}
 
@@ -55,7 +56,7 @@ public class GrameObjectLayer
 	public boolean contains(int eID)
 	{
 		for (int i = 0; i < this.objects.length; i++)
-			if (objects[i] != null && objects[i].getID() == eID)
+			if (objects[i] != null && objects[i].ID == eID)
 				return true;
 		return false;
 	}

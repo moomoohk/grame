@@ -5,31 +5,32 @@ import java.awt.Color;
 import com.moomoohk.Grame.AI.PlayerSimAI;
 import com.moomoohk.Grame.AI.SimpleChaseAI;
 import com.moomoohk.Grame.AI.SimpleStrollAI;
+import com.moomoohk.Grame.Basics.Entity;
+import com.moomoohk.Grame.Basics.Schematic;
+import com.moomoohk.Grame.Basics.Wall;
 import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
-import com.moomoohk.Grame.Essentials.Entity;
 import com.moomoohk.Grame.Essentials.GrameManager;
 import com.moomoohk.Grame.Essentials.GrameUtils;
-import com.moomoohk.Grame.Essentials.Schematic;
-import com.moomoohk.Grame.Essentials.Wall;
 import com.moomoohk.Grame.Graphics.RenderManager;
 
 public class AISystemTest
 {
 	public static void main(String[] args)
 	{
+		GrameManager.debug=true;
 		GrameUtils.loadBasicCommands();
 		GrameUtils.loadBasicAIs();
 		Base b = new Base(20, 20);
 		Schematic s=new Schematic();
-		s.load(b, GrameUtils.randomCoordinates(b));
 		b.setWraparound(true);
 		generatePlayers(1, 1, b);
-		//generateWalls(30, b);
 		generatePlayerSims(5, b);
+		s.load(b, GrameUtils.randomCoordinates(b));
+		generateWalls(30, b);
 		generateStrollers(5, b);
-		generateChasers(b, 5, GrameManager.findEntity(0));
-		generateChasers(b, 5, GrameManager.findEntity(1));
+		generateChasers(b, 5, (Entity)GrameManager.findGrameObject(0));
+		generateChasers(b, 5, (Entity)GrameManager.findGrameObject(1));
 		RenderManager.render(b.ID);
 		RenderManager.setVisible(true);
 	}
@@ -45,7 +46,7 @@ public class AISystemTest
 			Coordinates temp=GrameUtils.randomCoordinates(b);
 			while(b.isOccupied(temp))
 				temp=GrameUtils.randomCoordinates(b);
-			b.addEntity(ent.ID, temp);
+			b.addGrameObject(ent, temp);
 		}
 	}
 
@@ -62,7 +63,7 @@ public class AISystemTest
 			Coordinates temp=GrameUtils.randomCoordinates(b);
 			while(b.isOccupied(temp))
 				temp=GrameUtils.randomCoordinates(b);
-			b.addEntity(ent.ID, temp);
+			b.addGrameObject(ent, temp);
 		}
 	}
 
@@ -72,12 +73,12 @@ public class AISystemTest
 		{
 			Entity ent = new Entity();
 			ent.makePlayer(number, true, b.ID);
-			ent.setSpeed(3);
+			ent.setSpeed(2);
 			ent.setColor(Color.green);
 			Coordinates temp=GrameUtils.randomCoordinates(b);
 			while(b.isOccupied(temp))
 				temp=GrameUtils.randomCoordinates(b);
-			b.addEntity(ent.ID, temp);
+			b.addGrameObject(ent, temp);
 		}
 	}
 
@@ -92,7 +93,7 @@ public class AISystemTest
 			Coordinates temp=GrameUtils.randomCoordinates(b);
 			while(b.isOccupied(temp))
 				temp=GrameUtils.randomCoordinates(b);
-			b.addEntity(ent.ID, temp);
+			b.addGrameObject(ent, temp);
 		}
 	}
 	public static void generateWalls(int amount, Base b)

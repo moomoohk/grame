@@ -3,6 +3,8 @@ package com.moomoohk.Grame.Essentials;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.moomoohk.Grame.Basics.Dir;
+
 public class Coordinates
 {
 	protected int x;

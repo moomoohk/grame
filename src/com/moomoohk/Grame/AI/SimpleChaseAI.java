@@ -1,11 +1,12 @@
 package com.moomoohk.Grame.AI;
 
+import com.moomoohk.Grame.Basics.Dir;
+import com.moomoohk.Grame.Basics.Entity;
 import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
 import com.moomoohk.Grame.Essentials.CrashManager;
-import com.moomoohk.Grame.Essentials.Dir;
-import com.moomoohk.Grame.Essentials.Entity;
 import com.moomoohk.Grame.Essentials.GrameUtils;
+import com.moomoohk.Grame.Essentials.GrameUtils.MessageLevel;
 import com.moomoohk.Grame.Interfaces.MovementAI;
 
 public class SimpleChaseAI extends MovementAI
@@ -16,7 +17,7 @@ public class SimpleChaseAI extends MovementAI
 		{
 			if (target == null)
 			{
-				GrameUtils.print("Crucial parameters missing! Returning pos. (" + ent1.getName() + ")", "Simple Chaser", true);
+				GrameUtils.print("Crucial parameters missing! Returning pos. (" + ent1.getName() + ")", MessageLevel.ERROR);
 				return pos;
 			}
 			if (!b.getWraparound())
@@ -87,7 +88,7 @@ public class SimpleChaseAI extends MovementAI
 				return false;
 			if (target == null)
 			{
-				GrameUtils.print("Crucial parameters missing! Returning not valid. (" + ent1.getName() + ")", "Simple Chaser", true);
+				GrameUtils.print("Crucial parameters missing! Returning not valid. (" + ent1.getName() + ")", MessageLevel.ERROR);
 				return false;
 			}
 			if (ent1.getPos(b.ID).distance(ent2.getPos(b.ID)) > ent1.getRange())

@@ -1,10 +1,9 @@
 package com.moomoohk.Grame.commands;
 
 import com.moomoohk.Grame.Essentials.GrameManager;
+import com.moomoohk.Grame.Basics.Entity;
 import com.moomoohk.MooCommands.Command;
 import com.moomoohk.MooConsole.Console;
-
-
 
 public class AddEntityAICommand extends Command<Console>
 {
@@ -30,7 +29,7 @@ public class AddEntityAICommand extends Command<Console>
 			return;
 		}
 		this.message="";
-		GrameManager.findEntity(Integer.parseInt(arg1[0])).addAI(GrameManager.ais.get(arg1[2]), Integer.parseInt(arg1[1]));
+		((Entity)(GrameManager.findGrameObject(Integer.parseInt(arg1[0])))).addAI(GrameManager.ais.get(arg1[2]), Integer.parseInt(arg1[1]));
 	}
 }
 

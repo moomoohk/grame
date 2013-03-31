@@ -1,9 +1,9 @@
 package com.moomoohk.Grame.Interfaces;
 
+import com.moomoohk.Grame.Basics.Dir;
+import com.moomoohk.Grame.Basics.Entity;
 import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
-import com.moomoohk.Grame.Essentials.Dir;
-import com.moomoohk.Grame.Essentials.Entity;
 import com.moomoohk.Grame.Essentials.GrameManager;
 
 public abstract class MovementAI

@@ -1,6 +1,7 @@
 
 package com.moomoohk.Grame.commands;
 
+import com.moomoohk.Grame.Basics.Entity;
 import com.moomoohk.Grame.Essentials.GrameManager;
 import com.moomoohk.MooCommands.Command;
 import com.moomoohk.MooConsole.Console;
@@ -31,10 +32,10 @@ public class SetEntityOverrideAICommand extends Command<Console>
 						this.message+=name+ " ";
 				return;
 			}
-			GrameManager.findEntity(Integer.parseInt(arg1[0])).setOverrideAI(GrameManager.ais.get(arg1[2]), Integer.parseInt(arg1[1]));
+			((Entity)(GrameManager.findGrameObject(Integer.parseInt(arg1[0])))).setOverrideAI(GrameManager.ais.get(arg1[2]), Integer.parseInt(arg1[1]));
 		}
 		else
-			GrameManager.findEntity(Integer.parseInt(arg1[0])).setOverrideAI(null, Integer.parseInt(arg1[1]));
+			((Entity)(GrameManager.findGrameObject(Integer.parseInt(arg1[0])))).setOverrideAI(null, Integer.parseInt(arg1[1]));
 	}
 }
 

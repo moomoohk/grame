@@ -3,6 +3,7 @@ package com.moomoohk.Grame.Essentials;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import com.moomoohk.Grame.Essentials.GrameUtils.MessageLevel;
 import com.moomoohk.Grame.Interfaces.GrameObject;
 import com.moomoohk.Grame.Interfaces.MovementAI;
 
@@ -103,7 +104,6 @@ public class Base
 
 	public Color getColor(Coordinates pos)
 	{
-		// return this.floor.getColor(pos);
 		return this.colors[pos.x + pos.y * width];
 	}
 
@@ -118,11 +118,11 @@ public class Base
 					GrameManager.findBase(ID).entLayer++;
 				GrameManager.findBase(ID).coinLayer++;
 			}
-			GrameUtils.print("Added layer", "Base ID:" + ID, true);
+			GrameUtils.print("Added layer", MessageLevel.DEBUG);
 		}
 		else
 		{
-			GrameUtils.print("Incompatible layer! (Wrong dimensions: is " + gol.toString() + ", should be " + this.width + "x" + this.height + ")", "Base ID:" + ID, false);
+			GrameUtils.print("Incompatible layer! (Wrong dimensions: is " + gol.toString() + ", should be " + this.width + "x" + this.height + ")", MessageLevel.NORMAL);
 			return;
 		}
 	}
@@ -143,25 +143,15 @@ public class Base
 			calcColor(pos);
 	}
 
-	public void addEntity(int eID, Coordinates pos)
-	{
-		if(this.pos.get(entLayer).getObject(pos)!=null)
-		{
-			GrameUtils.print(pos+" is occupied. Returning.", "Entity", false);
-			return;
-		}
-		addGrameObject(GrameManager.findEntity(eID), pos);
-	}
-
-	public boolean containsEnt(int eID)
+	public boolean containsGrameObject(int goID)
 	{
 		for (GrameObjectLayer gol : GrameManager.findBase(ID).pos)
-			if (gol.contains(eID))
+			if (gol.contains(goID))
 				return true;
 		return false;
 	}
 
-	public Coordinates getEntPos(int eID)
+	public Coordinates getGrameObjectPos(int eID)
 	{
 		return GrameManager.findBase(ID).pos.get(GrameManager.findBase(ID).entLayer).getObjectPos(eID);
 	}
@@ -171,16 +161,17 @@ public class Base
 		return this.pos.get(entLayer);
 	}
 
-	public void moveEnt(int eID, Coordinates pos)
+	public void moveGrameObject(int goID, Coordinates pos)
 	{
 		for (int i = 0; i < this.pos.size(); i++)
-			if (this.pos.get(i).contains(eID) && this.pos.get(i).getObject(pos) == null)
+			if (this.pos.get(i).contains(goID) && (this.pos.get(i).getObject(pos) == null||!this.pos.get(i).getObject(pos).isCollidable()))
 			{
-				Coordinates prev = this.pos.get(i).getObjectPos(eID);
+				Coordinates prev = this.pos.get(i).getObjectPos(goID);
 				this.pos.get(i).setObject(prev, null);
 				calcColor(prev);
-				this.pos.get(i).setObject(pos, GrameManager.findEntity(eID));
-				GrameManager.findEntity(eID).setPos(ID, pos);
+				this.pos.get(i).setObject(pos, GrameManager.findGrameObject(goID));
+				
+				GrameManager.findGrameObject(goID).setPos(ID, pos);
 				calcColor(pos);
 			}
 	}
@@ -205,10 +196,6 @@ public class Base
 
 	public int getDiagonal()
 	{
-		Coordinates ul = new Coordinates(0, 0);
-		Coordinates ur = new Coordinates(GrameManager.findBase(ID).getColumns() - 1, 0);
-		Coordinates dl = new Coordinates(0, GrameManager.findBase(ID).getRows() - 1);
-		Coordinates dr = new Coordinates(GrameManager.findBase(ID).getColumns() - 1, GrameManager.findBase(ID).getRows() - 1);
-		return Math.max(ul.distance(dr), ur.distance(dl));
+		return Math.max(new Coordinates(0, 0).distance(new Coordinates(GrameManager.findBase(ID).getColumns() - 1, GrameManager.findBase(ID).getRows() - 1)), new Coordinates(GrameManager.findBase(ID).getColumns() - 1, 0).distance(new Coordinates(0, GrameManager.findBase(ID).getRows() - 1)));
 	}
 }

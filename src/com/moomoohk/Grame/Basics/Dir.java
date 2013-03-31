@@ -1,4 +1,6 @@
-package com.moomoohk.Grame.Essentials;
+package com.moomoohk.Grame.Basics;
+
+import com.moomoohk.Grame.Essentials.Coordinates;
 
 public class Dir extends Coordinates
 {

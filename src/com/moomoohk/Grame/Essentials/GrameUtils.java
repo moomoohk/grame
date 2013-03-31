@@ -33,13 +33,13 @@ import com.moomoohk.Grame.AI.PlayerSimAI;
 import com.moomoohk.Grame.AI.SimpleChaseAI;
 import com.moomoohk.Grame.AI.SimpleStrollAI;
 import com.moomoohk.Grame.commands.AddEntityAICommand;
-import com.moomoohk.Grame.commands.AddEntityCommand;
+import com.moomoohk.Grame.commands.AddGrameObjectCommand;
 import com.moomoohk.Grame.commands.ClearEntityAI;
 import com.moomoohk.Grame.commands.CreateEntityCommand;
 import com.moomoohk.Grame.commands.DrawCoordinatesCommand;
 import com.moomoohk.Grame.commands.HelpCommand;
 import com.moomoohk.Grame.commands.MakePlayerCommand;
-import com.moomoohk.Grame.commands.MoveEntityCommand;
+import com.moomoohk.Grame.commands.MoveGrameObjectCommand;
 import com.moomoohk.Grame.commands.PrintEntityAICommand;
 import com.moomoohk.Grame.commands.QuitCommand;
 import com.moomoohk.Grame.commands.RenderBaseCommand;
@@ -130,6 +130,7 @@ public class GrameUtils
 		Random r = new Random();
 		return new Color(r.nextFloat(), r.nextFloat(), r.nextFloat());
 	}
+
 	public static Coordinates randomCoordinates(Base b)
 	{
 		return new Coordinates(new Random().nextInt(b.getColumns()), new Random().nextInt(b.getRows()));
@@ -268,13 +269,19 @@ public class GrameUtils
 		return "";
 	}
 
-	public static synchronized void print(String st, String sender, boolean debug)
+	public static synchronized void print(String st, MessageLevel level)
 	{
-		if ((!GrameManager.disablePrints) && (((debug) && (GrameManager.debug)) || (!debug)))
+		if ((!GrameManager.disablePrints) && ((level == MessageLevel.DEBUG || level == MessageLevel.DEBUG_ERROR) && (GrameManager.debug)) || (level != MessageLevel.DEBUG && level != MessageLevel.DEBUG_ERROR))
 		{
 			StackTraceElement caller = Thread.currentThread().getStackTrace()[2];
 			wordQueue.add("[" + caller.getFileName().subSequence(0, caller.getFileName().indexOf(".java")) + ":" + caller.getLineNumber() + "] " + st);
-			console.setConsoleTextColor(Color.white);
+			if (level == MessageLevel.ERROR || level == MessageLevel.DEBUG_ERROR)
+				console.setConsoleTextColor(Color.red);
+			else
+				if(level==MessageLevel.DEBUG)
+					console.setConsoleTextColor(Color.gray.brighter());
+				else
+					console.setConsoleTextColor(Color.white);
 			console.addText(wordQueue.get(0) + "\n");
 			wordQueue.remove(0);
 		}
@@ -337,13 +344,13 @@ public class GrameUtils
 	{
 		ArrayList<Command<?>> commands = new ArrayList<Command<?>>();
 		commands.add(new setVisibleCommand(console, "setvisible", "Toggles the visibility of the main window. Usage: setvisible [true/false]", 0, 1));
-		commands.add(new MoveEntityCommand(console, "move", "Moves an Entity. Usage: move <ent ID> <base ID> <dir>", 3, 4));
+		commands.add(new MoveGrameObjectCommand(console, "move", "Moves a Grame Object. Usage: move <go ID> <base ID> <dir>", 3, 4));
 		commands.add(new HelpCommand(console, "help", "Will print the help of a command. Leave blank for all the commands. Usage: help [command name]", 0, 1));
 		commands.add(new RenderBaseCommand(console, "render", "Will render a base using a render in the Render list. Usage: render <base ID> <render name>", 2, 2));
 		commands.add(new QuitCommand(console, "quit", "Quits the program. Usage: quit", 0, 0));
 		commands.add(new SetMainBaseCommand(console, "setmainbase", "Sets the main Base to display. Usage: setmainbase <base ID>", 1, 1));
 		commands.add(new CreateEntityCommand(console, "createentity", "Creates a new Entity. Usage: createentity [n:name] [t:type] [l:level] [c:color]", 0, 4));
-		commands.add(new AddEntityCommand(console, "addentity", "Adds an Entity to a Base. Usage: addentity <ent ID> <base ID> <x> <y>", 4, 4));
+		commands.add(new AddGrameObjectCommand(console, "addobject", "Adds a Grame Object to a Base. Usage: addobject <go ID> <base ID> <x> <y>", 4, 4));
 		commands.add(new AddEntityAICommand(console, "addentityai", "Adds a MovememntAI to an Entity's AI list. Usage: addentityai <entity ID> <base ID> <movementai name>", 3, 3));
 		commands.add(new MakePlayerCommand(console, "makeplayer", "Turns an Entity into a controllable \"player\". Usage: makeplayer <entity ID> <player 1/2> <base ID> <true/false>", 4, 4));
 		commands.add(new SetEntityOverrideAICommand(console, "setentityoverrideai", "Sets the override AI for a given Entity. Usage: setentityoverrideai <entity ID> <base ID> <override movementai name>", 3, 3));
@@ -352,8 +359,9 @@ public class GrameUtils
 		commands.add(new isOccupiedCommand(console, "isoccupied", "Checks whether Coordinates in a Base are occupied by a Grame object. Usage: isoccupied <base ID> <coordinates x> <coordinates y>", 3, 3));
 		commands.add(new DrawCoordinatesCommand(console, "drawcoordinates", "Draws the coordinates in each square. Usage: drawcoordinates <true/false>", 1, 1));
 		console.loadCommands(commands);
-		print("Loaded " + Command.commands.size() + " commands.", "GrameUtils", false);
+		print("Loaded " + Command.commands.size() + " commands.", MessageLevel.DEBUG);
 	}
+
 	public static void loadBasicAIs()
 	{
 		GrameManager.addAI(new SimpleStrollAI());
@@ -361,9 +369,15 @@ public class GrameUtils
 		GrameManager.addAI(new SimpleChaseAI());
 		GrameManager.addAI(new PlayerSimAI());
 	}
+
 	public static void dumpStackTrace()
 	{
-		for(StackTraceElement ste:Thread.currentThread().getStackTrace())
+		for (StackTraceElement ste : Thread.currentThread().getStackTrace())
 			System.out.println(ste);
+	}
+
+	public enum MessageLevel
+	{
+		ERROR, NORMAL, DEBUG, DEBUG_ERROR
 	}
 }

@@ -37,6 +37,8 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 
+import com.moomoohk.Grame.Essentials.GrameUtils.MessageLevel;
+
 public class CrashManager
 {
 	private static JFrame crashF;
@@ -55,18 +57,18 @@ public class CrashManager
 			return;
 		e.printStackTrace();
 		isOpen = true;
-		GrameUtils.print("Crash detected.", "Crash Manager", false);
+		GrameUtils.print("Crash detected.", MessageLevel.NORMAL);
 		try
 		{
-			GrameUtils.print("Stopping main thread...", "Crash Manager", true);
+			GrameUtils.print("Stopping main thread...", MessageLevel.DEBUG);
 			GrameManager.stop();
 			GrameManager.input = null;
 		}
 		catch (Exception ex)
 		{
-			GrameUtils.print("(Fatal error) //Grame Manager not initialized.", "Crash Manager", false);
+			GrameUtils.print("(Fatal error) //Grame Manager not initialized.", MessageLevel.NORMAL);
 		}
-		GrameUtils.print("Gathering crash info...", "Crash Manager", true);
+		GrameUtils.print("Gathering crash info...", MessageLevel.DEBUG);
 		String line = "0";
 		String className = "Unknown", method = "Unknown", error = "";
 		for (int i = e.getStackTrace().length - 1; i >= 0; i--)
@@ -85,7 +87,7 @@ public class CrashManager
 		method = "Method: " + method + "\n";
 		line = "Line: " + line + "\n";
 		error = "Full error: \n" + error + "\n";
-		GrameUtils.print("Figuring out possible causes...", "Crash Manager", true);
+		GrameUtils.print("Figuring out possible causes...", MessageLevel.DEBUG);
 		if ((reason != null) && (!reason.equals("")))
 		{
 			reasonProvided = true;
@@ -94,7 +96,7 @@ public class CrashManager
 		CrashManager.exception = e;
 		String possCauses = "Could be: \n" + getPossibleCause(className.substring(7)) + "\n";
 		final String message = title + GrameV + exception + cause + className + method + line + OS + "\n\n" + error + "\n" + possCauses;
-		GrameUtils.print("Setting up window GUI...", "Crash Manager", true);
+		GrameUtils.print("Setting up window GUI...", MessageLevel.DEBUG);
 		crashF = new JFrame("CRASH!!!");
 		crashF.setLayout(new FlowLayout());
 		crashF.setResizable(false);
@@ -131,7 +133,7 @@ public class CrashManager
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				GrameUtils.print("Copying...", "Crash Manager", true);
+				GrameUtils.print("Copying...", MessageLevel.DEBUG);
 				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(message), new ClipboardOwner()
 				{
 					public void lostOwnership(Clipboard paramClipboard, Transferable paramTransferable)
@@ -153,7 +155,7 @@ public class CrashManager
 		{
 			public void actionPerformed(ActionEvent arg0)
 			{
-				GrameUtils.print("Passing to emailer...", "Crash Manager", true);
+				GrameUtils.print("Passing to emailer...", MessageLevel.DEBUG);
 				getAddress(message);
 			}
 		});
@@ -197,11 +199,11 @@ public class CrashManager
 		crashF.add(email, "South");
 		crashF.add(quit, "South");
 		crashF.setLocationRelativeTo(null);
-		GrameUtils.print("Showing window...", "Crash Manager", true);
+		GrameUtils.print("Showing window...", MessageLevel.DEBUG);
 		crashF.setVisible(true);
 		email.requestFocus();
 		crashF.getRootPane().setDefaultButton(email);
-		GrameUtils.print("Window is visible.", "Crash Manager", true);
+		GrameUtils.print("Window is visible.", MessageLevel.DEBUG);
 	}
 
 	public static void showException(Exception e)
@@ -211,7 +213,7 @@ public class CrashManager
 
 	private static void getAddress(final String message)
 	{
-		GrameUtils.print("Setting up window GUI...", "Crash Manager", true);
+		GrameUtils.print("Setting up window GUI...", MessageLevel.DEBUG);
 		final JDialog f = new JDialog();
 		f.setResizable(false);
 		f.setSize(520, 120);
@@ -243,7 +245,7 @@ public class CrashManager
 		{
 			public void actionPerformed(ActionEvent arg0)
 			{
-				GrameUtils.print("Emailing...", "Crash Manager", true);
+				GrameUtils.print("Emailing...", MessageLevel.DEBUG);
 				f.setVisible(false);
 				if (field.getText().length() > 0)
 					user = field.getText();
@@ -264,7 +266,7 @@ public class CrashManager
 		f.add(p);
 		f.setModal(true);
 		f.setLocationRelativeTo(null);
-		GrameUtils.print("Showing window...", "Crash Manager", true);
+		GrameUtils.print("Showing window...", MessageLevel.DEBUG);
 		f.setVisible(true);
 	}
 
@@ -336,7 +338,7 @@ public class CrashManager
 		if (cause.equals(""))
 			cause = "Unknown";
 		if (cause.equals("Unknown"))
-			GrameUtils.print("Unknown reason for " + exception.getClass().getSimpleName() + " from class " + className, "Crash Manager", true);
+			GrameUtils.print("Unknown reason for " + exception.getClass().getSimpleName() + " from class " + className, MessageLevel.DEBUG);
 		return cause;
 	}
 
@@ -414,7 +416,7 @@ public class CrashManager
 					}
 				});
 			}
-			GrameUtils.print("Emailing to " + this.to + ".", "Crash Manager", true);
+			GrameUtils.print("Emailing to " + this.to + ".", MessageLevel.DEBUG);
 			final String host = "smtp.gmail.com";
 			Properties props = System.getProperties();
 			props.put("mail.smtp.starttls.enable", "true");
@@ -457,7 +459,7 @@ public class CrashManager
 					}
 					catch (Exception e)
 					{
-						GrameUtils.print("Email failed. (" + e.getMessage() + ")", "Crash Manager", true);
+						GrameUtils.print("Email failed. (" + e.getMessage() + ")", MessageLevel.DEBUG);
 						e.printStackTrace();
 						progD.setVisible(false);
 						progD.dispose();

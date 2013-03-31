@@ -15,10 +15,10 @@ import javax.swing.JFrame;
 import javax.swing.JToggleButton;
 
 import com.moomoohk.Grame.AI.SimpleStrollAI;
+import com.moomoohk.Grame.Basics.Dir;
+import com.moomoohk.Grame.Basics.Entity;
 import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
-import com.moomoohk.Grame.Essentials.Dir;
-import com.moomoohk.Grame.Essentials.Entity;
 import com.moomoohk.Grame.Essentials.GrameManager;
 import com.moomoohk.Grame.Essentials.GrameUtils;
 import com.moomoohk.Grame.Graphics.GrameFrame;
@@ -26,7 +26,7 @@ import com.moomoohk.Grame.Graphics.PlainGridRender;
 import com.moomoohk.Grame.Graphics.RenderManager;
 import com.moomoohk.Grame.Interfaces.Render;
 import com.moomoohk.Grame.commands.HelpCommand;
-import com.moomoohk.Grame.commands.MoveEntityCommand;
+import com.moomoohk.Grame.commands.MoveGrameObjectCommand;
 import com.moomoohk.Grame.commands.QuitCommand;
 import com.moomoohk.Grame.commands.RenderBaseCommand;
 import com.moomoohk.Grame.commands.SetMainBaseCommand;
@@ -58,7 +58,7 @@ public class RenderTest
 		b.addEntity(ent3.ID, new Coordinates(10, 5));
 		ent.addAI(new SimpleStrollAI(), b.ID);
 		//b2.addGrameObject(ent, new Coordinates(10, 10));
-		System.out.println(b.getEntPos(ent.ID));
+		System.out.println(b.getGrameObjectPos(ent.ID));
 		RenderManager.render(b.ID, new PlainGridRender());
 		//RenderManager.render(b2.ID);
 		System.out.println("Base ID: "+b.ID);
@@ -74,7 +74,7 @@ public class RenderTest
 		}
 		ArrayList<Command<?>> commands=new ArrayList<Command<?>>();
 		commands.add(new setVisibleCommand(GrameUtils.console, "setvisible", "Toggles the visibility of a Base. Usage: setvisible [true/false]", 0, 1));
-		commands.add(new MoveEntityCommand(GrameUtils.console, "move", "Moves an Entity. Usage: move <ent ID> <base ID> <dir>", 3, 4));
+		commands.add(new MoveGrameObjectCommand(GrameUtils.console, "move", "Moves an Entity. Usage: move <ent ID> <base ID> <dir>", 3, 4));
 		commands.add(new HelpCommand(GrameUtils.console, "help", "Will print the help of a command. Leave blank for all the commands. Usage: help [command name]", 0, 1));
 		commands.add(new RenderBaseCommand(GrameUtils.console, "render", "Will render a base using a render in the Render list. Usage: render <base ID> <render name>", 2, 2));
 		commands.add(new QuitCommand(GrameUtils.console, "quit", "Quits the program. Usage: quit", 0, 0));

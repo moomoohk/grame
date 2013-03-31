@@ -6,14 +6,17 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.moomoohk.Grame.Basics.Dir;
+import com.moomoohk.Grame.Essentials.GrameUtils.MessageLevel;
 import com.moomoohk.Grame.Graphics.GridRender;
 import com.moomoohk.Grame.Graphics.RenderManager;
+import com.moomoohk.Grame.Interfaces.GrameObject;
 import com.moomoohk.Grame.Interfaces.MovementAI;
 import com.moomoohk.Grame.Interfaces.Render;
 
 public class GrameManager implements Runnable
 {
-	public static ArrayList<Entity> entList;
+	public static ArrayList<GrameObject> grameObjectList;
 	public static ArrayList<Base> baseList;
 	public static ArrayList<Render> renders = new ArrayList<Render>();
 	public static HashMap<String, MovementAI> ais = new HashMap<String, MovementAI>();
@@ -28,9 +31,8 @@ public class GrameManager implements Runnable
 	public static int time = 1;
 	public static Dir dir1 = null, dir2 = null;
 	public static Render defaultRender = new GridRender();
-	public static final String VERSION_NUMBER = "2.1";
+	public static final String VERSION_NUMBER = "3.0";
 	public static boolean showConsole = false;
-	public static int playerSpeed = 4;
 
 	static
 	{
@@ -47,16 +49,16 @@ public class GrameManager implements Runnable
 			public void run()
 			{
 				disposeAll();
-				GrameUtils.print("Exiting...", "Grame Manager", false);
+				GrameUtils.print("Exiting...", MessageLevel.NORMAL);
 			}
 		}));
 		System.setOut(new GrameManager().new OutputOverride(System.out));
 		System.setErr(new GrameManager().new OutputOverride(System.err));
 		GrameUtils.console.setVisible(true);
-		entList = new ArrayList<Entity>();
+		grameObjectList=new ArrayList<GrameObject>();
 		baseList = new ArrayList<Base>();
 		input = new InputHandler();
-		new RenderManager();
+		//new RenderManager();
 		GrameUtils.console.setAlwaysOnTop(true);
 		start();
 	}
@@ -68,7 +70,7 @@ public class GrameManager implements Runnable
 		running = true;
 		thread = new Thread(new GrameManager(), "Game");
 		thread.start();
-		GrameUtils.print("Grame is initialized.", "Grame Manager", false);
+		GrameUtils.print("Grame "+VERSION_NUMBER+" is initialized.", MessageLevel.NORMAL);
 	}
 
 	public static synchronized void stop()
@@ -113,7 +115,8 @@ public class GrameManager implements Runnable
 					frames = 0;
 				}
 				RenderManager.tick();
-				tickEnts();
+				//tickEnts();
+				tickGrameObjects();
 				tickBases();
 			}
 
@@ -167,18 +170,19 @@ public class GrameManager implements Runnable
 			System.exit(0);
 	}
 
-	private static void tickEnts()
+	private static void tickGrameObjects()
 	{
 		try
 		{
-			for (int i=0; i<entList.size(); i++)
+			for (int i=0; i<grameObjectList.size(); i++)
 			{
-				Entity ent=entList.get(i);
-				if (ent == null )
+				GrameObject go=grameObjectList.get(i);
+				if (go == null )
 					continue;
- 				for(int j=0; j<baseList.size(); j++)
-					if (time % ent.getSpeed() == 0 && !ent.isPaused())
-						ent.tick(j);
+				if(baseList!=null)
+					for(int bID=0; bID<baseList.size(); bID++)
+						if (findBase(bID).containsGrameObject(go.ID)&&go.getSpeed()!=0&&time % go.getSpeed() == 0&& !go.isPaused())
+							go.tick(bID);
 			}
 		}
 		catch (Exception e)
@@ -211,22 +215,21 @@ public class GrameManager implements Runnable
 
 	public static void disposeAll()
 	{
-		GrameUtils.print("Disposing of all the Bases in the Base list...", "Grame Manager", false);
+		GrameUtils.print("Disposing of all the Bases in the Base list...", MessageLevel.NORMAL);
 		for (int i = 0; i < baseList.size(); i++)
 		{
-			GrameUtils.print("Disposing of " + baseList.get(i).ID, "Grame Manager", true);
+			GrameUtils.print("Disposing of " + baseList.get(i).ID, MessageLevel.NORMAL);
 			baseList.remove(i);
 		}
 		baseList = null;
-		GrameUtils.print("Done disposing of Bases.", "Grame Manager", false);
+		GrameUtils.print("Done disposing of Bases.", MessageLevel.NORMAL);
 	}
 
-	public static int add(Entity ent)
+	public static int add(GrameObject go)
 	{
-		entList.add(ent);
-		GrameUtils.print("Added " + ent.getName() + " to the Entity list (ID:" + (entList.size() - 1) + ")", "Grame Manager", false);
-		GrameUtils.print("Made " + ent.getName() + " a render list", "Grame Manager", false);
-		return entList.size() - 1;
+		grameObjectList.add(go);
+		GrameUtils.print("Added " + go.getName() + " to the Grame Objects list (ID:" + (grameObjectList.size() - 1) + ")", MessageLevel.NORMAL);
+		return grameObjectList.size() - 1;
 	}
 
 	public static int add(Base b)
@@ -234,7 +237,7 @@ public class GrameManager implements Runnable
 		try
 		{
 			baseList.add(b);
-			GrameUtils.print("Added a Base to the Base list (ID:" + (baseList.size() - 1) + ")", "Grame Manager", false);
+			GrameUtils.print("Added a Base to the Base list (ID:" + (baseList.size() - 1) + ")", MessageLevel.NORMAL);
 			return baseList.size() - 1;
 		}
 		catch (Exception e)
@@ -244,11 +247,11 @@ public class GrameManager implements Runnable
 		return -1;
 	}
 
-	public static Entity findEntity(int id)
+	public static GrameObject findGrameObject(int id)
 	{
 		try
 		{
-			return entList.get(id);
+			return grameObjectList.get(id);
 		}
 		catch (Exception e)
 		{
@@ -266,7 +269,7 @@ public class GrameManager implements Runnable
 		}
 		catch (Exception e)
 		{
-			GrameUtils.print("Base with ID:" + id + " not found! Returning null instead.", "Grame Manager", false);
+			GrameUtils.print("Base with ID:" + id + " not found! Returning null instead.", MessageLevel.ERROR);
 		}
 		return null;
 	}
@@ -289,7 +292,7 @@ public class GrameManager implements Runnable
 			if (temp.getName().equals(render.getName()))
 				return;
 		renders.add(render);
-		GrameUtils.print("Added " + render.getName() + " to the render list.", "Grame Manager", false);
+		GrameUtils.print("Added " + render.getName() + " to the render list.", MessageLevel.DEBUG);
 	}
 
 	public static void addAI(MovementAI ai)
@@ -301,13 +304,13 @@ public class GrameManager implements Runnable
 			if (ais.get(temp).toString().equals(ai.toString()))
 				return;
 		ais.put(name, ai);
-		GrameUtils.print("Added " + name + " to the AI list.", "Grame Manager", false);
+		GrameUtils.print("Added " + name + " to the AI list.", MessageLevel.DEBUG);
 	}
 
-	public static void pauseAllEntities(boolean f)
+	public static void pauseAllGrameObjects(boolean f)
 	{
-		for (Entity ent : entList)
-			ent.pause(f);
+		for (GrameObject go : grameObjectList)
+			go.pause(f);
 	}
 
 	private class OutputOverride extends PrintStream

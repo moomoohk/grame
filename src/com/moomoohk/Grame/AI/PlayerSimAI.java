@@ -2,21 +2,22 @@ package com.moomoohk.Grame.AI;
 
 import java.util.Random;
 
+import com.moomoohk.Grame.Basics.Dir;
+import com.moomoohk.Grame.Basics.Entity;
 import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
-import com.moomoohk.Grame.Essentials.Dir;
-import com.moomoohk.Grame.Essentials.Entity;
 import com.moomoohk.Grame.Interfaces.MovementAI;
 
 public class PlayerSimAI extends MovementAI
 {
 	private Dir direction;
-	private int step;
+	private int step, tries;
 
 	public PlayerSimAI()
 	{
 		super();
 		this.step = 0;
+		this.tries=0;
 	}
 
 	@Override
@@ -42,8 +43,12 @@ public class PlayerSimAI extends MovementAI
 		if(b.isOccupied(next))
 		{
 			this.step=0;
+			this.tries++;
+			if(this.tries==10)
+				return pos;
 			return getNext(pos, targetPos, b, ent1, ent2);
 		}
+		this.tries=0;
 		this.step--;
 		return next;
 	}

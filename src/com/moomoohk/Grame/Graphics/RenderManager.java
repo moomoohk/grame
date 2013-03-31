@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 
 import com.moomoohk.Grame.Essentials.GrameManager;
 import com.moomoohk.Grame.Essentials.GrameUtils;
+import com.moomoohk.Grame.Essentials.GrameUtils.MessageLevel;
 import com.moomoohk.Grame.Interfaces.Render;
 
 public class RenderManager
@@ -26,11 +27,11 @@ public class RenderManager
 	public static int mainBase = -1;
 	public static boolean drawCoordinates=false;
 
-	public RenderManager()
+	static
 	{
 		renders = new HashMap<Integer, Render>();
 		loadRenders();
-		GrameUtils.print("Initialized successfully.", "Render Manager", false);
+		GrameUtils.print("Initialized successfully.", MessageLevel.NORMAL);
 	}
 
 	public static void render(int bID)

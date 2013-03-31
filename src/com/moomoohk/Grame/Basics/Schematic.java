@@ -1,6 +1,11 @@
-package com.moomoohk.Grame.Essentials;
+package com.moomoohk.Grame.Basics;
 
 import java.awt.Color;
+
+import com.moomoohk.Grame.Essentials.Base;
+import com.moomoohk.Grame.Essentials.Coordinates;
+import com.moomoohk.Grame.Essentials.GrameUtils;
+import com.moomoohk.Grame.Essentials.GrameUtils.MessageLevel;
 
 public class Schematic
 {
@@ -287,21 +292,21 @@ public class Schematic
 		amount %= 4;
 		if (s.width != s.height)
 		{
-			GrameUtils.print("Sorry, I can't rotate non-square schematics just yet. Returning your schematic.", "Schematic Rotator", false);
+			GrameUtils.print("Sorry, I can't rotate non-square schematics just yet. Returning your schematic.", MessageLevel.ERROR);
 			return s;
 		}
 		if (amount == 0)
 			return s;
-		GrameUtils.print("Rotating " + d.toString().toLowerCase() + amount + " times.", "Schematic Rotator", true);
+		GrameUtils.print("Rotating " + d.toString().toLowerCase() + amount + " times.", MessageLevel.DEBUG);
 		if (!d.equals(Dir.LEFT))
 			if (d.equals(Boolean.valueOf(!d.equals(Dir.RIGHT))))
 			{
-				GrameUtils.print("Invalid direction! Use only Dir.LEFT or Dir.RIGHT. Returning your schematic.", "Schematic Rotator", false);
+				GrameUtils.print("Invalid direction! Use only Dir.LEFT or Dir.RIGHT. Returning your schematic.", MessageLevel.ERROR);
 				return s;
 			}
 		if (amount < 0)
 		{
-			GrameUtils.print("Invalid amount! Use only positive numbers. Returning your schematic.", "Schematic Rotator", false);
+			GrameUtils.print("Invalid amount! Use only positive numbers. Returning your schematic.", MessageLevel.ERROR);
 			return s;
 		}
 		Schematic sn = new Schematic(s.width(), s.height());
