@@ -62,7 +62,6 @@ public class CrashManager
 		{
 			GrameUtils.print("Stopping main thread...", MessageLevel.DEBUG);
 			GrameManager.stop();
-			GrameManager.input = null;
 		}
 		catch (Exception ex)
 		{
@@ -79,7 +78,7 @@ public class CrashManager
 			method = e.getStackTrace()[i].getMethodName();
 		}
 		String OS = "OS: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + "\n";
-		String title = "- CRASHLOG -\nGame: " + GrameManager.gameName + "\n";
+		String title = "- CRASHLOG -\nGame: " + GrameManager.getGameName() + "\n";
 		String GrameV = "Version: " + GrameManager.VERSION_NUMBER + "\n";
 		String exception = "Exception: " + e.getClass().getSimpleName() + "\n";
 		String cause = "Cause: " + e.getLocalizedMessage() + "\n";

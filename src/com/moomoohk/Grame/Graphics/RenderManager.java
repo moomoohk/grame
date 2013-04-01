@@ -47,7 +47,7 @@ public class RenderManager
 		mainBase=bID;
 		mainFrame.setTitle("Rendering Base number "+mainBase);
 		if (render == null)
-			render = GrameManager.defaultRender;
+			render = GrameManager.getDefaultRender();
 		renders.put(bID, render);
 		BufferStrategy bs = mainCanvas.getBufferStrategy();
 		if (bs == null)
@@ -106,7 +106,7 @@ public class RenderManager
 				
 				public void focusLost(FocusEvent paramFocusEvent)
 				{
-					GrameManager.input.resetKeys();
+					GrameManager.getInputHandler().resetKeys();
 				}
 				
 				public void focusGained(FocusEvent paramFocusEvent)

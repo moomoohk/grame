@@ -17,22 +17,22 @@ public class SetEntityOverrideAICommand extends Command<Console>
 	@Override
 	public void execute(Console arg0, String[] arg1)
 	{
-		if(GrameManager.ais.size()==0)
+		if(GrameManager.getAIs().size()==0)
 		{
 			this.message="No AIs loaded!";
 			return;
 		}
 		if(!arg1[2].equalsIgnoreCase("null"))
 		{
-			if(GrameManager.ais.get(arg1[2])==null||(GrameManager.ais.get(arg1[2])!=null&&!GrameManager.ais.get(arg1[2]).isOverride()))
+			if(GrameManager.getAIs().get(arg1[2])==null||(GrameManager.getAIs().get(arg1[2])!=null&&!GrameManager.getAIs().get(arg1[2]).isOverride()))
 			{
 				this.message="Valid AIs: ";
-				for(String name:GrameManager.ais.keySet())
-					if(GrameManager.ais.get(name).isOverride())
+				for(String name:GrameManager.getAIs().keySet())
+					if(GrameManager.getAIs().get(name).isOverride())
 						this.message+=name+ " ";
 				return;
 			}
-			((Entity)(GrameManager.findGrameObject(Integer.parseInt(arg1[0])))).setOverrideAI(GrameManager.ais.get(arg1[2]), Integer.parseInt(arg1[1]));
+			((Entity)(GrameManager.findGrameObject(Integer.parseInt(arg1[0])))).setOverrideAI(GrameManager.getAIs().get(arg1[2]), Integer.parseInt(arg1[1]));
 		}
 		else
 			((Entity)(GrameManager.findGrameObject(Integer.parseInt(arg1[0])))).setOverrideAI(null, Integer.parseInt(arg1[1]));

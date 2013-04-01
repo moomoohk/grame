@@ -21,7 +21,6 @@ public class Entity extends GrameObject
 	private int range;
 	private int points;
 	private HashMap<Integer, Boolean> player;
-	private boolean showRange;
 	private int targetID;
 	protected EntityGenerator randomGen;
 	public ArrayList<Object> mods;
@@ -53,7 +52,6 @@ public class Entity extends GrameObject
 		this.targetID = -1;
 		this.range = 5;
 		this.setPoints(0);
-		this.showRange = false;
 		this.AI = new HashMap<Integer, ArrayList<MovementAI>>();
 		this.mods = new ArrayList<Object>();
 		this.activeAI = new HashMap<Integer, MovementAI>();
@@ -63,28 +61,18 @@ public class Entity extends GrameObject
 	public void tick(int bID)
 	{
 		determineAI(bID);
-		/*
-		 * if (this.activeAI != null) { if (this.activeAI.equals(new
-		 * SimpleChaseAI())) this.color = Color.red; if
-		 * (this.activeAI.equals(new StrollAI())) this.color = Color.green; }
-		 */
 		Coordinates c = getPos(bID);
 		Coordinates target = null;
 		if ((Entity) GrameManager.findGrameObject(targetID) != null)
 			target = ((Entity) (GrameManager.findGrameObject(targetID))).getPos(bID);
 		if (this.activeAI.size() != 0 && this.activeAI.get(bID) != null)
-			c = this.activeAI.get(bID).getNext(getPos(bID), target, GrameManager.findBase(bID), this, (Entity)GrameManager.findGrameObject(targetID));
-		/*
-		 * if (this.showRange) { this.b.drawCircle(this.range, this.pos,
-		 * this.color); if (!this.b.isOccupied(c)) {
-		 * this.b.drawCircle(this.range, this.pos, null); } }
-		 */
+			c = this.activeAI.get(bID).getNext(getPos(bID), target, GrameManager.findBase(bID), this, (Entity) GrameManager.findGrameObject(targetID));
 		GrameManager.findBase(bID).moveGrameObject(ID, c);
 	}
 
 	private void determineAI(int bID)
 	{
-		if (!GrameManager.findBase(bID).containsGrameObject(ID)||(this.AI.get(bID) == null && this.overrideAI.get(bID) == null) || (this.AI.get(bID) != null && this.AI.get(bID).size() == 0 && this.overrideAI.get(bID) == null))
+		if (!GrameManager.findBase(bID).containsGrameObject(ID) || (this.AI.get(bID) == null && this.overrideAI.get(bID) == null) || (this.AI.get(bID) != null && this.AI.get(bID).size() == 0 && this.overrideAI.get(bID) == null))
 		{
 			this.activeAI.remove(bID);
 			return;
@@ -97,7 +85,7 @@ public class Entity extends GrameObject
 				Coordinates target = null;
 				if (targetID != -1)
 					target = GrameManager.findGrameObject(targetID).getPos(bID);
-				if (!this.AI.get(bID).get(i).isValid(getPos(bID), target, GrameManager.findBase(bID), this, (Entity)GrameManager.findGrameObject(targetID)))
+				if (!this.AI.get(bID).get(i).isValid(getPos(bID), target, GrameManager.findBase(bID), this, (Entity) GrameManager.findGrameObject(targetID)))
 					continue;
 				temp = (MovementAI) this.AI.get(bID).get(i);
 				break;
@@ -236,7 +224,7 @@ public class Entity extends GrameObject
 	{
 		return true;
 	}
-	
+
 	public void setType(String type)
 	{
 		this.type = type;

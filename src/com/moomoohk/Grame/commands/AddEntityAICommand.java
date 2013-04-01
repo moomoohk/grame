@@ -16,20 +16,20 @@ public class AddEntityAICommand extends Command<Console>
 	@Override
 	public void execute(Console arg0, String[] arg1)
 	{
-		if(GrameManager.ais.size()==0)
+		if(GrameManager.getAIs().size()==0)
 		{
 			this.message="No AIs loaded!";
 			return;
 		}
-		if(GrameManager.ais.get(arg1[2])==null)
+		if(GrameManager.getAIs().get(arg1[2])==null)
 		{
 			this.message="Valid AIs: ";
-			for(String name:GrameManager.ais.keySet())
+			for(String name:GrameManager.getAIs().keySet())
 				this.message+=name+ " ";
 			return;
 		}
 		this.message="";
-		((Entity)(GrameManager.findGrameObject(Integer.parseInt(arg1[0])))).addAI(GrameManager.ais.get(arg1[2]), Integer.parseInt(arg1[1]));
+		((Entity)(GrameManager.findGrameObject(Integer.parseInt(arg1[0])))).addAI(GrameManager.getAIs().get(arg1[2]), Integer.parseInt(arg1[1]));
 	}
 }
 

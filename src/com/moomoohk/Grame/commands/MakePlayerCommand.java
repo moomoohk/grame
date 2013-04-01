@@ -18,7 +18,7 @@ public class MakePlayerCommand extends Command<Console>
 	{
 		if(arg1[0].equalsIgnoreCase("all"))
 		{
-			for(int i=0; i<GrameManager.grameObjectList.size(); i++)
+			for(int i=0; i<GrameManager.getObjectListLength(); i++)
 				if(GrameManager.findGrameObject(i) instanceof Entity)
 					((Entity)(GrameManager.findGrameObject(i))).makePlayer(Integer.parseInt(arg1[1]), Boolean.parseBoolean(arg1[3]), Integer.parseInt(arg1[2]));
 		}

@@ -13,7 +13,7 @@ public class Wall extends GrameObject
 
 	public Wall(Color color)
 	{
-		super("Wall", 0, color, false);
+		super("Wall", 1, color, false);
 	}
 
 	public boolean isCollidable()
@@ -24,6 +24,5 @@ public class Wall extends GrameObject
 	@Override
 	public void tick(int bID)
 	{
-		
 	}
 }

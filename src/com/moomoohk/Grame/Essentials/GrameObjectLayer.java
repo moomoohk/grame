@@ -29,7 +29,14 @@ public class GrameObjectLayer
 
 	public GrameObject getObject(Coordinates pos)
 	{
-		return this.objects[pos.x + pos.y * width];
+		try
+		{
+			return this.objects[pos.x + pos.y * width];
+		}
+		catch(Exception e)
+		{
+			return null;
+		}
 	}
 
 	public Coordinates getObjectPos(int goID)

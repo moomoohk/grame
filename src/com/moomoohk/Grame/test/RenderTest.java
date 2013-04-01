@@ -40,7 +40,7 @@ public class RenderTest
 	public static void main(String[] args)
 	{
 		new GrameManager();
-		GrameManager.debug=true;
+		GrameManager.setDebug(true);
 		/*Base b = new Base(20, 20, 30, "This is a normal grame base", false);
 		b.setWraparound(true);
 		b.loadSchem(5);

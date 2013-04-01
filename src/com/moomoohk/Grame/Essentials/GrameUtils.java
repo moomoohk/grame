@@ -271,14 +271,14 @@ public class GrameUtils
 
 	public static synchronized void print(String st, MessageLevel level)
 	{
-		if ((!GrameManager.disablePrints) && ((level == MessageLevel.DEBUG || level == MessageLevel.DEBUG_ERROR) && (GrameManager.debug)) || (level != MessageLevel.DEBUG && level != MessageLevel.DEBUG_ERROR))
-		{
+		if (!GrameManager.isDisablePrints()&&((level==MessageLevel.DEBUG||level==MessageLevel.DEBUG_ERROR&&GrameManager.isDebug())||(level==MessageLevel.SPAM&&GrameManager.isSpam())||(level==MessageLevel.NORMAL)||(level==MessageLevel.ERROR)))
+		{		
 			StackTraceElement caller = Thread.currentThread().getStackTrace()[2];
 			wordQueue.add("[" + caller.getFileName().subSequence(0, caller.getFileName().indexOf(".java")) + ":" + caller.getLineNumber() + "] " + st);
 			if (level == MessageLevel.ERROR || level == MessageLevel.DEBUG_ERROR)
 				console.setConsoleTextColor(Color.red);
 			else
-				if(level==MessageLevel.DEBUG)
+				if (level == MessageLevel.DEBUG)
 					console.setConsoleTextColor(Color.gray.brighter());
 				else
 					console.setConsoleTextColor(Color.white);
@@ -378,6 +378,6 @@ public class GrameUtils
 
 	public enum MessageLevel
 	{
-		ERROR, NORMAL, DEBUG, DEBUG_ERROR
+		ERROR, NORMAL, DEBUG, DEBUG_ERROR, SPAM
 	}
 }

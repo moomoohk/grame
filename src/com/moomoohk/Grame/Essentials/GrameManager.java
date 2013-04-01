@@ -16,23 +16,24 @@ import com.moomoohk.Grame.Interfaces.Render;
 
 public class GrameManager implements Runnable
 {
-	public static ArrayList<GrameObject> grameObjectList;
-	public static ArrayList<Base> baseList;
-	public static ArrayList<Render> renders = new ArrayList<Render>();
-	public static HashMap<String, MovementAI> ais = new HashMap<String, MovementAI>();
-	public static boolean running = false;
-	public static boolean debug = false;
-	public static boolean disablePrints = false;
-	public static boolean initialized = false;
-	public static String gameName = "Grame";
-	public static InputHandler input;
-	public static Thread thread;
-	public static int fps = 0;
-	public static int time = 1;
+	private static ArrayList<GrameObject> grameObjectList;
+	private static ArrayList<Base> baseList;
+	private static HashMap<String, Render> renders = new HashMap<String, Render>();
+	private static HashMap<String, MovementAI> ais = new HashMap<String, MovementAI>();
+	private static boolean running = false;
+	private static boolean debug = false;
+	private static boolean disablePrints = false;
+	private static boolean initialized = false;
+	private static boolean spam=false;
+	private static String gameName = "Grame";
+	private static InputHandler input;
+	private static Thread thread;
+	private static int fps = 0;
+	private static int time = 1;
 	public static Dir dir1 = null, dir2 = null;
-	public static Render defaultRender = new GridRender();
+	private static Render defaultRender = new GridRender();
 	public static final String VERSION_NUMBER = "3.0";
-	public static boolean showConsole = false;
+	private static boolean showConsole;
 
 	static
 	{
@@ -58,7 +59,7 @@ public class GrameManager implements Runnable
 		grameObjectList=new ArrayList<GrameObject>();
 		baseList = new ArrayList<Base>();
 		input = new InputHandler();
-		//new RenderManager();
+		showConsole=false;
 		GrameUtils.console.setAlwaysOnTop(true);
 		start();
 	}
@@ -110,7 +111,7 @@ public class GrameManager implements Runnable
 				tickCount++;
 				if (tickCount % 60 != 0)
 				{
-					fps = frames;
+					fps=frames;
 					prev += 1000L;
 					frames = 0;
 				}
@@ -278,21 +279,32 @@ public class GrameManager implements Runnable
 	{
 		gameName = name;
 	}
+	
+	public static String getGameName()
+	{
+		return gameName;
+	}
 
 	public static void setDefaultRender(Render render)
 	{
 		defaultRender = render;
+	}
+	
+	public static Render getDefaultRender()
+	{
+		return defaultRender;
 	}
 
 	public static void addRender(Render render)
 	{
 		if (render == null)
 			return;
-		for (Render temp : renders)
-			if (temp.getName().equals(render.getName()))
+		String name = render.getName().toLowerCase().trim().replace(' ', '_');
+		for (String temp : renders.keySet())
+			if (renders.get(temp).getName().equals(render.getName()))
 				return;
-		renders.add(render);
-		GrameUtils.print("Added " + render.getName() + " to the render list.", MessageLevel.DEBUG);
+		renders.put(name, render);
+		GrameUtils.print("Added " + name + " to the render list.", MessageLevel.DEBUG);
 	}
 
 	public static void addAI(MovementAI ai)
@@ -313,6 +325,76 @@ public class GrameManager implements Runnable
 			go.pause(f);
 	}
 
+	public static void setDebug(boolean debug)
+	{
+		GrameManager.debug = debug;
+	}
+
+	public static boolean isDebug()
+	{
+		return debug;
+	}
+
+	public static void setDisablePrints(boolean disablePrints)
+	{
+		GrameManager.disablePrints = disablePrints;
+	}
+
+	public static boolean isDisablePrints()
+	{
+		return disablePrints;
+	}
+
+	public static boolean isInitialized()
+	{
+		return initialized;
+	}
+
+	public static void setSpam(boolean spam)
+	{
+		GrameManager.spam = spam;
+	}
+
+	public static boolean isSpam()
+	{
+		return spam;
+	}
+
+	public static int getFps()
+	{
+		return fps;
+	}
+
+	public static void showConsole(boolean showConsole)
+	{
+		GrameManager.showConsole = showConsole;
+	}
+	
+	public static boolean showingConsole()
+	{
+		return showConsole;
+	}
+	
+	public static InputHandler getInputHandler()
+	{
+		return input;
+	}
+	
+	public static HashMap<String, MovementAI> getAIs()
+	{
+		return ais;
+	}
+	
+	public static HashMap<String, Render> getRenders()
+	{
+		return renders;
+	}
+	
+	public static int getObjectListLength()
+	{
+		return grameObjectList.size();
+	}
+	
 	private class OutputOverride extends PrintStream
 	{
 		public OutputOverride(OutputStream str)
@@ -326,7 +408,7 @@ public class GrameManager implements Runnable
 			super.write(b);
 			String text = new String(b).trim();
 			if (!text.equals("") && !text.equals("\n"))
-				GrameUtils.console.addText("[From Console (" + Thread.currentThread().getStackTrace()[9].getFileName().subSequence(0, Thread.currentThread().getStackTrace()[9].getFileName().indexOf(".java")) + ":" + Thread.currentThread().getStackTrace()[9].getLineNumber() + ")] " + text + "\n");
+				GrameUtils.print("[From Console (" + Thread.currentThread().getStackTrace()[9].getFileName().subSequence(0, Thread.currentThread().getStackTrace()[9].getFileName().indexOf(".java")) + ":" + Thread.currentThread().getStackTrace()[9].getLineNumber() + ")] " + text, MessageLevel.NORMAL);
 		}
 
 		@Override
@@ -335,7 +417,7 @@ public class GrameManager implements Runnable
 			super.write(buf, off, len);
 			String text = new String(buf, off, len).trim();
 			if (!text.equals("") && !text.equals("\n"))
-				GrameUtils.console.addText("[From Console (" + Thread.currentThread().getStackTrace()[9].getFileName().subSequence(0, Thread.currentThread().getStackTrace()[9].getFileName().indexOf(".java")) + ":" + Thread.currentThread().getStackTrace()[9].getLineNumber() + ")] " + text + "\n");
+				GrameUtils.print("[From Console (" + Thread.currentThread().getStackTrace()[9].getFileName().subSequence(0, Thread.currentThread().getStackTrace()[9].getFileName().indexOf(".java")) + ":" + Thread.currentThread().getStackTrace()[9].getLineNumber() + ")] " + text, MessageLevel.NORMAL);
 		}
 
 		@Override

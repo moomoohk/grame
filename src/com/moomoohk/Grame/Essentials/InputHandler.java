@@ -32,17 +32,17 @@ public class InputHandler implements KeyEventDispatcher
 		case KeyEvent.KEY_PRESSED:
 			if ((keyCode > 0) && (keyCode < key.length))
 				key[keyCode] = true;
-			GrameUtils.print("Key pressed: " + e.getKeyCode(), MessageLevel.DEBUG);
+			GrameUtils.print("Key pressed: " + e.getKeyCode(), MessageLevel.SPAM);
 			break;
 		case KeyEvent.KEY_RELEASED:
 			if ((keyCode > 0) && (keyCode < key.length))
 				key[keyCode] = false;
-			GrameUtils.print("Key released: " + e.getKeyCode(), MessageLevel.DEBUG);
+			GrameUtils.print("Key released: " + e.getKeyCode(), MessageLevel.SPAM);
 			break;
 		case KeyEvent.KEY_TYPED:
 			if ((keyCode > 0) && (keyCode < key.length))
 				key[keyCode] = true;
-			GrameUtils.print("Key pressed: " + e.getKeyCode(), MessageLevel.DEBUG);
+			GrameUtils.print("Key pressed: " + e.getKeyCode(), MessageLevel.SPAM);
 			break;
 		}
 		return false;

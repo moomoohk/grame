@@ -18,11 +18,13 @@ public class AISystemTest
 {
 	public static void main(String[] args)
 	{
-		GrameManager.debug=true;
+		GrameManager.setDebug(true);
+		GrameManager.setSpam(false);
 		GrameUtils.loadBasicCommands();
 		GrameUtils.loadBasicAIs();
 		Base b = new Base(20, 20);
-		Schematic s=new Schematic();
+		Schematic s=new Schematic(12);
+		System.out.println(s.toString());
 		b.setWraparound(true);
 		generatePlayers(1, 1, b);
 		generatePlayerSims(5, b);
@@ -59,7 +61,7 @@ public class AISystemTest
 			ent.setRange(b.getDiagonal());
 			ent.setTarget(target.ID);
 			ent.setColor(Color.red);
-			ent.setSpeed(5);
+			ent.setSpeed(2);
 			Coordinates temp=GrameUtils.randomCoordinates(b);
 			while(b.isOccupied(temp))
 				temp=GrameUtils.randomCoordinates(b);
@@ -73,7 +75,7 @@ public class AISystemTest
 		{
 			Entity ent = new Entity();
 			ent.makePlayer(number, true, b.ID);
-			ent.setSpeed(2);
+			ent.setSpeed(1);
 			ent.setColor(Color.green);
 			Coordinates temp=GrameUtils.randomCoordinates(b);
 			while(b.isOccupied(temp))
@@ -89,7 +91,7 @@ public class AISystemTest
 			Entity ent = new Entity();
 			ent.setColor(Color.yellow);
 			ent.setOverrideAI(new PlayerSimAI(), b.ID);
-			ent.setSpeed(4);
+			ent.setSpeed(1);
 			Coordinates temp=GrameUtils.randomCoordinates(b);
 			while(b.isOccupied(temp))
 				temp=GrameUtils.randomCoordinates(b);
@@ -99,6 +101,11 @@ public class AISystemTest
 	public static void generateWalls(int amount, Base b)
 	{
 		for(int i=1; i<=amount; i++)
-			b.addGrameObject(new Wall(), GrameUtils.randomCoordinates(b));
+		{
+			Coordinates temp=GrameUtils.randomCoordinates(b);
+			while(b.isOccupied(temp))
+				temp=GrameUtils.randomCoordinates(b);
+			b.addGrameObject(new Wall(), temp);
+		}
 	}
 }

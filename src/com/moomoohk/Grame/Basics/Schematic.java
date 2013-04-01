@@ -16,11 +16,12 @@ public class Schematic
 
 	public Schematic()
 	{
-		this((int) (Math.random() * 13.0D));
+		this((int) (Math.random() * 13));
 	}
 
 	public Schematic(int type)
 	{
+		System.out.println(type);
 		this.type = type;
 		this.map = new Color[5][5];
 		this.height = this.map.length;
@@ -330,36 +331,47 @@ public class Schematic
 
 	public void load(Base b, Coordinates loc)
 	{
-		//		if (b.getEdges())
-		//		{
-		//			if (loc.getX() < 3)
-		//				loc = new Coordinates(3, loc.getY());
-		//			if (loc.getX() > getColumns() - 4)
-		//				loc = new Coordinates(getColumns() - 4, loc.getY());
-		//			if (loc.getY() < 3)
-		//				loc = new Coordinates(loc.getX(), 3);
-		//			if (loc.getY() > getRows() - 4)
-		//				loc = new Coordinates(loc.getX(), getRows() - 4);
-		//		}
 		int sx = 0;
 		int sy = 0;
-		int mapx = loc.getX() - 2;
-		int mapy = loc.getY() - 2;
-		for (int i = loc.getY() - 2; i < loc.getY() + 3; i++)
+		int mapx = loc.getX();
+		int mapy = loc.getY();
+		for (int i = loc.getY(); i < loc.getY() + this.height; i++)
 		{
 			mapy = i;
-			for (int j = loc.getX() - 2; j < loc.getX() + 3; j++)
+			for (int j = loc.getX(); j < loc.getX()+this.width; j++)
 			{
 				mapx = j;
+				//System.out.println((this.map[sy][sx]==null)+" "+!b.isOccupied(new Coordinates(mapx, mapy))+" "+b.isInMap(new Coordinates(mapx, mapy))+" "+new Coordinates(mapx, mapy));
 				if(this.map[sy][sx]==null)
 					continue;
 				if (b.isInMap(new Coordinates(mapx, mapy)) && !b.isOccupied(new Coordinates(mapx, mapy)))
+				{
+				//	System.out.println("hi");
 					b.addGrameObject(new Wall(getColor(new Coordinates(sx, sy))), new Coordinates(mapx, mapy));
+				}
 				sx++;
 			}
 			sx = 0;
 			sy++;
 		}
+	}
+	public String toString()
+	{
+		String st="";
+		for(int i=0; i<width; i++)
+		{
+			for(int j=0; j<height; j++)
+			{
+				st+="[";
+				if(this.map[i][j]!=null)
+					st+="x";
+				else
+					st+=" ";
+				st+="]";
+			}
+			st+="\n";
+		}
+		return st;
 	}
 
 }
