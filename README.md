@@ -1,5 +1,5 @@
-New-Grame
-=========
+Grame
+=====
 
 An easy to use, lightweight 2D grid based game engine!
 
