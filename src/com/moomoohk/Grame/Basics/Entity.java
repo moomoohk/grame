@@ -63,8 +63,8 @@ public class Entity extends GrameObject
 		determineAI(bID);
 		Coordinates c = getPos(bID);
 		Coordinates target = null;
-		if ((Entity) GrameManager.findGrameObject(targetID) != null)
-			target = ((Entity) (GrameManager.findGrameObject(targetID))).getPos(bID);
+		if(this.targetID!=-1)
+			target=GrameManager.findGrameObject(this.targetID).getPos(bID);
 		if (this.activeAI.size() != 0 && this.activeAI.get(bID) != null)
 			c = this.activeAI.get(bID).getNext(getPos(bID), target, GrameManager.findBase(bID), this, (Entity) GrameManager.findGrameObject(targetID));
 		GrameManager.findBase(bID).moveGrameObject(ID, c);

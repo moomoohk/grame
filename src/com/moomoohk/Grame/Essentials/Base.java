@@ -98,14 +98,14 @@ public class Base
 		return this.colors[pos.x + pos.y * width];
 	}
 
-	public void addGOLayer(GrameObjectLayer gol, int place)
+	public void addGrameObjectLayer(GrameObjectLayer gol, int place)
 	{
 		if (gol.getHeight() == this.height && gol.getWidth() == this.width)
 		{
 			this.layers.add(place, gol);
 			if (place <= this.goLayer)
 				this.goLayer++;
-			GrameUtils.print("Added layer", MessageLevel.DEBUG);
+			GrameUtils.print("Added layer "+gol.toString()+" to Base ID:"+ID, MessageLevel.DEBUG);
 		}
 		else
 		{
@@ -204,5 +204,17 @@ public class Base
 	public String getTitle()
 	{
 		return title;
+	}
+	
+	public String toString()
+	{
+		String st="Base ID:"+ID+"\n";
+		st+="Contains: "+this.layers.size()+" Grame Object layers.\n";
+		st+="Contains ";
+		int count=0;
+		for(int i=0; i<this.layers.size(); i++)
+			count+=this.layers.get(i).getTotalObjects();
+		st+=count+" Grame Objects.";
+		return st;
 	}
 }

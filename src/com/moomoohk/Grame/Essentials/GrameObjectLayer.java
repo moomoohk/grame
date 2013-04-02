@@ -67,4 +67,12 @@ public class GrameObjectLayer
 				return true;
 		return false;
 	}
+	public int getTotalObjects()
+	{
+		int count=0;
+		for(int i=0; i<this.objects.length; i++)
+			if(this.objects[i]!=null)
+				count++;
+		return count;
+	}
 }

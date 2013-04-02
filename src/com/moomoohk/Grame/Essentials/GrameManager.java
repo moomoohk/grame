@@ -35,6 +35,8 @@ public class GrameManager implements Runnable
 	public static final String VERSION_NUMBER = "3.0";
 	private static boolean showConsole;
 
+	//events
+	
 	static
 	{
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler()

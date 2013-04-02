@@ -34,6 +34,29 @@ public abstract class MovementAI
 		return pos.addDir(d);
 	}
 
+	public static Coordinates slide(Base b, Coordinates pos, Dir d)
+	{
+		if(!d.isDiag())
+			return pos.addDir(d);
+		if(b.isInMap(pos.addDir(d))&&!b.isOccupied(pos.addDir(d)))
+			return pos.addDir(d);
+		if(!b.isInMap(pos.addDir(d)))
+			if(!b.getWraparound())
+			{
+				if(b.isInMap(pos.addDir(d.split()[0])))
+					return pos.addDir(d.split()[0]);
+				if(b.isInMap(pos.addDir(d.split()[1])))
+					return pos.addDir(d.split()[1]);
+			}
+			else
+				return wraparound(b, pos, d);
+		if(!b.isOccupied(pos.addDir(d.split()[0])))
+			return pos.addDir(d.split()[0]);
+		if(!b.isOccupied(pos.addDir(d.split()[1])))
+			return pos.addDir(d.split()[1]);
+		return pos.addDir(d);
+	}
+
 	public abstract String author();
 
 	public abstract Coordinates getNext(Coordinates pos, Coordinates targetPos, Base b, Entity ent1, Entity ent2);

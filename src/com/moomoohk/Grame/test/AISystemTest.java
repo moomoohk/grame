@@ -27,12 +27,12 @@ public class AISystemTest
 		System.out.println(s.toString());
 		b.setWraparound(true);
 		generatePlayers(1, 1, b);
-		generatePlayerSims(5, b);
-		s.load(b, GrameUtils.randomCoordinates(b));
-		generateWalls(30, b);
+		generatePlayerSims(1, b);
+		//s.load(b, GrameUtils.randomCoordinates(b));
+		//generateWalls(30, b);
 		generateStrollers(5, b);
-		generateChasers(b, 5, (Entity)GrameManager.findGrameObject(0));
-		generateChasers(b, 5, (Entity)GrameManager.findGrameObject(1));
+		generateChasers(b, 1, (Entity)GrameManager.findGrameObject(1));
+		//generateChasers(b, 5, (Entity)GrameManager.findGrameObject(1));
 		RenderManager.render(b.ID);
 		RenderManager.setVisible(true);
 	}

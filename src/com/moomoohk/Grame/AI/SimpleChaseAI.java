@@ -4,7 +4,6 @@ import com.moomoohk.Grame.Basics.Dir;
 import com.moomoohk.Grame.Basics.Entity;
 import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
-import com.moomoohk.Grame.Essentials.CrashManager;
 import com.moomoohk.Grame.Essentials.GrameUtils;
 import com.moomoohk.Grame.Essentials.GrameUtils.MessageLevel;
 import com.moomoohk.Grame.Interfaces.MovementAI;
@@ -13,97 +12,79 @@ public class SimpleChaseAI extends MovementAI
 {
 	public Coordinates getNext(Coordinates pos, Coordinates target, Base b, Entity ent1, Entity ent2)
 	{
-		try
+		if (target == null)
 		{
-			if (target == null)
+			GrameUtils.print("Crucial parameters missing! Returning pos. (" + ent1.getName() + ")", MessageLevel.ERROR);
+			return pos;
+		}
+		if (!b.getWraparound())
+		{
+			Dir d = new Dir(pos, target);
+			if (!b.isOccupied(pos.addDir(d)))
+				return pos.addDir(d);
+			return MovementAI.slide(b, pos, d);
+		}
+		else
+		{
+			int normalDistance = pos.distance(target);
+			Coordinates temp = pos;
+			int distanceThroughWall = 0;
+			boolean wrapped = false;
+			while (temp.distance(target) > 0)
 			{
-				GrameUtils.print("Crucial parameters missing! Returning pos. (" + ent1.getName() + ")", MessageLevel.ERROR);
-				return pos;
-			}
-			if (!b.getWraparound())
-			{
-				Dir d = new Dir(pos, target);
-				if (!b.isOccupied(pos.addDir(d)))
-					return pos.addDir(d);
-				if (!b.isOccupied(pos.addDir(d.split()[0])))
-					return pos.addDir(d.split()[0]);
-				if (!b.isOccupied(pos.addDir(d.split()[1])))
-					return pos.addDir(d.split()[1]);
-			}
-			else
-			{
-				int normalDistance = pos.distance(target);
-				Coordinates temp = pos;
-				int distanceThroughWall = 0;
-				boolean wrapped = false;
-				while (temp.distance(target) > 0)
+				Dir dir = new Dir(target, temp);
+				if (!wrapped && !b.isInMap(temp.addDir(dir)))
 				{
-					Dir dir = new Dir(target, temp);
-					if (!wrapped && !b.isInMap(temp.addDir(dir)))
+					temp = MovementAI.wraparound(b, MovementAI.slide(b, temp, dir), dir);
+					wrapped = true;
+				}
+				else
+					if (!wrapped)
 					{
-						temp = MovementAI.wraparound(b, temp, dir);
-						wrapped = true;
+						Dir dir2 = new Dir(temp, target);
+						Dir wall = closestWall(temp, b);
+						if (wall.getX() != 0)
+							dir2.setX(wall.getX());
+						if (wall.getY() != 0)
+							dir2.setY(wall.getY());
+						temp = MovementAI.slide(b, temp, dir2);
 					}
 					else
-						if (!wrapped)
-						{
-							Dir dir2 = new Dir(temp, target);
-							Dir wall = closestWall(temp, b);
-							if (wall.getX() != 0)
-								dir2.setX(wall.getX());
-							if (wall.getY() != 0)
-								dir2.setY(wall.getY());
-							temp = temp.addDir(dir2);
-						}
-						else
-							temp = temp.addDir(new Dir(temp, target));
-					distanceThroughWall++;
-				}
-				if (normalDistance <= distanceThroughWall)
-					return pos.addDir(new Dir(pos, target));
-				else
-				{
-					Dir dir2 = new Dir(pos, target);
-					Dir wall = closestWall(pos, b);
-					if (wall.getX() != 0)
-						dir2.setX(wall.getX());
-					if (wall.getY() != 0)
-						dir2.setY(wall.getY());
-					return MovementAI.wraparound(b, pos, dir2);
-				}
+						temp = MovementAI.slide(b, temp, new Dir(temp, target));
+				distanceThroughWall++;
+			}
+			if (normalDistance <= distanceThroughWall)
+				return MovementAI.slide(b, pos, new Dir(pos, target));
+			else
+			{
+				Dir dir2 = new Dir(pos, target);
+				Dir wall = closestWall(pos, b);
+				if (wall.getX() != 0)
+					dir2.setX(wall.getX());
+				if (wall.getY() != 0)
+					dir2.setY(wall.getY());
+				return MovementAI.wraparound(b, MovementAI.slide(b, pos, dir2), dir2);
 			}
 		}
-		catch (Exception e)
-		{
-			CrashManager.showException(e);
-		}
-		return pos;
 	}
 
 	public boolean isValid(Coordinates pos, Coordinates target, Base b, Entity ent1, Entity ent2)
 	{
-		try
+		if (pos == null)
+			return false;
+		if (target == null)
 		{
-			if(pos==null)
-				return false;
-			if (target == null)
-			{
-				GrameUtils.print("Crucial parameters missing! Returning not valid. (" + ent1.getName() + ")", MessageLevel.ERROR);
-				return false;
-			}
-			if (ent1.getPos(b.ID).distance(ent2.getPos(b.ID)) > ent1.getRange())
-			{
-				return false;
-			}
-
-			if (ent1.getPos(b.ID).isSurrounded(b))
-			{
-				return false;
-			}
+			GrameUtils.print("Crucial parameters missing! Returning not valid. (" + ent1.getName() + ")", MessageLevel.ERROR);
+			return false;
 		}
-		catch (Exception e)
+		if (ent1.getPos(b.ID).distance(ent2.getPos(b.ID)) > ent1.getRange())
 		{
-			CrashManager.showException(e);
+			return false;
+		}
+
+		if (ent1.getPos(b.ID).isSurrounded(b))
+		{
+			return false;
 		}
 		return true;
 	}

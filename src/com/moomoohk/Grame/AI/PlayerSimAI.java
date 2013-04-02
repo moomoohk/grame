@@ -45,7 +45,10 @@ public class PlayerSimAI extends MovementAI
 			this.step=0;
 			this.tries++;
 			if(this.tries==10)
+			{
+				this.tries=0;
 				return pos;
+			}
 			return getNext(pos, targetPos, b, ent1, ent2);
 		}
 		this.tries=0;
