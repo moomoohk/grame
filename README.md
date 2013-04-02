@@ -7,5 +7,5 @@ You can download it from [here](https://github.com/moomoohk/New-Grame/blob/maste
 
 (I'm still working on the JavaDocs)
 
-I published Grame related videos to my [YouTube channel](http://youtube.com/user/moomoohk).
+I publish Grame related videos to my [YouTube channel](http://youtube.com/user/moomoohk).
 
