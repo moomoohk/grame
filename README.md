@@ -3,7 +3,7 @@ Grame
 
 An easy to use, lightweight 2D grid based game engine!
 
-You can download it from [here](https://github.com/moomoohk/New-Grame/blob/master/Build/New-Grame.jar?raw=true).
+You can download it from [here](https://github.com/moomoohk/New-Grame/raw/master/Build/Grame.jar).
 
 (I'm still working on the JavaDocs)
 
