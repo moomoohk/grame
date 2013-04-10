@@ -39,6 +39,13 @@ import javax.swing.KeyStroke;
 
 import com.moomoohk.Grame.Essentials.GrameUtils.MessageLevel;
 
+/**
+ * Manages crashes and exceptions.
+ * 
+ * @author Meshulam Silk <moomoohk@ymail.com>
+ * @version 1.0
+ * @since 2013-04-05
+ */
 public class CrashManager
 {
 	private static JFrame crashF;
@@ -46,11 +53,19 @@ public class CrashManager
 	private static JTextPane crashlogPane;
 	private static String user = "Not given";
 	private static Thread t = new Thread();
-	public static boolean isOpen = false;
-	public static boolean reasonProvided = false;
-	public static String reason = "";
-	public static Exception exception = null;
+	private static boolean isOpen = false;
+	private static boolean reasonProvided = false;
+	private static String reason = "";
+	private static Exception exception = null;
 
+	/**
+	 * Displays an {@link Exception} and any relevant info about it in a window.
+	 * 
+	 * @param e
+	 *            The {@link Exception} to show.
+	 * @param reason
+	 *            Any reasons that might've caused the {@link Exception}.
+	 */
 	public static void showException(Exception e, String reason)
 	{
 		if (isOpen)
@@ -74,7 +89,7 @@ public class CrashManager
 		{
 			error += "  at " + e.getStackTrace()[e.getStackTrace().length - 1 - i] + "\n";
 			line = "" + e.getStackTrace()[i].getLineNumber();
-			className = e.getStackTrace()[i].getClassName().substring(e.getStackTrace()[i].getClassName().indexOf('.')+1);
+			className = e.getStackTrace()[i].getClassName().substring(e.getStackTrace()[i].getClassName().indexOf('.') + 1);
 			method = e.getStackTrace()[i].getMethodName();
 		}
 		String OS = "OS: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + "\n";
@@ -104,7 +119,7 @@ public class CrashManager
 		JPanel changelogPanel = new JPanel(new FlowLayout());
 		crashlogPane = new JTextPane()
 		{
-			 
+
 			private static final long serialVersionUID = 1L;
 
 			public boolean getScrollableTracksViewportWidth()
@@ -205,6 +220,12 @@ public class CrashManager
 		GrameUtils.print("Window is visible.", MessageLevel.DEBUG);
 	}
 
+	/**
+	 * Displays an {@link Exception} and any relevant info about it in a window.
+	 * 
+	 * @param e
+	 *            The {@link Exception} to show.
+	 */
 	public static void showException(Exception e)
 	{
 		showException(e, null);
@@ -273,15 +294,15 @@ public class CrashManager
 	{
 		if (reasonProvided)
 		{
-			Scanner parser=new Scanner(reason);
+			Scanner parser = new Scanner(reason);
 			parser.useDelimiter(":");
-			String newReason="";
-			while(parser.hasNext())
+			String newReason = "";
+			while (parser.hasNext())
 			{
-				if(exception.toString().equals(parser.next().trim()))
-					newReason+=parser.next()+"\n";
+				if (exception.toString().equals(parser.next().trim()))
+					newReason += parser.next() + "\n";
 			}
-			if(newReason.equals(""))
+			if (newReason.equals(""))
 				return "Unknown";
 			return newReason;
 		}

@@ -5,6 +5,13 @@ import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
 import com.moomoohk.Grame.Interfaces.Render;
 
+/**
+ * Renders {@link Base}s in a grid without grouting lines.
+ * 
+ * @author Meshulam Silk <moomoohk@ymail.com>
+ * @version 1.0
+ * @since 2013-04-05
+ */
 public class PlainGridRender implements Render
 {
 	public int[] getPixels(int[] pixels, Base b, int width, int height)
@@ -17,7 +24,7 @@ public class PlainGridRender implements Render
 					currSquare.setX(b.getColumns()-1);
 				if( currSquare.getY()>=b.getRows())
 					currSquare.setY(b.getRows()-1);
-				if (b.isInMap(currSquare))
+				if (b.isInBase(currSquare))
 				try
 				{
 					pixels[x + y * width] = b.getColor(currSquare).getRGB();

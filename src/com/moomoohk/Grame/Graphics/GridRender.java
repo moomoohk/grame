@@ -6,6 +6,13 @@ import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
 import com.moomoohk.Grame.Interfaces.Render;
 
+/**
+ * Render {@link Base}s in a grid with grouting lines.
+ * 
+ * @author Meshulam Silk <moomoohk@ymail.com>
+ * @version 1.0
+ * @since 2013-04-05
+ */
 public class GridRender implements Render
 {
 	public int[] getPixels(int[] pixels, Base b, int width, int height)
@@ -21,7 +28,7 @@ public class GridRender implements Render
 				}
 				int pixelX = (x) / (squareW), pixelY = y / squareH;
 				Coordinates currSquare = new Coordinates(pixelX, pixelY);
-				if (b.isInMap(currSquare))
+				if (b.isInBase(currSquare))
 				{
 					pixels[x + y * width] = b.getColor(currSquare).getRGB();
 				}

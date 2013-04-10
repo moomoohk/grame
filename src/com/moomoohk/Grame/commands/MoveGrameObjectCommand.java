@@ -19,12 +19,12 @@ public class MoveGrameObjectCommand extends Command<Console>
 	public void execute(Console arg0, String[] arg1)
 	{
 		if(arg1.length==3)
-			if(GrameManager.findBase(Integer.parseInt(arg1[1])).isInMap(GrameManager.findGrameObject(Integer.parseInt(arg1[0])).getPos(Integer.parseInt(arg1[1])).addDir(new Dir(arg1[2]))))
+			if(GrameManager.findBase(Integer.parseInt(arg1[1])).isInBase(GrameManager.findGrameObject(Integer.parseInt(arg1[0])).getPos(Integer.parseInt(arg1[1])).addDir(new Dir(arg1[2]))))
 				GrameManager.findGrameObject(Integer.parseInt(arg1[0])).setPos(Integer.parseInt(arg1[1]), GrameManager.findGrameObject(Integer.parseInt(arg1[0])).getPos(Integer.parseInt(arg1[1])).addDir(new Dir(arg1[2])));
 			else
 				this.message="Can't move there!";
 		if(arg1.length==4)
-			if(GrameManager.findBase(Integer.parseInt(arg1[1])).isInMap(new Coordinates(Integer.parseInt(arg1[2]), Integer.parseInt(arg1[3]))))
+			if(GrameManager.findBase(Integer.parseInt(arg1[1])).isInBase(new Coordinates(Integer.parseInt(arg1[2]), Integer.parseInt(arg1[3]))))
 				GrameManager.findGrameObject(Integer.parseInt(arg1[0])).setPos(Integer.parseInt(arg1[1]), new Coordinates(Integer.parseInt(arg1[2]), Integer.parseInt(arg1[3])));
 			else
 				this.message="Can't move there!";

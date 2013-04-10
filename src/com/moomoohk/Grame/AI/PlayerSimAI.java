@@ -8,11 +8,23 @@ import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
 import com.moomoohk.Grame.Interfaces.MovementAI;
 
+/**
+ * AI that is supposed to simulate a player.
+ * <p>
+ * Made for debug and testing purposes.
+ * 
+ * @author Meshulam Silk <moomoohk@ymail.com>
+ * @version 1.0
+ * @since 2013-04-05
+ */
 public class PlayerSimAI extends MovementAI
 {
 	private Dir direction;
 	private int step, tries;
 
+	/**
+	 * Constructor.
+	 */
 	public PlayerSimAI()
 	{
 		super();
@@ -35,7 +47,7 @@ public class PlayerSimAI extends MovementAI
 		if (b.getWraparound())
 			next = MovementAI.wraparound(b, pos, this.direction);
 		else
-			if (!b.isInMap(next))
+			if (!b.isInBase(next))
 			{
 				this.step = 0;
 				return pos;

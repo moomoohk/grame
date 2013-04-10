@@ -6,17 +6,17 @@ import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
 import com.moomoohk.Grame.Interfaces.MovementAI;
 
+/**
+ * This AI is designed to simulate neutral random movement.
+ * 
+ * @author Meshulam Silk <moomoohk@ymail.com>
+ * @version 1.0
+ * @since 2013-04-05
+ */
 public class SimpleStrollAI extends MovementAI
 {
-	public static long currtime=System.currentTimeMillis();
 	public Coordinates getNext(Coordinates pos, Coordinates target, Base b, Entity ent1, Entity ent2)
 	{
-		if(ent1.ID==3)
-		{
-			long temp=System.currentTimeMillis();
-			//System.out.println(temp-currtime);
-			currtime=temp;
-		}
 		Coordinates[] sur = pos.getAllSurrounding(b);
 		Coordinates next = sur[(int) (Math.random() * sur.length)];
 		try
@@ -25,7 +25,7 @@ public class SimpleStrollAI extends MovementAI
 			if ((int) (Math.random() * 15)>13)
 				if (b.getWraparound())
 				{
-					if (!b.isInMap(next))
+					if (!b.isInBase(next))
 						next=MovementAI.wraparound(b, next, new Dir(pos, next));
 					if (b.isOccupied(next))
 						return pos;
@@ -35,9 +35,9 @@ public class SimpleStrollAI extends MovementAI
 				else
 				{
 					if (b.isOccupied(next))
-						for (int i = 0; i < sur.length || (!b.isOccupied(next) && b.isInMap(next)); i++)
+						for (int i = 0; i < sur.length || (!b.isOccupied(next) && b.isInBase(next)); i++)
 							next = sur[i];
-					if(!b.isInMap(next))
+					if(!b.isInBase(next))
 						next=pos;
 				}
 			else

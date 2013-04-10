@@ -32,6 +32,7 @@ import com.moomoohk.Grame.AI.PlayerMovementAI;
 import com.moomoohk.Grame.AI.PlayerSimAI;
 import com.moomoohk.Grame.AI.SimpleChaseAI;
 import com.moomoohk.Grame.AI.SimpleStrollAI;
+import com.moomoohk.Grame.Interfaces.GrameObject;
 import com.moomoohk.Grame.commands.AddEntityAICommand;
 import com.moomoohk.Grame.commands.AddGrameObjectCommand;
 import com.moomoohk.Grame.commands.ClearEntityAI;
@@ -44,21 +45,57 @@ import com.moomoohk.Grame.commands.PrintEntityAICommand;
 import com.moomoohk.Grame.commands.QuitCommand;
 import com.moomoohk.Grame.commands.RenderBaseCommand;
 import com.moomoohk.Grame.commands.SetEntityOverrideAICommand;
-import com.moomoohk.Grame.commands.SetMainBaseCommand;
 import com.moomoohk.Grame.commands.isOccupiedCommand;
 import com.moomoohk.Grame.commands.setVisibleCommand;
 import com.moomoohk.MooCommands.Command;
 import com.moomoohk.MooConsole.Console;
 
+/**
+ * The Grame Utils class provides useful utilities.
+ * 
+ * @author Meshulam Silk <moomoohk@ymail.com>
+ * @version 1.0
+ * @since 2013-04-05
+ */
 public class GrameUtils
 {
-	public static final String VERSION_NUMBER = "2.0";
-	public static File saveFolder = new File("Entities");
+	/**
+	 * Folder where {@link GrameObject}s can be saved.
+	 */
+	public static File saveFolder = new File("GrameObjects");
+	/**
+	 * Folder where sound files can be saved.
+	 */
 	public static File soundsFolder = new File("Sounds");
+	/**
+	 * {@link Console} for debug prints and command execution.
+	 */
+	public static Console console;
 	private static boolean isDialog = false;
-	public static ArrayList<String> wordQueue = new ArrayList<String>();
-	public static Console console = new Console();
+	private static ArrayList<String> wordQueue = new ArrayList<String>();
 
+	static
+	{
+		try
+		{
+			console = new Console();
+		}
+		catch (Error e)
+		{
+			System.out.println("You don't appear to have MooConsole installed!");
+			System.out.println("Get it at: https://github.com/moomoohk/MooConsole/raw/master/Build/MooConsole.jar");
+		}
+	}
+
+	/**
+	 * Writes a {@link String} out to a {@link File}.
+	 * 
+	 * @param f
+	 *            {@link File} to write to.
+	 * @param s
+	 *            {@link String} to write.
+	 * @return True if the process was completed successfully, else false.
+	 */
 	public static boolean write(File f, String s)
 	{
 		try
@@ -80,6 +117,15 @@ public class GrameUtils
 		return true;
 	}
 
+	/**
+	 * Reads a {@link File} and returns a {@link String} array where each place is a segment of text separated by a delimiter.
+	 * 
+	 * @param st
+	 *            Path to file.
+	 * @param delimiter
+	 *            Delimiter to use.
+	 * @return A {@link String} array.
+	 */
 	public static String[] readFile(String st, String delimiter)
 	{
 		try
@@ -125,17 +171,32 @@ public class GrameUtils
 		return "oops";
 	}
 
+	/**
+	 * Creates and returns a random color.
+	 * 
+	 * @return A random color.
+	 */
 	public static Color randomColor()
 	{
 		Random r = new Random();
 		return new Color(r.nextFloat(), r.nextFloat(), r.nextFloat());
 	}
 
+	/**
+	 * Will generate a random set of {@link Coordinates} which exist in the given {@link Base}.
+	 * 
+	 * @param b
+	 *            The {@link Base} in which to get {@link Coordinates}.
+	 * @return A random set of {@link Coordinates} which exist in the given {@link Base}.
+	 */
 	public static Coordinates randomCoordinates(Base b)
 	{
 		return new Coordinates(new Random().nextInt(b.getColumns()), new Random().nextInt(b.getRows()));
 	}
 
+	/**
+	 * Deletes the Entity save folder.
+	 */
 	public static void deleteEntFolder()
 	{
 		System.err.println("Deleting entity folder...");
@@ -154,6 +215,13 @@ public class GrameUtils
 		}
 	}
 
+	/**
+	 * Deletes a {@link File} and all its children files.
+	 * 
+	 * @param f
+	 *            {@link File} to delete.
+	 * @return True if the operation was successful, else false.
+	 */
 	private static boolean delete(File f)
 	{
 		if (f.isDirectory())
@@ -170,6 +238,18 @@ public class GrameUtils
 		return f.delete();
 	}
 
+	/**
+	 * Creates a dialog with buttons.
+	 * 
+	 * @param paneText
+	 *            Text to show in the dialog.
+	 * @param options
+	 *            Names of buttons.
+	 * @param title
+	 *            Title of dialog.
+	 * @param events
+	 *            What happens when a button gets pressed.
+	 */
 	public static void makeDialog(String paneText, Object[] options, String title, Runnable[] events)
 	{
 		if (!isDialog)
@@ -195,6 +275,12 @@ public class GrameUtils
 		}
 	}
 
+	/**
+	 * Plays a sound.
+	 * 
+	 * @param file
+	 *            The path to the sound file.
+	 */
 	public static void playSound(String file)
 	{
 		File soundFile = null;
@@ -262,6 +348,13 @@ public class GrameUtils
 		sourceLine.close();
 	}
 
+	/**
+	 * Capitalizes a word.
+	 * 
+	 * @param word
+	 *            Word to capitalize.
+	 * @return The capitalized word.
+	 */
 	public static String capitalize(String word)
 	{
 		if (word.length() > 0)
@@ -269,10 +362,18 @@ public class GrameUtils
 		return "";
 	}
 
+	/**
+	 * Prints messages out into the console.
+	 * 
+	 * @param st
+	 *            The message to print.
+	 * @param level
+	 *            The {@link MessageLevel} of the message.
+	 */
 	public static synchronized void print(String st, MessageLevel level)
 	{
-		if (!GrameManager.isDisablePrints()&&((level==MessageLevel.DEBUG||level==MessageLevel.DEBUG_ERROR&&GrameManager.isDebug())||(level==MessageLevel.SPAM&&GrameManager.isSpam())||(level==MessageLevel.NORMAL)||(level==MessageLevel.ERROR)))
-		{		
+		if (!GrameManager.isDisablePrints() && ((level == MessageLevel.DEBUG || level == MessageLevel.DEBUG_ERROR && GrameManager.isDebug()) || (level == MessageLevel.SPAM && GrameManager.isSpam()) || (level == MessageLevel.NORMAL) || (level == MessageLevel.ERROR)))
+		{
 			StackTraceElement caller = Thread.currentThread().getStackTrace()[2];
 			wordQueue.add("[" + caller.getFileName().subSequence(0, caller.getFileName().indexOf(".java")) + ":" + caller.getLineNumber() + "] " + st);
 			if (level == MessageLevel.ERROR || level == MessageLevel.DEBUG_ERROR)
@@ -287,6 +388,17 @@ public class GrameUtils
 		}
 	}
 
+	/**
+	 * Will create a clickable JLabel which opens a URL.
+	 * 
+	 * @param text
+	 *            JLabel text.
+	 * @param URL
+	 *            The URL to open on click.
+	 * @param toolTip
+	 *            The tooltip of the JLabel.
+	 * @return A clickable JLabel.
+	 */
 	public static JLabel linkify(final String text, String URL, String toolTip)
 	{
 		URI temp = null;
@@ -340,6 +452,9 @@ public class GrameUtils
 		return link;
 	}
 
+	/**
+	 * Loads some basic commands.
+	 */
 	public static void loadBasicCommands()
 	{
 		ArrayList<Command<?>> commands = new ArrayList<Command<?>>();
@@ -348,7 +463,6 @@ public class GrameUtils
 		commands.add(new HelpCommand(console, "help", "Will print the help of a command. Leave blank for all the commands. Usage: help [command name]", 0, 1));
 		commands.add(new RenderBaseCommand(console, "render", "Will render a base using a render in the Render list. Usage: render <base ID> <render name>", 2, 2));
 		commands.add(new QuitCommand(console, "quit", "Quits the program. Usage: quit", 0, 0));
-		commands.add(new SetMainBaseCommand(console, "setmainbase", "Sets the main Base to display. Usage: setmainbase <base ID>", 1, 1));
 		commands.add(new CreateEntityCommand(console, "createentity", "Creates a new Entity. Usage: createentity [n:name] [t:type] [l:level] [c:color]", 0, 4));
 		commands.add(new AddGrameObjectCommand(console, "addobject", "Adds a Grame Object to a Base. Usage: addobject <go ID> <base ID> <x> <y>", 4, 4));
 		commands.add(new AddEntityAICommand(console, "addentityai", "Adds a MovememntAI to an Entity's AI list. Usage: addentityai <entity ID> <base ID> <movementai name>", 3, 3));
@@ -362,6 +476,9 @@ public class GrameUtils
 		print("Loaded " + Command.commands.size() + " commands.", MessageLevel.DEBUG);
 	}
 
+	/**
+	 * Loads some basic AIs.
+	 */
 	public static void loadBasicAIs()
 	{
 		GrameManager.addAI(new SimpleStrollAI());
@@ -370,14 +487,45 @@ public class GrameUtils
 		GrameManager.addAI(new PlayerSimAI());
 	}
 
+	/**
+	 * Prints out the current stack trace.
+	 */
 	public static void dumpStackTrace()
 	{
 		for (StackTraceElement ste : Thread.currentThread().getStackTrace())
 			System.out.println(ste);
 	}
 
+	/**
+	 * Used to denote print types.
+	 * 
+	 * @author Meshulam Silk <moomoohk@ymail.com>
+	 * @version 1.0
+	 * @since 2013-04-05
+	 */
 	public enum MessageLevel
 	{
-		ERROR, NORMAL, DEBUG, DEBUG_ERROR, SPAM
+		/**
+		 * Error messages.
+		 */
+		ERROR,
+		/**
+		 * Normal messages.
+		 */
+		NORMAL,
+		/**
+		 * Normal debug messages.
+		 */
+		DEBUG,
+		/**
+		 * Debug error messages.
+		 */
+		DEBUG_ERROR,
+		/**
+		 * Spam messages.
+		 * <p>
+		 * These are messages that might get sent repeatedly thus spamming the console.
+		 */
+		SPAM
 	}
 }

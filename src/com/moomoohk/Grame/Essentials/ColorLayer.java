@@ -4,11 +4,22 @@ import java.awt.Color;
 
 import com.moomoohk.Grame.Essentials.GrameUtils.MessageLevel;
 
+/**
+ * ColorLayers provide an easy way to implement a color matrix.
+ * @author Meshulam Silk <moomoohk@ymail.com>
+ * @version 1.0
+ * @since 2013-04-05
+ */
 public class ColorLayer
 {
 	private Color[] colors;
 	private int width, height;
-
+	
+	/**
+	 * Constructor
+	 * @param width Width of ColorLayer
+	 * @param height Height of ColorLayer
+	 */
 	public ColorLayer(int width, int height)
 	{
 		this.width = width;
@@ -16,6 +27,11 @@ public class ColorLayer
 		this.colors=new Color[width*height];
 	}
 
+	/**
+	 * Sets the color of a place in this layer.
+	 * @param pos {@link Coordinates} of place to set color.
+	 * @param c Color to set.
+	 */
 	public void setColor(Coordinates pos, Color c)
 	{
 		int place = pos.x + pos.y * this.width;
@@ -24,6 +40,10 @@ public class ColorLayer
 		this.colors[place] = c;
 	}
 
+	/**
+	 * Sets the color of all the places in this layer.
+	 * @param c Color to set.
+	 */
 	public void setAll(Color c)
 	{
 		for (int x = 0; x < width; x++)
@@ -31,6 +51,11 @@ public class ColorLayer
 				this.colors[x + y * width] = c;
 	}
 
+	/**
+	 * Gets the color of a place in this layer.
+	 * @param pos {@link Coordinates} of place.
+	 * @return The color of the place.
+	 */
 	public Color getColor(Coordinates pos)
 	{
 		int place = pos.x + pos.y * this.width;
@@ -39,15 +64,27 @@ public class ColorLayer
 		return this.colors[place];
 	}
 
+	/**
+	 * Returns the width of this layer.
+	 * @return The width of this layer.
+	 */
 	public int getWidth()
 	{
 		return this.width;
 	}
 
+	/**
+	 * Returns the height of this layer.
+	 * @return The height of this layer.
+	 */
 	public int getHeight()
 	{
 		return this.height;
 	}
+	
+	/**
+	 * Prints the dimensions of this layer.
+	 */
 	public String toString()
 	{
 		return this.width+"x"+this.height;

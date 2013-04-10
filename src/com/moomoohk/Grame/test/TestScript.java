@@ -15,6 +15,7 @@ public class TestScript
 {
 	public static void main(String[] args)
 	{
+		GrameUtils.loadBasicCommands();
 		Base b=new Base(20, 20);
 		TestGrameObject test=new TestGrameObject("Test", 1, GrameUtils.randomColor(), false);
 		Entity ent=new Entity();

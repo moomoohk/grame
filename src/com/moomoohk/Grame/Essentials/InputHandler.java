@@ -5,17 +5,32 @@ import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 
 import com.moomoohk.Grame.Essentials.GrameUtils.MessageLevel;
-import com.moomoohk.Grame.Graphics.RenderManager;
 
+/**
+ * Handles keyboard input.
+ * @author Meshulam Silk <moomoohk@ymail.com>
+ * @version 1.0
+ * @since 2013-04-05
+ */
 public class InputHandler implements KeyEventDispatcher
 {
+	/**
+	 * Boolean array representing all the key combinations.
+	 */
 	public boolean[] key = new boolean[68836];
 
+	/**
+	 * Constructor.
+	 */
 	public InputHandler()
 	{
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(this);
+		GrameUtils.print("Input Handler added", MessageLevel.DEBUG);
 	}
 
+	/**
+	 * Resets the key array.
+	 */
 	public void resetKeys()
 	{
 		for (int i = 0; i < key.length; i++)
@@ -24,7 +39,7 @@ public class InputHandler implements KeyEventDispatcher
 
 	public boolean dispatchKeyEvent(KeyEvent e)
 	{
-		if (!RenderManager.mainFrame.isFocusOwner() && !RenderManager.mainFrame.hasFocus())
+		if (GrameUtils.console.hasFocus()||GrameUtils.console.isFocusOwner())
 			return false;
 		int keyCode = e.getKeyCode();
 		switch (e.getID())
@@ -45,7 +60,7 @@ public class InputHandler implements KeyEventDispatcher
 			GrameUtils.print("Key typed: " + e.getKeyCode(), MessageLevel.SPAM);
 			break;
 		}
-		return false;
+		return true;
 	}
 
 }

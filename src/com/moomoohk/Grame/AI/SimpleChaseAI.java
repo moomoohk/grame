@@ -8,6 +8,15 @@ import com.moomoohk.Grame.Essentials.GrameUtils;
 import com.moomoohk.Grame.Essentials.GrameUtils.MessageLevel;
 import com.moomoohk.Grame.Interfaces.MovementAI;
 
+/**
+ * This AI is designed to chase objects.
+ * <p>
+ * The algorithm will try to follow a straight line between point A and point B with no regard for obstacles.
+ * 
+ * @author Meshulam Silk <moomoohk@ymail.com>
+ * @version 1.0
+ * @since 2013-04-05
+ */
 public class SimpleChaseAI extends MovementAI
 {
 	public Coordinates getNext(Coordinates pos, Coordinates target, Base b, Entity ent1, Entity ent2)
@@ -33,7 +42,7 @@ public class SimpleChaseAI extends MovementAI
 			while (temp.distance(target) > 0)
 			{
 				Dir dir = new Dir(target, temp);
-				if (!wrapped && !b.isInMap(temp.addDir(dir)))
+				if (!wrapped && !b.isInBase(temp.addDir(dir)))
 				{
 					temp = MovementAI.wraparound(b, MovementAI.slide(b, temp, dir), dir);
 					wrapped = true;

@@ -31,8 +31,8 @@ public class AISystemTest
 		//s.load(b, GrameUtils.randomCoordinates(b));
 		//generateWalls(30, b);
 		generateStrollers(5, b);
-		generateChasers(b, 1, (Entity)GrameManager.findGrameObject(1));
-		//generateChasers(b, 5, (Entity)GrameManager.findGrameObject(1));
+		generateChasers(b, 3, (Entity)GrameManager.findGrameObject(1));
+		generateChasers(b, 3, (Entity)GrameManager.findGrameObject(0));
 		RenderManager.render(b.ID);
 		RenderManager.setVisible(true);
 	}

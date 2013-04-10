@@ -1,8 +1,5 @@
 package com.moomoohk.Grame.Essentials;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -14,8 +11,34 @@ import com.moomoohk.Grame.Interfaces.GrameObject;
 import com.moomoohk.Grame.Interfaces.MovementAI;
 import com.moomoohk.Grame.Interfaces.Render;
 
+/**
+ * The Grame Manager takes care of all the internal Grame operations.
+ * <p>
+ * Indexes and ticks any {@link GrameObject}s and {@link Base}s that are created
+ * automatically.
+ * 
+ * @author Meshulam Silk <moomoohk@ymail.com>
+ * @version 1.0
+ * @since 2013-04-05
+ */
 public class GrameManager implements Runnable
 {
+	/**
+	 * The Grame version number.
+	 */
+	public static final String VERSION_NUMBER = "3.1";
+	/**
+	 * The WASD keys parsed to a {@link Dir}.
+	 */
+	public static Dir dir1 = null;
+	/**
+	 * The arrow keys parsed to a {@link Dir}.
+	 */
+	public static Dir dir2 = null;
+	/**
+	 * Current game time.
+	 */
+	public static int time = 1;
 	private static ArrayList<GrameObject> grameObjectList;
 	private static ArrayList<Base> baseList;
 	private static HashMap<String, Render> renders = new HashMap<String, Render>();
@@ -23,22 +46,16 @@ public class GrameManager implements Runnable
 	private static boolean running = false;
 	private static boolean debug = false;
 	private static boolean disablePrints = false;
-	private static boolean initialized = false;
-	private static boolean spam=false;
+	private static boolean spam = false;
 	private static String gameName = "Grame";
 	private static InputHandler input;
 	private static Thread thread;
 	private static int fps = 0;
-	private static int time = 1;
-	public static Dir dir1 = null, dir2 = null;
 	private static Render defaultRender = new GridRender();
-	public static final String VERSION_NUMBER = "3.0";
-	private static boolean showConsole;
 
-	//events
-	
 	static
 	{
+		input = new InputHandler();
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler()
 		{
 			public void uncaughtException(Thread t, Throwable e)
@@ -51,29 +68,27 @@ public class GrameManager implements Runnable
 		{
 			public void run()
 			{
-				disposeAll();
 				GrameUtils.print("Exiting...", MessageLevel.NORMAL);
+				stop();
+				disposeAll();
 			}
 		}));
-		System.setOut(new GrameManager().new OutputOverride(System.out));
-		System.setErr(new GrameManager().new OutputOverride(System.err));
-		GrameUtils.console.setVisible(true);
-		grameObjectList=new ArrayList<GrameObject>();
+		grameObjectList = new ArrayList<GrameObject>();
 		baseList = new ArrayList<Base>();
-		input = new InputHandler();
-		showConsole=false;
-		GrameUtils.console.setAlwaysOnTop(true);
+		GrameUtils.console.setOutputOverride();
+		//GrameUtils.console.setLocation(GrameUtils.console.getLocation().x, Toolkit.getDefaultToolkit().getScreenSize().height);
+		GrameUtils.console.setVisible(true);
 		start();
 	}
 
-	public static void start()
+	private static void start()
 	{
 		if (running)
 			return;
 		running = true;
 		thread = new Thread(new GrameManager(), "Game");
 		thread.start();
-		GrameUtils.print("Grame "+VERSION_NUMBER+" is initialized.", MessageLevel.NORMAL);
+		GrameUtils.print("Grame " + VERSION_NUMBER + " is initialized.", MessageLevel.NORMAL);
 	}
 
 	public static synchronized void stop()
@@ -81,16 +96,14 @@ public class GrameManager implements Runnable
 		if (!running)
 			return;
 		running = false;
-		try
-		{
-			thread.join();
-		}
-		catch (Exception e)
-		{
-			System.out.println("Something broke");
-		}
 	}
 
+	/**
+	 * Starts the Grame Manager clock.
+	 * <p>
+	 * This method should never be called by the user as doing that might create
+	 * issues.
+	 */
 	public void run()
 	{
 		int frames = 0;
@@ -113,12 +126,11 @@ public class GrameManager implements Runnable
 				tickCount++;
 				if (tickCount % 60 != 0)
 				{
-					fps=frames;
+					fps = frames;
 					prev += 1000L;
 					frames = 0;
 				}
 				RenderManager.tick();
-				//tickEnts();
 				tickGrameObjects();
 				tickBases();
 			}
@@ -131,7 +143,7 @@ public class GrameManager implements Runnable
 		}
 	}
 
-	public void tick(boolean[] key)
+	private void tick(boolean[] key)
 	{
 		time += 1;
 		dir1 = null;
@@ -177,14 +189,14 @@ public class GrameManager implements Runnable
 	{
 		try
 		{
-			for (int i=0; i<grameObjectList.size(); i++)
+			for (int i = 0; i < grameObjectList.size(); i++)
 			{
-				GrameObject go=grameObjectList.get(i);
-				if (go == null )
+				GrameObject go = grameObjectList.get(i);
+				if (go == null)
 					continue;
-				if(baseList!=null)
-					for(int bID=0; bID<baseList.size(); bID++)
-						if (findBase(bID).containsGrameObject(go.ID)&&go.getSpeed()!=0&&time % go.getSpeed() == 0&& !go.isPaused())
+				if (baseList != null)
+					for (int bID = 0; bID < baseList.size(); bID++)
+						if (findBase(bID).containsGrameObject(go.ID) && go.getSpeed() != 0 && time % go.getSpeed() == 0 && !go.isPaused())
 							go.tick(bID);
 			}
 		}
@@ -216,6 +228,9 @@ public class GrameManager implements Runnable
 		}
 	}
 
+	/**
+	 * Disposes of all the {@link GrameObject}s and {@link Base}s.
+	 */
 	public static void disposeAll()
 	{
 		GrameUtils.print("Disposing of all the Bases in the Base list...", MessageLevel.NORMAL);
@@ -228,28 +243,54 @@ public class GrameManager implements Runnable
 		GrameUtils.print("Done disposing of Bases.", MessageLevel.NORMAL);
 	}
 
+	/**
+	 * Adds a {@link GrameObject} to the Grame Object list.
+	 * <p>
+	 * The user should never have to call this method.
+	 * 
+	 * @param go
+	 *            {@link GrameObject} to add.
+	 * @return The ID number for the object.
+	 */
 	public static int add(GrameObject go)
 	{
+		if (grameObjectList.contains(go))
+		{
+			GrameUtils.print(go.getName() + " already exists in the Grame Object list!", MessageLevel.ERROR);
+			return -1;
+		}
 		grameObjectList.add(go);
 		GrameUtils.print("Added " + go.getName() + " to the Grame Objects list (ID:" + (grameObjectList.size() - 1) + ")", MessageLevel.NORMAL);
 		return grameObjectList.size() - 1;
 	}
 
+	/**
+	 * Adds a {@link Base} to the Base list.
+	 * <p>
+	 * The user should never have to call this method.
+	 * 
+	 * @param b
+	 *            {@link Base} to add.
+	 * @return The ID number for the Base.
+	 */
 	public static int add(Base b)
 	{
-		try
+		if (baseList.contains(b))
 		{
-			baseList.add(b);
-			GrameUtils.print("Added a Base to the Base list (ID:" + (baseList.size() - 1) + ")", MessageLevel.NORMAL);
-			return baseList.size() - 1;
+			GrameUtils.print(b.toString() + " already exists in the Grame Object list!", MessageLevel.ERROR);
+			return -1;
 		}
-		catch (Exception e)
-		{
-			CrashManager.showException(e);
-		}
-		return -1;
+		baseList.add(b);
+		GrameUtils.print("Added a Base to the Base list (ID:" + (baseList.size() - 1) + ")", MessageLevel.NORMAL);
+		return baseList.size() - 1;
 	}
 
+	/**
+	 * Finds and returns a {@link GrameObject} from the Grame Objects list.<br>
+	 * If the object is not found, null will be returned.
+	 * @param id The ID of the object to find.
+	 * @return The {@link GrameObject} with that ID. If not in the list, null will be returned.
+	 */
 	public static GrameObject findGrameObject(int id)
 	{
 		try
@@ -264,6 +305,12 @@ public class GrameManager implements Runnable
 		return null;
 	}
 
+	/**
+	 * Finds and returns a {@link Base} from the Base list.<br>
+	 * If the {@link Base} is not found, null will be returned.
+	 * @param id The ID of the {@link Base} to find.
+	 * @return The {@link Base} with that ID. If not in the list, null will be returned.
+	 */
 	public static Base findBase(int id)
 	{
 		try
@@ -277,26 +324,46 @@ public class GrameManager implements Runnable
 		return null;
 	}
 
+	/**
+	 * Sets the game name.
+	 * @param name Game name to set.
+	 */
 	public static void setGameName(String name)
 	{
 		gameName = name;
 	}
-	
+
+	/**
+	 * Gets the game name.
+	 * @return The game name.
+	 */
 	public static String getGameName()
 	{
 		return gameName;
 	}
-
+	
+	/**
+	 * Sets the default {@link Render}.
+	 * @param render {@link Render} to set.
+	 */
 	public static void setDefaultRender(Render render)
 	{
 		defaultRender = render;
 	}
 	
+	/**
+	 * Gets the default {@link Render}.
+	 * @return The default {@link Render}.
+	 */
 	public static Render getDefaultRender()
 	{
 		return defaultRender;
 	}
 
+	/**
+	 * Indexes a {@link Render}.
+	 * @param render {@link Render} to index.
+	 */
 	public static void addRender(Render render)
 	{
 		if (render == null)
@@ -309,6 +376,10 @@ public class GrameManager implements Runnable
 		GrameUtils.print("Added " + name + " to the render list.", MessageLevel.DEBUG);
 	}
 
+	/**
+	 * Indexes a {@link MovementAI}.
+	 * @param ai {@link MovementAI} to index.
+	 */
 	public static void addAI(MovementAI ai)
 	{
 		if (ai == null)
@@ -321,111 +392,112 @@ public class GrameManager implements Runnable
 		GrameUtils.print("Added " + name + " to the AI list.", MessageLevel.DEBUG);
 	}
 
+	/**
+	 * Pauses or unpauses all the {@link GrameObject}s.
+	 * @param f True to pause, false to unpause all the {@link GrameObject}.
+	 */
 	public static void pauseAllGrameObjects(boolean f)
 	{
 		for (GrameObject go : grameObjectList)
 			go.pause(f);
 	}
 
+	/**
+	 * Sets whether debug prints will be visible or not.
+	 * @param debug True to enable debug prints, else false.
+	 */
 	public static void setDebug(boolean debug)
 	{
 		GrameManager.debug = debug;
 	}
 
+	/**
+	 * Returns whether or not debug prints are enabled.
+	 * @return True if debug prints are enabled, else false.
+	 */
 	public static boolean isDebug()
 	{
 		return debug;
 	}
 
+	/**
+	 * Completely disable prints.
+	 * @param disablePrints True to disable all prints, else false.
+	 */
 	public static void setDisablePrints(boolean disablePrints)
 	{
 		GrameManager.disablePrints = disablePrints;
 	}
 
+	/**
+	 * Returns whether or not prints are completely disabled.
+	 * @return True if prints are completely disabled, else false.
+	 */
 	public static boolean isDisablePrints()
 	{
 		return disablePrints;
 	}
 
-	public static boolean isInitialized()
-	{
-		return initialized;
-	}
-
+	/**
+	 * Sets whether spam prints will be visible or not. 
+	 * @param spam True to enable spam prints, else false.
+	 */
 	public static void setSpam(boolean spam)
 	{
 		GrameManager.spam = spam;
 	}
 
+	/**
+	 * Returns whether or not spam prints are enabled.
+	 * @return True if spam prints are enabled, else false.
+	 */
 	public static boolean isSpam()
 	{
 		return spam;
 	}
 
-	public static int getFps()
-	{
-		return fps;
-	}
-
-	public static void showConsole(boolean showConsole)
-	{
-		GrameManager.showConsole = showConsole;
-	}
-	
-	public static boolean showingConsole()
-	{
-		return showConsole;
-	}
-	
+	/**
+	 * Gets the {@link InputHandler} that is currently being used.
+	 * @return The {@link InputHandler} that is currently being used.
+	 */
 	public static InputHandler getInputHandler()
 	{
 		return input;
 	}
-	
+
+	/**
+	 * Gets all the loaded {@link MovementAI}s sorted in a HashMap<String, {@link MovementAI}> where the names (spaces replaced with '-') are the keys. 
+	 * @return A HashMap<String, {@link MovementAI}> of all loaded {@link MovementAI}s.
+	 */
 	public static HashMap<String, MovementAI> getAIs()
 	{
 		return ais;
 	}
-	
+
+	/**
+	 * Gets all the loaded {@link Render}s sorted in a HashMap<String, {@link Render}> where the names (spaces replaced with '-') are the keys. 
+	 * @return A HashMap<String, {@link Render}> of all loaded {@link Render}s.
+	 */
 	public static HashMap<String, Render> getRenders()
 	{
 		return renders;
 	}
-	
+
+	/**
+	 * Gets the size of the {@link GrameObject} list.
+	 * @return The size of the {@link GrameObject} list.
+	 */
 	public static int getObjectListLength()
 	{
 		return grameObjectList.size();
 	}
 	
-	private class OutputOverride extends PrintStream
+	/**
+	 * Gets the current FPS (Frames Per Second) count.
+	 * @return The current FPS (Frames Per Second) count.
+	 */
+	public static int getFPS()
 	{
-		public OutputOverride(OutputStream str)
-		{
-			super(str);
-		}
-
-		@Override
-		public void write(byte[] b) throws IOException
-		{
-			super.write(b);
-			String text = new String(b).trim();
-			if (!text.equals("") && !text.equals("\n"))
-				GrameUtils.print("[From Console (" + Thread.currentThread().getStackTrace()[9].getFileName().subSequence(0, Thread.currentThread().getStackTrace()[9].getFileName().indexOf(".java")) + ":" + Thread.currentThread().getStackTrace()[9].getLineNumber() + ")] " + text, MessageLevel.NORMAL);
-		}
-
-		@Override
-		public void write(byte[] buf, int off, int len)
-		{
-			super.write(buf, off, len);
-			String text = new String(buf, off, len).trim();
-			if (!text.equals("") && !text.equals("\n"))
-				GrameUtils.print("[From Console (" + Thread.currentThread().getStackTrace()[9].getFileName().subSequence(0, Thread.currentThread().getStackTrace()[9].getFileName().indexOf(".java")) + ":" + Thread.currentThread().getStackTrace()[9].getLineNumber() + ")] " + text, MessageLevel.NORMAL);
-		}
-
-		@Override
-		public void write(int b)
-		{
-			throw new UnsupportedOperationException("Write(int) is not supported by OutputOverride.");
-		}
+		return fps;
 	}
 }

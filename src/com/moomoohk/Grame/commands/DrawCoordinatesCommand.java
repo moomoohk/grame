@@ -15,7 +15,7 @@ public class DrawCoordinatesCommand extends Command<Console>
 	@Override
 	public void execute(Console arg0, String[] arg1)
 	{
-		RenderManager.drawCoordinates=Boolean.parseBoolean(arg1[0]);
+		RenderManager.drawCoordinates(Boolean.parseBoolean(arg1[0]));
 	}
 }
 

@@ -17,7 +17,7 @@ public class isOccupiedCommand extends Command<Console>
 	@Override
 	public void execute(Console arg0, String[]arg1)
 	{
-		if(!GrameManager.findBase(Integer.parseInt(arg1[0])).isInMap(new Coordinates(Integer.parseInt(arg1[1]), Integer.parseInt(arg1[1]))))
+		if(!GrameManager.findBase(Integer.parseInt(arg1[0])).isInBase(new Coordinates(Integer.parseInt(arg1[1]), Integer.parseInt(arg1[1]))))
 		{
 			this.message="Coordinates "+new Coordinates(Integer.parseInt(arg1[1]), Integer.parseInt(arg1[1])).toString()+" isn't in Base ID:"+arg1[0];
 			return;

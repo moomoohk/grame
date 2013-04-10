@@ -7,6 +7,13 @@ import com.moomoohk.Grame.Essentials.Coordinates;
 import com.moomoohk.Grame.Essentials.GrameUtils;
 import com.moomoohk.Grame.Essentials.GrameUtils.MessageLevel;
 
+/**
+ * This class is a collection of {@link Wall}s which is arranged in a certain pattern.
+ * 
+ * @author Meshulam Silk <moomoohk@ymail.com>
+ * @version 1.0
+ * @since 2013-04-05
+ */
 public class Schematic
 {
 	private Color[][] map;
@@ -14,11 +21,20 @@ public class Schematic
 	private int width;
 	private int type;
 
+	/**
+	 * Constructor.
+	 */
 	public Schematic()
 	{
 		this((int) (Math.random() * 13));
 	}
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param type
+	 *            1 of 13 premade Schematics.
+	 */
 	public Schematic(int type)
 	{
 		System.out.println(type);
@@ -229,6 +245,14 @@ public class Schematic
 		}
 	}
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param width
+	 *            Width of Schematic.
+	 * @param height
+	 *            Height of Schematic.
+	 */
 	public Schematic(int width, int height)
 	{
 		this.type = 0;
@@ -240,26 +264,33 @@ public class Schematic
 				this.map[i][j] = Color.WHITE;
 	}
 
-	void def(int row, int col)
+	private void def(int row, int col)
 	{
 		this.map[row][col] = Color.BLACK;
 	}
 
-	void trig(int row, int col)
+	private void trig(int row, int col)
 	{
 		this.map[row][col] = Color.cyan;
 	}
 
+	/**
+	 * Gets the color at a certain {@link Coordinates}.
+	 * 
+	 * @param c
+	 *            {@link Coordinates} from which to get color.
+	 * @return The color at the {@link Coordinates}.
+	 */
 	public Color getColor(Coordinates c)
 	{
 		return this.map[c.getY()][c.getX()];
 	}
 
-	int getType()
-	{
-		return this.type;
-	}
-
+	/**
+	 * Shows this Schematic in a {@link Base}.
+	 * <p>
+	 * For debug purposes.
+	 */
 	public void show()
 	{
 		Base b = new Base(5, 5, "Schematic " + type);
@@ -268,16 +299,33 @@ public class Schematic
 				b.setFloorColor(new Coordinates(j, i), this.map[i][j]);
 	}
 
-	public int width()
+	/**
+	 * Gets the width of this Schematic.
+	 * 
+	 * @return The width of this Schematic.
+	 */
+	public int getWidth()
 	{
 		return this.width;
 	}
 
-	public int height()
+	/**
+	 * Gets the height of this Schematic.
+	 * 
+	 * @return The height of this Schematic.
+	 */
+	public int getHeight()
 	{
 		return this.height;
 	}
 
+	/**
+	 * Checks if the place at certain {@link Coordinates} are solid or not.
+	 * 
+	 * @param c
+	 *            {@link Coordinates} to check.
+	 * @return True if solid, else false.
+	 */
 	public boolean isSolid(Coordinates c)
 	{
 		return (isInSchem(c)) && (this.map[c.getY()][c.getX()] == Color.black);
@@ -288,6 +336,17 @@ public class Schematic
 		return (c.getY() >= 0) && (c.getX() >= 0) && (c.getX() < this.width) && (c.getY() < this.height);
 	}
 
+	/**
+	 * Rotates Schematics 90 degrees in a given {@link Dir} a given amount of times.
+	 * 
+	 * @param d
+	 *            {@link Dir} to rotate in.
+	 * @param amount
+	 *            Amount of times to rotate.
+	 * @param s
+	 *            Schematic to rotate.
+	 * @return The rotated Schematic.
+	 */
 	public static Schematic rotator(Dir d, int amount, Schematic s)
 	{
 		amount %= 4;
@@ -310,7 +369,7 @@ public class Schematic
 			GrameUtils.print("Invalid amount! Use only positive numbers. Returning your schematic.", MessageLevel.ERROR);
 			return s;
 		}
-		Schematic sn = new Schematic(s.width(), s.height());
+		Schematic sn = new Schematic(s.getWidth(), s.getHeight());
 		for (int i = 0; i < sn.width; i++)
 			for (int j = 0; j < sn.height; j++)
 			{
@@ -324,11 +383,27 @@ public class Schematic
 		return rotator(d, amount - 1, sn);
 	}
 
+	/**
+	 * Sets the color at certain {@link Coordinates}.
+	 * 
+	 * @param pos
+	 *            {@link Coordinates} to set.
+	 * @param c
+	 *            Color to use.
+	 */
 	public void setColor(Coordinates pos, Color c)
 	{
 		this.map[pos.getY()][pos.getX()] = c;
 	}
 
+	/**
+	 * Loads the Schematic into a given {@link Base} at given {@link Coordinates}.
+	 * 
+	 * @param b
+	 *            {@link Base} in which to load this Schematic.
+	 * @param loc
+	 *            {@link Coordinates} at which to load this Schematic.
+	 */
 	public void load(Base b, Coordinates loc)
 	{
 		int sx = 0;
@@ -338,15 +413,15 @@ public class Schematic
 		for (int i = loc.getY(); i < loc.getY() + this.height; i++)
 		{
 			mapy = i;
-			for (int j = loc.getX(); j < loc.getX()+this.width; j++)
+			for (int j = loc.getX(); j < loc.getX() + this.width; j++)
 			{
 				mapx = j;
 				//System.out.println((this.map[sy][sx]==null)+" "+!b.isOccupied(new Coordinates(mapx, mapy))+" "+b.isInMap(new Coordinates(mapx, mapy))+" "+new Coordinates(mapx, mapy));
-				if(this.map[sy][sx]==null)
+				if (this.map[sy][sx] == null)
 					continue;
-				if (b.isInMap(new Coordinates(mapx, mapy)) && !b.isOccupied(new Coordinates(mapx, mapy)))
+				if (b.isInBase(new Coordinates(mapx, mapy)) && !b.isOccupied(new Coordinates(mapx, mapy)))
 				{
-				//	System.out.println("hi");
+					//	System.out.println("hi");
 					b.addGrameObject(new Wall(getColor(new Coordinates(sx, sy))), new Coordinates(mapx, mapy));
 				}
 				sx++;
@@ -355,21 +430,22 @@ public class Schematic
 			sy++;
 		}
 	}
+
 	public String toString()
 	{
-		String st="";
-		for(int i=0; i<width; i++)
+		String st = "";
+		for (int i = 0; i < width; i++)
 		{
-			for(int j=0; j<height; j++)
+			for (int j = 0; j < height; j++)
 			{
-				st+="[";
-				if(this.map[i][j]!=null)
-					st+="x";
+				st += "[";
+				if (this.map[i][j] != null)
+					st += "x";
 				else
-					st+=" ";
-				st+="]";
+					st += " ";
+				st += "]";
 			}
-			st+="\n";
+			st += "\n";
 		}
 		return st;
 	}

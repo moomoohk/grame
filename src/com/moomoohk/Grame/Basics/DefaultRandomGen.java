@@ -1,7 +1,14 @@
-package com.moomoohk.Grame.Essentials;
+package com.moomoohk.Grame.Basics;
 
 import com.moomoohk.Grame.Interfaces.EntityGenerator;
 
+/**
+ * This generator will generate a random name and type.
+ * 
+ * @author Meshulam Silk <moomoohk@ymail.com>
+ * @version 1.0
+ * @since 2013-04-05
+ */
 public class DefaultRandomGen implements EntityGenerator
 {
 	public String nameGen()
@@ -14,7 +21,7 @@ public class DefaultRandomGen implements EntityGenerator
 		for (int i = 0; i < letters.length; i++)
 		{
 			letters[i] = letter;
-			letter +=1;
+			letter += 1;
 		}
 		for (int i = 0; i < length; i++)
 		{

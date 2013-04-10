@@ -4,13 +4,26 @@ import java.awt.Color;
 
 import com.moomoohk.Grame.Interfaces.GrameObject;
 
+/**
+ * Walls are ready to use {@link GrameObject}s which are supposed to represent ordinary walls.
+ * @author Meshulam Silk <moomoohk@ymail.com>
+ * @version 1.0
+ * @since 2013-04-05
+ */
 public class Wall extends GrameObject
 {
+	/**
+	 * Constructor.
+	 */
 	public Wall()
 	{
 		this(Color.black);
 	}
 
+	/**
+	 * Constructor.
+	 * @param color Color of this Wall.
+	 */
 	public Wall(Color color)
 	{
 		super("Wall", 1, color, false);
@@ -23,6 +36,11 @@ public class Wall extends GrameObject
 
 	@Override
 	public void tick(int bID)
+	{
+	}
+
+	@Override
+	public void consume(GrameObject go)
 	{
 	}
 }

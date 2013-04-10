@@ -4,8 +4,8 @@ package com.moomoohk.Grame.commands;
 import java.awt.Color;
 import java.util.HashMap;
 
+import com.moomoohk.Grame.Basics.DefaultRandomGen;
 import com.moomoohk.Grame.Basics.Entity;
-import com.moomoohk.Grame.Essentials.DefaultRandomGen;
 import com.moomoohk.Grame.Essentials.GrameUtils;
 import com.moomoohk.MooCommands.Command;
 import com.moomoohk.MooConsole.Console;
