@@ -72,7 +72,7 @@ public class SimpleChaseAI extends MovementAI
 					dir2.setX(wall.getX());
 				if (wall.getY() != 0)
 					dir2.setY(wall.getY());
-				return MovementAI.wraparound(b, MovementAI.slide(b, pos, dir2), dir2);
+				return MovementAI.wraparound(b, /*MovementAI.slide(b, pos, dir2)*/ pos, dir2);
 			}
 		}
 	}

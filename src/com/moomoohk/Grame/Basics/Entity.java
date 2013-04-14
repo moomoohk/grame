@@ -287,6 +287,15 @@ public class Entity extends GrameObject
 		else
 			GrameUtils.print("Cannot set that Entity (ID:" + eID + ") as target for Entity with ID:" + ID + " (Entity not found)", MessageLevel.ERROR);
 	}
+	
+	/**
+	 * Returns this Entity's target.
+	 * @return This Entity's target.
+	 */
+	public Entity getTarget()
+	{
+		return (Entity)(GrameManager.findGrameObject(this.targetID));
+	}
 
 	/**
 	 * Gets the range of this Entity.

@@ -12,6 +12,7 @@ import com.moomoohk.Grame.Essentials.GrameManager;
 import com.moomoohk.Grame.Essentials.GrameObjectLayer;
 import com.moomoohk.Grame.Essentials.GrameUtils;
 import com.moomoohk.Grame.Graphics.RenderManager;
+import com.moomoohk.Grame.test.SpriteRender;
 
 public class MainScript
 {
@@ -47,11 +48,13 @@ public class MainScript
 			b.addGrameObject(new Wall(), temp, 0);
 			b.addGrameObject(new Wall(), temp, 1);
 		}
-		RenderManager.render(b.ID);
+		SpriteRender.objects.put(p.ID, "player");
+		SpriteRender.objects.put(c.ID, "monster");
+		RenderManager.render(b.ID, new SpriteRender());
 		RenderManager.setVisible(true);
 		JOptionPane.showMessageDialog(new JFrame(), "Ready to begin?", "Grass Muncher!", JOptionPane.PLAIN_MESSAGE);
 		GrameManager.pauseAllGrameObjects(false);
-		c.pause(true);
+//		c.pause(true);
 	}
 
 	public static void win()

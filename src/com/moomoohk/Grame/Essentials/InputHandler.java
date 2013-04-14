@@ -60,7 +60,6 @@ public class InputHandler implements KeyEventDispatcher
 			GrameUtils.print("Key typed: " + e.getKeyCode(), MessageLevel.SPAM);
 			break;
 		}
-		return true;
+		return false;
 	}
-
 }

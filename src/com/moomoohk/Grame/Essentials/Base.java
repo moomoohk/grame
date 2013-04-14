@@ -289,6 +289,17 @@ public class Base
 				return true;
 		return false;
 	}
+	
+	/**
+	 * Gets the {@link GrameManager} at given {@link Coordinates} in a certain layer.
+	 * @param pos The {@link Coordinates} to get the object from.
+	 * @param layer The layer to get the object from.
+	 * @return The {@link GrameManager} at the given {@link Coordinates} in the given layer.
+	 */
+	public GrameObject getGrameObject(Coordinates pos, int layer)
+	{
+		return this.layers.get(layer).getObject(pos);
+	}
 
 	/**
 	 * Returns the position of a {@link GrameObject} that is in this Base.
@@ -427,6 +438,15 @@ public class Base
 	public String getTitle()
 	{
 		return title;
+	}
+	
+	/**
+	 * Gets the amount of layers in this Base.
+	 * @return The amount of layers in this Base.
+	 */
+	public int getLayerCount()
+	{
+		return this.layers.size();
 	}
 
 	/**

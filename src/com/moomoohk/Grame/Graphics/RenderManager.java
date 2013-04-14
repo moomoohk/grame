@@ -133,10 +133,12 @@ public class RenderManager
 				public void focusLost(FocusEvent paramFocusEvent)
 				{
 					GrameManager.getInputHandler().resetKeys();
+//					GrameManager.pauseAllGrameObjects(true);
 				}
 
 				public void focusGained(FocusEvent paramFocusEvent)
 				{
+//					GrameManager.pauseAllGrameObjects(false);
 				}
 			});
 		}

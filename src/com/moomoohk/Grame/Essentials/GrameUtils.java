@@ -45,6 +45,8 @@ import com.moomoohk.Grame.commands.PrintEntityAICommand;
 import com.moomoohk.Grame.commands.QuitCommand;
 import com.moomoohk.Grame.commands.RenderBaseCommand;
 import com.moomoohk.Grame.commands.SetEntityOverrideAICommand;
+import com.moomoohk.Grame.commands.SetObjectSpeedCommand;
+import com.moomoohk.Grame.commands.SetSpriteCommand;
 import com.moomoohk.Grame.commands.isOccupiedCommand;
 import com.moomoohk.Grame.commands.setVisibleCommand;
 import com.moomoohk.MooCommands.Command;
@@ -472,6 +474,8 @@ public class GrameUtils
 		commands.add(new PrintEntityAICommand(console, "printentityai", "Prints the AI list for a given Entity. Usage: printentityai <entity ID>", 1, 1));
 		commands.add(new isOccupiedCommand(console, "isoccupied", "Checks whether Coordinates in a Base are occupied by a Grame object. Usage: isoccupied <base ID> <coordinates x> <coordinates y>", 3, 3));
 		commands.add(new DrawCoordinatesCommand(console, "drawcoordinates", "Draws the coordinates in each square. Usage: drawcoordinates <true/false>", 1, 1));
+		commands.add(new SetObjectSpeedCommand(console, "setspeed", "Sets the speed of an object.", 2, 2));
+		commands.add(new SetSpriteCommand(console, "setsprite", "Sets a certain sprite. Usage: setsprite <sprite name> <path to sprite>", 2, -1));
 		console.loadCommands(commands);
 		print("Loaded " + Command.commands.size() + " commands.", MessageLevel.DEBUG);
 	}
