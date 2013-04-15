@@ -25,7 +25,7 @@ public class TestGrameObject extends GrameObject
 	{
 		//this.color=GrameUtils.randomColor();
 		time++;
-		this.color=new Color(Math.abs((int)(245*Math.sin(time/4)))+10, Math.abs((int)(245*Math.sin((time+100)/4)))+10, Math.abs((int)(245*Math.sin((time+200)/4)))+10);
+		//this.color=new Color(Math.abs((int)(245*Math.sin(time/4)))+10, Math.abs((int)(245*Math.sin((time+100)/4)))+10, Math.abs((int)(245*Math.sin((time+200)/4)))+10);
 	}
 
 	@Override
