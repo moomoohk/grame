@@ -64,6 +64,16 @@ public class Entity extends GrameObject
 		this(entGen.nameGen(), entGen.typeGen(), 1, GrameUtils.randomColor());
 	}
 
+	public Entity(String name)
+	{
+		this(name, "", 0, GrameUtils.randomColor());
+	}
+
+	public Entity(String name, Color color)
+	{
+		this(name, "", 0, color);
+	}
+
 	/**
 	 * Constructor.
 	 * 
@@ -241,7 +251,9 @@ public class Entity extends GrameObject
 
 	/**
 	 * Checks whether or not this Entity is a "player" (controllable by the keyboard).
-	 * @param bID The {@link Base#ID} of the {@link Base} in which to check.
+	 * 
+	 * @param bID
+	 *            The {@link Base#ID} of the {@link Base} in which to check.
 	 * @return True if this Entity is a "player", else false.
 	 * @see Entity#makePlayer(int, boolean, int)
 	 */
@@ -254,9 +266,13 @@ public class Entity extends GrameObject
 
 	/**
 	 * Turns this Entity into a "player".
-	 * @param player 1 for wasd control, 2 for arrow keys control.
-	 * @param f True to turn this Entity into a "player", else false.
-	 * @param bID The {@link Base#ID} of the {@link Base} in which to turn this Entity into a "player".
+	 * 
+	 * @param player
+	 *            1 for wasd control, 2 for arrow keys control.
+	 * @param f
+	 *            True to turn this Entity into a "player", else false.
+	 * @param bID
+	 *            The {@link Base#ID} of the {@link Base} in which to turn this Entity into a "player".
 	 * @see Entity#isPlayer(int)
 	 */
 	public void makePlayer(int player, boolean f, int bID)
@@ -278,7 +294,9 @@ public class Entity extends GrameObject
 
 	/**
 	 * Sets the target of this Entity.
-	 * @param eID The {@link GrameObject#ID} of the {@link GrameObject}/Entity to set as target. 
+	 * 
+	 * @param eID
+	 *            The {@link GrameObject#ID} of the {@link GrameObject}/Entity to set as target.
 	 */
 	public void setTarget(int eID)
 	{
@@ -287,18 +305,20 @@ public class Entity extends GrameObject
 		else
 			GrameUtils.print("Cannot set that Entity (ID:" + eID + ") as target for Entity with ID:" + ID + " (Entity not found)", MessageLevel.ERROR);
 	}
-	
+
 	/**
 	 * Returns this Entity's target.
+	 * 
 	 * @return This Entity's target.
 	 */
 	public Entity getTarget()
 	{
-		return (Entity)(GrameManager.findGrameObject(this.targetID));
+		return (Entity) (GrameManager.findGrameObject(this.targetID));
 	}
 
 	/**
 	 * Gets the range of this Entity.
+	 * 
 	 * @return The range of this Entity.
 	 */
 	public int getRange()
@@ -308,7 +328,9 @@ public class Entity extends GrameObject
 
 	/**
 	 * Sets the range of this Entity.
-	 * @param range The range to set.
+	 * 
+	 * @param range
+	 *            The range to set.
 	 */
 	public void setRange(int range)
 	{
@@ -322,7 +344,9 @@ public class Entity extends GrameObject
 
 	/**
 	 * Sets the type of this Entity.
-	 * @param type The type to set.
+	 * 
+	 * @param type
+	 *            The type to set.
 	 */
 	public void setType(String type)
 	{
@@ -331,6 +355,7 @@ public class Entity extends GrameObject
 
 	/**
 	 * Gets the type of this Entity.
+	 * 
 	 * @return The type of this Entity.
 	 */
 	public String getType()
@@ -340,7 +365,9 @@ public class Entity extends GrameObject
 
 	/**
 	 * Sets the level of this Entity.
-	 * @param level The level to set.
+	 * 
+	 * @param level
+	 *            The level to set.
 	 */
 	public void setLevel(int level)
 	{
@@ -349,6 +376,7 @@ public class Entity extends GrameObject
 
 	/**
 	 * Gets the level of this Entity.
+	 * 
 	 * @return The level of this Entity.
 	 */
 	public int getLevel()
@@ -358,7 +386,9 @@ public class Entity extends GrameObject
 
 	/**
 	 * Sets the points of this Entity.
-	 * @param points The points to set.
+	 * 
+	 * @param points
+	 *            The points to set.
 	 */
 	public void setPoints(int points)
 	{
@@ -367,6 +397,7 @@ public class Entity extends GrameObject
 
 	/**
 	 * Gets the points of this Entity.
+	 * 
 	 * @return The points of this Entity.
 	 */
 	public int getPoints()

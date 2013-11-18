@@ -6,10 +6,10 @@ import com.moomoohk.Grame.Essentials.GrameManager;
 import com.moomoohk.MooCommands.Command;
 import com.moomoohk.MooConsole.Console;
 
-public class isOccupiedCommand extends Command<Console>
+public class IsOccupiedCommand extends Command<Console>
 {
 
-	public isOccupiedCommand(Console handler, String command, String help, int minParams, int maxParams)
+	public IsOccupiedCommand(Console handler, String command, String help, int minParams, int maxParams)
 	{
 		super(handler, command, help, minParams, maxParams);
 	}

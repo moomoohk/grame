@@ -15,6 +15,7 @@ import java.util.HashMap;
 import javax.swing.JFrame;
 
 import com.moomoohk.Grame.Essentials.Base;
+import com.moomoohk.Grame.Essentials.Coordinates;
 import com.moomoohk.Grame.Essentials.GrameManager;
 import com.moomoohk.Grame.Essentials.GrameUtils;
 import com.moomoohk.Grame.Essentials.GrameUtils.MessageLevel;
@@ -22,6 +23,7 @@ import com.moomoohk.Grame.Interfaces.Render;
 
 /**
  * Manages all the rendering operations.
+ * 
  * @author Meshulam Silk <moomoohk@ymail.com>
  * @version 1.0
  * @since 2013-04-05
@@ -29,21 +31,26 @@ import com.moomoohk.Grame.Interfaces.Render;
 public class RenderManager
 {
 	private static HashMap<Integer, Render> renders;
+	private static HashMap<Integer, TextLayer> text;
 	private static JFrame mainFrame = new JFrame();
 	private static Canvas mainCanvas = null;
 	private static int mainBase = -1;
 	private static boolean drawCoordinates = false;
+	private static int squareSize = 30;
 
 	static
 	{
 		renders = new HashMap<Integer, Render>();
+		text = new HashMap<Integer, TextLayer>();
 		loadRenders();
 		GrameUtils.print("Initialized successfully.", MessageLevel.NORMAL);
 	}
 
 	/**
 	 * Renders a {@link Base}.
-	 * @param bID The {@link Base#ID} of the {@link Base} to render.
+	 * 
+	 * @param bID
+	 *            The {@link Base#ID} of the {@link Base} to render.
 	 */
 	public static void render(int bID)
 	{
@@ -52,8 +59,11 @@ public class RenderManager
 
 	/**
 	 * Renders a {@link Base} using a given {@link Render}.
-	 * @param bID The {@link Base#ID} of the {@link Base} to render.
-	 * @param render The {@link Render} to use.
+	 * 
+	 * @param bID
+	 *            The {@link Base#ID} of the {@link Base} to render.
+	 * @param render
+	 *            The {@link Render} to use.
 	 */
 	public static void render(final int bID, Render render)
 	{
@@ -84,16 +94,24 @@ public class RenderManager
 		}
 		Graphics g = bs.getDrawGraphics();
 		g.drawImage(img, 0, 0, mainCanvas.getWidth(), mainCanvas.getHeight(), null);
+
+		g.setColor(Color.blue);
+		g.setFont(new Font("LucidaTypewriter", 1, 8));
+		int squaresize = mainCanvas.getWidth() / GrameManager.findBase(bID).getColumns();
+		for (int x = 0; x < GrameManager.findBase(bID).getColumns(); x++)
+			for (int y = 0; y < GrameManager.findBase(bID).getRows(); y++)
+				if (text.get(bID) != null)
+				{
+					if (text.get(bID).getText(new Coordinates(x, y)) != null && text.get(bID).getText(new Coordinates(x, y)).trim().length() != 0)
+						g.drawString(text.get(bID).getText(new Coordinates(x, y)), y * squaresize, (x + 1) * (squaresize) - ((squaresize / 2) - 5));
+				}
+
 		if (drawCoordinates)
 		{
-			g.setColor(Color.black);
-			g.setFont(new Font("LucidaTypewriter", 1, 8));
-			int squaresize = mainCanvas.getWidth() / GrameManager.findBase(bID).getColumns();
+			//			squaresize = mainCanvas.getWidth() / GrameManager.findBase(bID).getColumns();
 			for (int x = 0; x < GrameManager.findBase(bID).getColumns(); x++)
 				for (int y = 0; y < GrameManager.findBase(bID).getRows(); y++)
-				{
-					g.drawString("(" + y + ", " + x + ")", y * squaresize + 5, (x + 1) * squaresize - (squaresize / 2));
-				}
+					g.drawString("(" + y + ", " + x + ")", y * squaresize, (x + 1) * (squaresize) - ((squaresize / 2) - 5));
 		}
 		g.dispose();
 		bs.show();
@@ -101,20 +119,24 @@ public class RenderManager
 
 	/**
 	 * Generates a blank {@link Canvas} which is of the required size.
-	 * @param bID {@link Base#ID} of the {@link Base} of which this {@link Canvas} is.
+	 * 
+	 * @param bID
+	 *            {@link Base#ID} of the {@link Base} of which this {@link Canvas} is.
 	 * @return A {@link Canvas}.
 	 */
 	public static Canvas generateCanvas(int bID)
 	{
 		Canvas c = new Canvas();
-		int width = Math.min(30 * GrameManager.findBase(bID).getColumns(), Toolkit.getDefaultToolkit().getScreenSize().width), height = Math.min(30 * GrameManager.findBase(bID).getRows(), Toolkit.getDefaultToolkit().getScreenSize().height - 50);
+		int width = Math.min(squareSize * GrameManager.findBase(bID).getColumns(), Toolkit.getDefaultToolkit().getScreenSize().width), height = Math.min(squareSize * GrameManager.findBase(bID).getRows(), Toolkit.getDefaultToolkit().getScreenSize().height - 50);
 		c.setSize(width, height);
 		return c;
 	}
 
 	/**
 	 * Sets up the main window.
-	 * @param bID {@link Base#ID} of the {@link Base} which is being rendered.
+	 * 
+	 * @param bID
+	 *            {@link Base#ID} of the {@link Base} which is being rendered.
 	 */
 	public static void setupFrame(int bID)
 	{
@@ -133,12 +155,12 @@ public class RenderManager
 				public void focusLost(FocusEvent paramFocusEvent)
 				{
 					GrameManager.getInputHandler().resetKeys();
-//					GrameManager.pauseAllGrameObjects(true);
+					//					GrameManager.pauseAllGrameObjects(true);
 				}
 
 				public void focusGained(FocusEvent paramFocusEvent)
 				{
-//					GrameManager.pauseAllGrameObjects(false);
+					//					GrameManager.pauseAllGrameObjects(false);
 				}
 			});
 		}
@@ -155,14 +177,17 @@ public class RenderManager
 
 	/**
 	 * Attaches a {@link Render} to a {@link Base} for future reference.
-	 * @param bID {@link Base#ID} of {@link Base} to attach the {@link Render} to.
-	 * @param render The {@link Render} to attach.
+	 * 
+	 * @param bID
+	 *            {@link Base#ID} of {@link Base} to attach the {@link Render} to.
+	 * @param render
+	 *            The {@link Render} to attach.
 	 */
 	public static void setRender(int bID, Render render)
 	{
 		renders.put(bID, render);
 	}
-	
+
 	/**
 	 * Loads some basic {@link Render}s.
 	 */
@@ -174,7 +199,9 @@ public class RenderManager
 
 	/**
 	 * Sets the visibility of the main window.
-	 * @param f True to make the main window visible, else false.
+	 * 
+	 * @param f
+	 *            True to make the main window visible, else false.
 	 */
 	public static void setVisible(boolean f)
 	{
@@ -183,6 +210,7 @@ public class RenderManager
 
 	/**
 	 * Checks whether the main window is visible or not.
+	 * 
 	 * @return True if the main window is visible, else false.
 	 */
 	public static boolean isVisible()
@@ -192,15 +220,17 @@ public class RenderManager
 
 	/**
 	 * Gets the main window.
+	 * 
 	 * @return The main window.
 	 */
 	public static JFrame getMainFrame()
 	{
 		return mainFrame;
 	}
-	
+
 	/**
 	 * Gets the main {@link Canvas}.
+	 * 
 	 * @return The main {@link Canvas}.
 	 */
 	public static Canvas getMainCanvas()
@@ -210,6 +240,7 @@ public class RenderManager
 
 	/**
 	 * Gets the {@link Base#ID} of the main {@link Base}.
+	 * 
 	 * @return The {@link Base#ID} of the main {@link Base}.
 	 */
 	public static int getMainBase()
@@ -219,6 +250,7 @@ public class RenderManager
 
 	/**
 	 * Gets the {@link Render} {@link HashMap}.
+	 * 
 	 * @return The {@link Render} {@link HashMap}.
 	 */
 	public static HashMap<Integer, Render> getRenders()
@@ -230,10 +262,46 @@ public class RenderManager
 	 * Sets whether or not to draw coordinates.
 	 * <p>
 	 * This method was created for debug and testing purposes.
-	 * @param f True to draw coordinates, else false.
+	 * 
+	 * @param f
+	 *            True to draw coordinates, else false.
 	 */
 	public static void drawCoordinates(boolean f)
 	{
-		drawCoordinates=f;
+		drawCoordinates = f;
+	}
+
+	public static void setText(int bID, Coordinates pos, String text)
+	{
+		if (!GrameManager.findBase(bID).isInBase(pos))
+			return;
+		if (RenderManager.text.get(bID) == null)
+			RenderManager.text.put(bID, new TextLayer(GrameManager.findBase(bID).getRows(), GrameManager.findBase(bID).getColumns()));
+		RenderManager.text.get(bID).setText(pos, text);
+	}
+
+	public static void clearText(int bID)
+	{
+		RenderManager.text.put(bID, new TextLayer(GrameManager.findBase(bID).getRows(), GrameManager.findBase(bID).getColumns()));
+	}
+
+	private static class TextLayer
+	{
+		private String[][] text;
+
+		public TextLayer(int row, int col)
+		{
+			this.text = new String[row][col];
+		}
+
+		public void setText(Coordinates pos, String text)
+		{
+			this.text[pos.getY()][pos.getX()] = text;
+		}
+
+		public String getText(Coordinates pos)
+		{
+			return this.text[pos.getY()][pos.getX()];
+		}
 	}
 }

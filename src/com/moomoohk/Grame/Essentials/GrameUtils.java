@@ -47,8 +47,8 @@ import com.moomoohk.Grame.commands.RenderBaseCommand;
 import com.moomoohk.Grame.commands.SetEntityOverrideAICommand;
 import com.moomoohk.Grame.commands.SetObjectSpeedCommand;
 import com.moomoohk.Grame.commands.SetSpriteCommand;
-import com.moomoohk.Grame.commands.isOccupiedCommand;
-import com.moomoohk.Grame.commands.setVisibleCommand;
+import com.moomoohk.Grame.commands.IsOccupiedCommand;
+import com.moomoohk.Grame.commands.SetVisibleCommand;
 import com.moomoohk.MooCommands.Command;
 import com.moomoohk.MooConsole.Console;
 
@@ -378,14 +378,13 @@ public class GrameUtils
 		{
 			StackTraceElement caller = Thread.currentThread().getStackTrace()[2];
 			wordQueue.add("[" + caller.getFileName().subSequence(0, caller.getFileName().indexOf(".java")) + ":" + caller.getLineNumber() + "] " + st);
+			Color printColor = Color.white;
 			if (level == MessageLevel.ERROR || level == MessageLevel.DEBUG_ERROR)
-				console.setConsoleTextColor(Color.red);
+				printColor = Color.red;
 			else
 				if (level == MessageLevel.DEBUG)
-					console.setConsoleTextColor(Color.gray.brighter());
-				else
-					console.setConsoleTextColor(Color.white);
-			console.addText(wordQueue.get(0) + "\n");
+					printColor = Color.gray.brighter();
+			console.addText(wordQueue.get(0) + "\n", printColor);
 			wordQueue.remove(0);
 		}
 	}
@@ -460,7 +459,7 @@ public class GrameUtils
 	public static void loadBasicCommands()
 	{
 		ArrayList<Command<?>> commands = new ArrayList<Command<?>>();
-		commands.add(new setVisibleCommand(console, "setvisible", "Toggles the visibility of the main window. Usage: setvisible [true/false]", 0, 1));
+		commands.add(new SetVisibleCommand(console, "setvisible", "Toggles the visibility of the main window. Usage: setvisible [true/false]", 0, 1));
 		commands.add(new MoveGrameObjectCommand(console, "move", "Moves a Grame Object. Usage: move <go ID> <base ID> <dir>", 3, 4));
 		commands.add(new HelpCommand(console, "help", "Will print the help of a command. Leave blank for all the commands. Usage: help [command name]", 0, 1));
 		commands.add(new RenderBaseCommand(console, "render", "Will render a base using a render in the Render list. Usage: render <base ID> <render name>", 2, 2));
@@ -472,7 +471,7 @@ public class GrameUtils
 		commands.add(new SetEntityOverrideAICommand(console, "setentityoverrideai", "Sets the override AI for a given Entity. Usage: setentityoverrideai <entity ID> <base ID> <override movementai name>", 3, 3));
 		commands.add(new ClearEntityAI(console, "clearentityai", "Clears the AI list of an Entity. Usage: clearentityai <entity ID>", 1, 1));
 		commands.add(new PrintEntityAICommand(console, "printentityai", "Prints the AI list for a given Entity. Usage: printentityai <entity ID>", 1, 1));
-		commands.add(new isOccupiedCommand(console, "isoccupied", "Checks whether Coordinates in a Base are occupied by a Grame object. Usage: isoccupied <base ID> <coordinates x> <coordinates y>", 3, 3));
+		commands.add(new IsOccupiedCommand(console, "isoccupied", "Checks whether Coordinates in a Base are occupied by a Grame object. Usage: isoccupied <base ID> <coordinates x> <coordinates y>", 3, 3));
 		commands.add(new DrawCoordinatesCommand(console, "drawcoordinates", "Draws the coordinates in each square. Usage: drawcoordinates <true/false>", 1, 1));
 		commands.add(new SetObjectSpeedCommand(console, "setspeed", "Sets the speed of an object.", 2, 2));
 		commands.add(new SetSpriteCommand(console, "setsprite", "Sets a certain sprite. Usage: setsprite <sprite name> <path to sprite>", 2, -1));

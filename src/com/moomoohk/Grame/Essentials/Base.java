@@ -1,6 +1,7 @@
 package com.moomoohk.Grame.Essentials;
 
 import java.awt.Color;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.moomoohk.Grame.Essentials.GrameUtils.MessageLevel;
@@ -13,8 +14,9 @@ import com.moomoohk.Grame.Interfaces.GrameObject;
  * @version 1.0
  * @since 2013-04-05
  */
-public class Base
+public class Base implements Serializable
 {
+	private static final long serialVersionUID = 8132183829206502759L;
 	/**
 	 * The ID of this Base.
 	 * <p>
@@ -235,6 +237,18 @@ public class Base
 	}
 
 	/**
+	 * Gets the floor color of a square in this Base.
+	 * 
+	 * @param pos
+	 *            {@link Coordinates} of square to get.
+	 * @return The color of the square.
+	 */
+	public Color getFloorColor(Coordinates pos)
+	{
+		return this.floor.getColor(pos);
+	}
+
+	/**
 	 * Adds a {@link GrameObject} to this Base.
 	 * 
 	 * @param go
@@ -289,11 +303,14 @@ public class Base
 				return true;
 		return false;
 	}
-	
+
 	/**
 	 * Gets the {@link GrameManager} at given {@link Coordinates} in a certain layer.
-	 * @param pos The {@link Coordinates} to get the object from.
-	 * @param layer The layer to get the object from.
+	 * 
+	 * @param pos
+	 *            The {@link Coordinates} to get the object from.
+	 * @param layer
+	 *            The layer to get the object from.
 	 * @return The {@link GrameManager} at the given {@link Coordinates} in the given layer.
 	 */
 	public GrameObject getGrameObject(Coordinates pos, int layer)
@@ -314,6 +331,16 @@ public class Base
 			if (this.layers.get(i).contains(goID))
 				return this.layers.get(i).getObjectPos(goID);
 		return null;
+	}
+
+	/**
+	 * Return a list of the {@link GrameObjectLayer}s of this Base.
+	 * 
+	 * @return A list of the {@link GrameObjectLayer}s of this Base.
+	 */
+	public ArrayList<GrameObjectLayer> getGrameObjectLayers()
+	{
+		return this.layers;
 	}
 
 	/**
@@ -377,7 +404,7 @@ public class Base
 	 */
 	public boolean isOccupied(Coordinates pos, int layer)
 	{
-		if (this.layers.get(layer).getObject(pos) != null)
+		if (this.layers.get(layer).getObject(pos) != null && this.layers.get(layer).getObject(pos).isCollidable())
 			return true;
 		return false;
 	}
@@ -439,9 +466,10 @@ public class Base
 	{
 		return title;
 	}
-	
+
 	/**
 	 * Gets the amount of layers in this Base.
+	 * 
 	 * @return The amount of layers in this Base.
 	 */
 	public int getLayerCount()

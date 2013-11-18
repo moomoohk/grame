@@ -36,13 +36,17 @@ public class PlayerMovementAI extends MovementAI
 		Dir d = player == 1 ? GrameManager.dir1 : player == 2 ? GrameManager.dir2 : null;
 		if (d == null)
 			return pos;
-		if (!b.isInBase(MovementAI.slide(b, pos, d)))
+		int layer = -1;
+		for (int i = 0; i < b.getGrameObjectLayers().size(); i++)
+			if (b.getGrameObjectLayers().get(i).contains(ent1.ID))
+				layer = i;
+		if (!b.isInBase(MovementAI.slide(b, pos, d, layer)))
 			if (b.getWraparound())
-				return MovementAI.wraparound(b, MovementAI.slide(b, pos, d), d);
+				return MovementAI.wraparound(b, MovementAI.slide(b, pos, d, layer), d);
 			else
 				return pos;
 		else
-			return MovementAI.slide(b, pos, d);
+			return MovementAI.slide(b, pos, d, layer);
 	}
 
 	public boolean isValid(Coordinates pos, Coordinates target, Base b, Entity ent1, Entity ent2)

@@ -61,10 +61,12 @@ public class Coordinates
 	{
 		return this.y;
 	}
-	
+
 	/**
 	 * Sets the x value of this set of coordinates.
-	 * @param x The x to set.
+	 * 
+	 * @param x
+	 *            The x to set.
 	 */
 	public void setX(int x)
 	{
@@ -73,7 +75,9 @@ public class Coordinates
 
 	/**
 	 * Sets the y value of this set of coordinates.
-	 * @param y The y to set.
+	 * 
+	 * @param y
+	 *            The y to set.
 	 */
 	public void setY(int y)
 	{
@@ -85,8 +89,7 @@ public class Coordinates
 	 * 
 	 * @param d
 	 *            {@link Dir} to apply.
-	 * @return A new set of coordinates which are a combination of this set and
-	 *         the {@link Dir}.
+	 * @return A new set of coordinates which are a combination of this set and the {@link Dir}.
 	 */
 	public Coordinates addDir(Dir d)
 	{
@@ -116,15 +119,11 @@ public class Coordinates
 	}
 
 	/**
-	 * Will return an Coordinates[] which contains all the sets of coordinates
-	 * which are adjacent to this set in a certain {@link Base} and are also in
-	 * that same {@link Base}.
+	 * Will return an Coordinates[] which contains all the sets of coordinates which are adjacent to this set in a certain {@link Base} and are also in that same {@link Base}.
 	 * 
 	 * @param b
 	 *            The {@link Base} in which to check.
-	 * @return An array containing all the sets of coordinates which are
-	 *         adjacent to this set in a certain {@link Base} and are also in
-	 *         that same {@link Base}.
+	 * @return An array containing all the sets of coordinates which are adjacent to this set in a certain {@link Base} and are also in that same {@link Base}.
 	 */
 	public Coordinates[] getSurrounding(Base b)
 	{
@@ -152,30 +151,23 @@ public class Coordinates
 	}
 
 	/**
-	 * Will return an Coordinates[] which contains all the sets of coordinates
-	 * which are adjacent to this set in a certain {@link Base} but are not
-	 * necessarily in that same {@link Base}.
+	 * Will return an Coordinates[] which contains all the sets of coordinates which are adjacent to this set in a certain {@link Base} but are not necessarily in that same {@link Base}.
 	 * 
 	 * @param b
 	 *            The {@link Base} in which to check.
-	 * @return An array containing all the sets of coordinates which are
-	 *         adjacent to this set in a certain {@link Base} but are not
-	 *         necessarily in that same {@link Base}.
+	 * @return An array containing all the sets of coordinates which are adjacent to this set in a certain {@link Base} but are not necessarily in that same {@link Base}.
 	 */
 	public Coordinates[] getAllSurrounding(Base b)
 	{
-		return new Coordinates[]
-		                       { this.addDir(Dir.UP), this.addDir(Dir.LEFT), this.addDir(Dir.RIGHT), this.addDir(Dir.DOWN), this.addDir(new Dir(1, 1)), this.addDir(new Dir(-1, 1)), this.addDir(new Dir(1, -1)), this.addDir(new Dir(-1, -1)) };
+		return new Coordinates[] { this.addDir(Dir.UP), this.addDir(Dir.LEFT), this.addDir(Dir.RIGHT), this.addDir(Dir.DOWN), this.addDir(new Dir(1, 1)), this.addDir(new Dir(-1, 1)), this.addDir(new Dir(1, -1)), this.addDir(new Dir(-1, -1)) };
 	}
 
 	/**
-	 * Checks whether all the adjacent sets of coordinates contain a
-	 * {@link GrameObject} in a certain {@link Base}.
+	 * Checks whether all the adjacent sets of coordinates contain a {@link GrameObject} in a certain {@link Base}.
 	 * 
 	 * @param b
 	 *            {@link Base} in which to check.
-	 * @return True if all the adjacent sets of coordinates contain a
-	 *         {@link GrameObject}, else false.
+	 * @return True if all the adjacent sets of coordinates contain a {@link GrameObject}, else false.
 	 */
 	public boolean isSurrounded(Base b)
 	{
@@ -184,5 +176,13 @@ public class Coordinates
 			if (!b.isOccupied(pos))
 				return false;
 		return true;
+	}
+
+	public boolean equals(Object o)
+	{
+		if (!(o instanceof Coordinates))
+			return false;
+		Coordinates temp = (Coordinates) o;
+		return temp.x == this.x && temp.y == this.y;
 	}
 }

@@ -5,10 +5,10 @@ import com.moomoohk.Grame.Graphics.RenderManager;
 import com.moomoohk.MooCommands.Command;
 import com.moomoohk.MooConsole.Console;
 
-public class setVisibleCommand extends Command<Console>
+public class SetVisibleCommand extends Command<Console>
 {
 
-	public setVisibleCommand(Console handler, String command, String help, int minParams, int maxParams)
+	public SetVisibleCommand(Console handler, String command, String help, int minParams, int maxParams)
 	{
 		super(handler, command, help, minParams, maxParams);
 	}

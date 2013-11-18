@@ -14,8 +14,7 @@ import com.moomoohk.Grame.Interfaces.Render;
 /**
  * The Grame Manager takes care of all the internal Grame operations.
  * <p>
- * Indexes and ticks any {@link GrameObject}s and {@link Base}s that are created
- * automatically.
+ * Indexes and ticks any {@link GrameObject}s and {@link Base}s that are created automatically.
  * 
  * @author Meshulam Silk <moomoohk@ymail.com>
  * @version 1.0
@@ -75,7 +74,7 @@ public class GrameManager implements Runnable
 		}));
 		grameObjectList = new ArrayList<GrameObject>();
 		baseList = new ArrayList<Base>();
-		GrameUtils.console.setOutputOverride();
+		//		GrameUtils.console.setOutputOverride();
 		//GrameUtils.console.setLocation(GrameUtils.console.getLocation().x, Toolkit.getDefaultToolkit().getScreenSize().height);
 		GrameUtils.console.setVisible(true);
 		start();
@@ -101,8 +100,7 @@ public class GrameManager implements Runnable
 	/**
 	 * Starts the Grame Manager clock.
 	 * <p>
-	 * This method should never be called by the user as doing that might create
-	 * issues.
+	 * This method should never be called by the user as doing that might create issues.
 	 */
 	public void run()
 	{
@@ -288,7 +286,9 @@ public class GrameManager implements Runnable
 	/**
 	 * Finds and returns a {@link GrameObject} from the Grame Objects list.<br>
 	 * If the object is not found, null will be returned.
-	 * @param id The ID of the object to find.
+	 * 
+	 * @param id
+	 *            The ID of the object to find.
 	 * @return The {@link GrameObject} with that ID. If not in the list, null will be returned.
 	 */
 	public static GrameObject findGrameObject(int id)
@@ -308,7 +308,9 @@ public class GrameManager implements Runnable
 	/**
 	 * Finds and returns a {@link Base} from the Base list.<br>
 	 * If the {@link Base} is not found, null will be returned.
-	 * @param id The ID of the {@link Base} to find.
+	 * 
+	 * @param id
+	 *            The ID of the {@link Base} to find.
 	 * @return The {@link Base} with that ID. If not in the list, null will be returned.
 	 */
 	public static Base findBase(int id)
@@ -326,7 +328,9 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Sets the game name.
-	 * @param name Game name to set.
+	 * 
+	 * @param name
+	 *            Game name to set.
 	 */
 	public static void setGameName(String name)
 	{
@@ -335,24 +339,28 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Gets the game name.
+	 * 
 	 * @return The game name.
 	 */
 	public static String getGameName()
 	{
 		return gameName;
 	}
-	
+
 	/**
 	 * Sets the default {@link Render}.
-	 * @param render {@link Render} to set.
+	 * 
+	 * @param render
+	 *            {@link Render} to set.
 	 */
 	public static void setDefaultRender(Render render)
 	{
 		defaultRender = render;
 	}
-	
+
 	/**
 	 * Gets the default {@link Render}.
+	 * 
 	 * @return The default {@link Render}.
 	 */
 	public static Render getDefaultRender()
@@ -362,7 +370,9 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Indexes a {@link Render}.
-	 * @param render {@link Render} to index.
+	 * 
+	 * @param render
+	 *            {@link Render} to index.
 	 */
 	public static void addRender(Render render)
 	{
@@ -378,7 +388,9 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Indexes a {@link MovementAI}.
-	 * @param ai {@link MovementAI} to index.
+	 * 
+	 * @param ai
+	 *            {@link MovementAI} to index.
 	 */
 	public static void addAI(MovementAI ai)
 	{
@@ -394,7 +406,9 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Pauses or unpauses all the {@link GrameObject}s.
-	 * @param f True to pause, false to unpause all the {@link GrameObject}.
+	 * 
+	 * @param f
+	 *            True to pause, false to unpause all the {@link GrameObject}.
 	 */
 	public static void pauseAllGrameObjects(boolean f)
 	{
@@ -404,7 +418,9 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Sets whether debug prints will be visible or not.
-	 * @param debug True to enable debug prints, else false.
+	 * 
+	 * @param debug
+	 *            True to enable debug prints, else false.
 	 */
 	public static void setDebug(boolean debug)
 	{
@@ -413,6 +429,7 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Returns whether or not debug prints are enabled.
+	 * 
 	 * @return True if debug prints are enabled, else false.
 	 */
 	public static boolean isDebug()
@@ -422,7 +439,9 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Completely disable prints.
-	 * @param disablePrints True to disable all prints, else false.
+	 * 
+	 * @param disablePrints
+	 *            True to disable all prints, else false.
 	 */
 	public static void setDisablePrints(boolean disablePrints)
 	{
@@ -431,6 +450,7 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Returns whether or not prints are completely disabled.
+	 * 
 	 * @return True if prints are completely disabled, else false.
 	 */
 	public static boolean isDisablePrints()
@@ -439,8 +459,10 @@ public class GrameManager implements Runnable
 	}
 
 	/**
-	 * Sets whether spam prints will be visible or not. 
-	 * @param spam True to enable spam prints, else false.
+	 * Sets whether spam prints will be visible or not.
+	 * 
+	 * @param spam
+	 *            True to enable spam prints, else false.
 	 */
 	public static void setSpam(boolean spam)
 	{
@@ -449,6 +471,7 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Returns whether or not spam prints are enabled.
+	 * 
 	 * @return True if spam prints are enabled, else false.
 	 */
 	public static boolean isSpam()
@@ -458,6 +481,7 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Gets the {@link InputHandler} that is currently being used.
+	 * 
 	 * @return The {@link InputHandler} that is currently being used.
 	 */
 	public static InputHandler getInputHandler()
@@ -466,7 +490,8 @@ public class GrameManager implements Runnable
 	}
 
 	/**
-	 * Gets all the loaded {@link MovementAI}s sorted in a HashMap<String, {@link MovementAI}> where the names (spaces replaced with '-') are the keys. 
+	 * Gets all the loaded {@link MovementAI}s sorted in a HashMap<String, {@link MovementAI}> where the names (spaces replaced with '-') are the keys.
+	 * 
 	 * @return A HashMap<String, {@link MovementAI}> of all loaded {@link MovementAI}s.
 	 */
 	public static HashMap<String, MovementAI> getAIs()
@@ -475,7 +500,8 @@ public class GrameManager implements Runnable
 	}
 
 	/**
-	 * Gets all the loaded {@link Render}s sorted in a HashMap<String, {@link Render}> where the names (spaces replaced with '-') are the keys. 
+	 * Gets all the loaded {@link Render}s sorted in a HashMap<String, {@link Render}> where the names (spaces replaced with '-') are the keys.
+	 * 
 	 * @return A HashMap<String, {@link Render}> of all loaded {@link Render}s.
 	 */
 	public static HashMap<String, Render> getRenders()
@@ -485,15 +511,17 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Gets the size of the {@link GrameObject} list.
+	 * 
 	 * @return The size of the {@link GrameObject} list.
 	 */
 	public static int getObjectListLength()
 	{
 		return grameObjectList.size();
 	}
-	
+
 	/**
 	 * Gets the current FPS (Frames Per Second) count.
+	 * 
 	 * @return The current FPS (Frames Per Second) count.
 	 */
 	public static int getFPS()

@@ -67,11 +67,11 @@ public abstract class MovementAI
 	 *            The {@link Dir} to apply.
 	 * @return The slided {@link Coordinates}.
 	 */
-	public static Coordinates slide(Base b, Coordinates pos, Dir d)
+	public static Coordinates slide(Base b, Coordinates pos, Dir d, int layer)
 	{
 		if (!d.isDiag())
 			return pos.addDir(d);
-		if (b.isInBase(pos.addDir(d)) && !b.isOccupied(pos.addDir(d)))
+		if (b.isInBase(pos.addDir(d)) && !b.isOccupied(pos.addDir(d), layer))
 			return pos.addDir(d);
 		if (!b.isInBase(pos.addDir(d)))
 			if (!b.getWraparound())
@@ -83,9 +83,9 @@ public abstract class MovementAI
 			}
 			else
 				return wraparound(b, pos, d);
-		if (!b.isOccupied(pos.addDir(d.split()[0])))
+		if (!b.isOccupied(pos.addDir(d.split()[0]), layer))
 			return pos.addDir(d.split()[0]);
-		if (!b.isOccupied(pos.addDir(d.split()[1])))
+		if (!b.isOccupied(pos.addDir(d.split()[1]), layer))
 			return pos.addDir(d.split()[1]);
 		return pos.addDir(d);
 	}

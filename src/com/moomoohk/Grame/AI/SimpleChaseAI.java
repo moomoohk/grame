@@ -26,12 +26,16 @@ public class SimpleChaseAI extends MovementAI
 			GrameUtils.print("Crucial parameters missing! Returning pos. (" + ent1.getName() + ")", MessageLevel.ERROR);
 			return pos;
 		}
+		int layer = -1;
+		for (int i = 0; i < b.getGrameObjectLayers().size(); i++)
+			if (b.getGrameObjectLayers().get(i).contains(ent1.ID))
+				layer = i;
 		if (!b.getWraparound())
 		{
 			Dir d = new Dir(pos, target);
 			if (!b.isOccupied(pos.addDir(d)))
 				return pos.addDir(d);
-			return MovementAI.slide(b, pos, d);
+			return MovementAI.slide(b, pos, d, layer);
 		}
 		else
 		{
@@ -44,7 +48,7 @@ public class SimpleChaseAI extends MovementAI
 				Dir dir = new Dir(target, temp);
 				if (!wrapped && !b.isInBase(temp.addDir(dir)))
 				{
-					temp = MovementAI.wraparound(b, MovementAI.slide(b, temp, dir), dir);
+					temp = MovementAI.wraparound(b, MovementAI.slide(b, temp, dir, layer), dir);
 					wrapped = true;
 				}
 				else
@@ -56,14 +60,14 @@ public class SimpleChaseAI extends MovementAI
 							dir2.setX(wall.getX());
 						if (wall.getY() != 0)
 							dir2.setY(wall.getY());
-						temp = MovementAI.slide(b, temp, dir2);
+						temp = MovementAI.slide(b, temp, dir2, layer);
 					}
 					else
-						temp = MovementAI.slide(b, temp, new Dir(temp, target));
+						temp = MovementAI.slide(b, temp, new Dir(temp, target), layer);
 				distanceThroughWall++;
 			}
 			if (normalDistance <= distanceThroughWall)
-				return MovementAI.slide(b, pos, new Dir(pos, target));
+				return MovementAI.slide(b, pos, new Dir(pos, target), layer);
 			else
 			{
 				Dir dir2 = new Dir(pos, target);
@@ -72,7 +76,7 @@ public class SimpleChaseAI extends MovementAI
 					dir2.setX(wall.getX());
 				if (wall.getY() != 0)
 					dir2.setY(wall.getY());
-				return MovementAI.wraparound(b, /*MovementAI.slide(b, pos, dir2)*/ pos, dir2);
+				return MovementAI.wraparound(b, /*MovementAI.slide(b, pos, dir2)*/pos, dir2);
 			}
 		}
 	}
