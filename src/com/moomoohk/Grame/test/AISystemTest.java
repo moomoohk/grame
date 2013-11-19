@@ -13,29 +13,13 @@ import com.moomoohk.Grame.Essentials.Coordinates;
 import com.moomoohk.Grame.Essentials.GrameManager;
 import com.moomoohk.Grame.Essentials.GrameUtils;
 import com.moomoohk.Grame.Graphics.RenderManager;
+import com.moomoohk.Grame.Interfaces.MainGrameClass;
 
-public class AISystemTest
+public class AISystemTest implements MainGrameClass
 {
 	public static void main(String[] args)
 	{
-		GrameManager.setDebug(true);
-		GrameManager.setSpam(false);
-		GrameUtils.loadBasicCommands();
-		GrameUtils.loadBasicAIs();
-		Base b = new Base(20, 20);
-		Schematic s = new Schematic(12);
-		System.out.println(s.toString());
-		b.setWraparound(true);
-		generatePlayers(1, 1, b);
-		generatePlayerSims(1, b);
-		generateStrollers(5, b);
-		generateChasers(b, 3, (Entity) GrameManager.findGrameObject(1));
-		generateChasers(b, 3, (Entity) GrameManager.findGrameObject(0));
-		RenderManager.render(b.ID);
-		RenderManager.setVisible(true);
-		RenderManager.setText(b.ID, new Coordinates(5, 5), "test");
-		RenderManager.setText(b.ID, new Coordinates(19, 19), "penis");
-		RenderManager.setText(b.ID, new Coordinates(5, 5), "hohohohoh");
+		GrameManager.initialize(new AISystemTest());
 	}
 
 	public static void generateStrollers(int amount, Base b)
@@ -109,5 +93,34 @@ public class AISystemTest
 				temp = GrameUtils.randomCoordinates(b);
 			b.addGrameObject(new Wall(), temp);
 		}
+	}
+
+	@Override
+	public void newGame()
+	{
+		GrameManager.setDebug(true);
+		GrameManager.setSpam(false);
+		GrameUtils.loadBasicCommands();
+		GrameUtils.loadBasicAIs();
+		Base b = new Base(20, 20);
+		Schematic s = new Schematic(12);
+		System.out.println(s.toString());
+		b.setWraparound(true);
+		generatePlayers(1, 1, b);
+		generatePlayerSims(1, b);
+		generateStrollers(5, b);
+		generateChasers(b, 3, (Entity) GrameManager.findGrameObject(1));
+		generateChasers(b, 3, (Entity) GrameManager.findGrameObject(0));
+		RenderManager.render(b.ID);
+		RenderManager.setVisible(true);
+		RenderManager.setText(b.ID, new Coordinates(6, 6), "test", Color.red);
+		RenderManager.setText(b.ID, new Coordinates(19, 19), "penis", Color.yellow);
+		RenderManager.setText(b.ID, new Coordinates(5, 5), "hohohohoh", Color.green);
+	}
+
+	@Override
+	public String getGameName()
+	{
+		return "A* Pathfinding Test";
 	}
 }

@@ -71,7 +71,8 @@ public class RenderManager
 			return;
 		setupFrame(bID);
 		mainBase = bID;
-		mainFrame.setTitle("Rendering Base number " + mainBase);
+		//		mainFrame.setTitle("Rendering Base number " + mainBase);
+		mainFrame.setTitle(GrameManager.getGameName());
 		if (render == null)
 			render = GrameManager.getDefaultRender();
 		renders.put(bID, render);
@@ -95,20 +96,23 @@ public class RenderManager
 		Graphics g = bs.getDrawGraphics();
 		g.drawImage(img, 0, 0, mainCanvas.getWidth(), mainCanvas.getHeight(), null);
 
-		g.setColor(Color.blue);
 		g.setFont(new Font("LucidaTypewriter", 1, 8));
-		int squaresize = mainCanvas.getWidth() / GrameManager.findBase(bID).getColumns();
+		int squaresize = mainCanvas.getWidth() / GrameManager.findBase(bID).getColumns(); //TODO: Fix nullpointer
 		for (int x = 0; x < GrameManager.findBase(bID).getColumns(); x++)
 			for (int y = 0; y < GrameManager.findBase(bID).getRows(); y++)
 				if (text.get(bID) != null)
 				{
 					if (text.get(bID).getText(new Coordinates(x, y)) != null && text.get(bID).getText(new Coordinates(x, y)).trim().length() != 0)
+					{
+						g.setColor(text.get(bID).getColor(new Coordinates(x, y)));
 						g.drawString(text.get(bID).getText(new Coordinates(x, y)), y * squaresize, (x + 1) * (squaresize) - ((squaresize / 2) - 5));
+					}
 				}
 
 		if (drawCoordinates)
 		{
 			//			squaresize = mainCanvas.getWidth() / GrameManager.findBase(bID).getColumns();
+			g.setColor(Color.blue);
 			for (int x = 0; x < GrameManager.findBase(bID).getColumns(); x++)
 				for (int y = 0; y < GrameManager.findBase(bID).getRows(); y++)
 					g.drawString("(" + y + ", " + x + ")", y * squaresize, (x + 1) * (squaresize) - ((squaresize / 2) - 5));
@@ -144,7 +148,7 @@ public class RenderManager
 		{
 			if (mainCanvas == null)
 				mainCanvas = generateCanvas(bID);
-			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 			mainFrame.setResizable(false);
 			mainFrame.add(mainCanvas);
 			mainFrame.pack();
@@ -271,37 +275,57 @@ public class RenderManager
 		drawCoordinates = f;
 	}
 
-	public static void setText(int bID, Coordinates pos, String text)
+	public static void setText(int bID, Coordinates pos, String text, Color color)
 	{
 		if (!GrameManager.findBase(bID).isInBase(pos))
 			return;
 		if (RenderManager.text.get(bID) == null)
 			RenderManager.text.put(bID, new TextLayer(GrameManager.findBase(bID).getRows(), GrameManager.findBase(bID).getColumns()));
-		RenderManager.text.get(bID).setText(pos, text);
+		RenderManager.text.get(bID).setText(pos, text, color);
+	}
+
+	public static void clearAllText()
+	{
+		for (Integer i : text.keySet())
+			clearText(i);
 	}
 
 	public static void clearText(int bID)
 	{
-		RenderManager.text.put(bID, new TextLayer(GrameManager.findBase(bID).getRows(), GrameManager.findBase(bID).getColumns()));
+		text.put(bID, new TextLayer(GrameManager.findBase(bID).getRows(), GrameManager.findBase(bID).getColumns()));
 	}
 
 	private static class TextLayer
 	{
 		private String[][] text;
+		private Color[][] color;
 
 		public TextLayer(int row, int col)
 		{
 			this.text = new String[row][col];
+			this.color = new Color[row][col];
 		}
 
-		public void setText(Coordinates pos, String text)
+		public void setText(Coordinates pos, String text, Color color)
 		{
 			this.text[pos.getY()][pos.getX()] = text;
+			this.color[pos.getY()][pos.getX()] = color;
 		}
 
 		public String getText(Coordinates pos)
 		{
 			return this.text[pos.getY()][pos.getX()];
 		}
+
+		public Color getColor(Coordinates pos)
+		{
+			return this.color[pos.getY()][pos.getX()];
+		}
+	}
+
+	public static void dispose()
+	{
+		mainFrame.removeAll();
+		mainFrame.dispose();
 	}
 }

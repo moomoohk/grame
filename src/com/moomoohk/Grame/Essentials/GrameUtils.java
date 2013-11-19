@@ -81,6 +81,7 @@ public class GrameUtils
 		try
 		{
 			console = new Console();
+			console.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		}
 		catch (Error e)
 		{

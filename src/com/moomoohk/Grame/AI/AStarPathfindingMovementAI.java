@@ -1,4 +1,4 @@
-package com.moomoohk.Grame.test;
+package com.moomoohk.Grame.AI;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -8,21 +8,24 @@ import com.moomoohk.Grame.Basics.Entity;
 import com.moomoohk.Grame.Basics.Schematic;
 import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
+import com.moomoohk.Grame.Essentials.GrameManager;
 import com.moomoohk.Grame.Essentials.GrameObjectLayer;
 import com.moomoohk.Grame.Essentials.GrameUtils;
 import com.moomoohk.Grame.Graphics.PlainGridRender;
 import com.moomoohk.Grame.Graphics.RenderManager;
+import com.moomoohk.Grame.Interfaces.MainGrameClass;
 import com.moomoohk.Grame.Interfaces.MovementAI;
 
-public class AStarMovementAI extends MovementAI
+public class AStarPathfindingMovementAI extends MovementAI implements MainGrameClass
 {
-	private static final double NORMAL_COST = 1, DIAGONAL_COST = 1.4;
+	private static final double NORMAL_COST = 1, DIAGONAL_COST = Math.sqrt(2);
 
 	private Coordinates cachedTargetPos = null;
 
 	private ArrayList<Node> cachedNodePath = null;
 
-	public boolean showCosts = false, showVisualization = false;;
+	public boolean showCosts = false, showVisualization = false;
+	public Color costColor = Color.blue, visualizationColor = Color.green;
 
 	@Override
 	public String author()
@@ -35,13 +38,8 @@ public class AStarMovementAI extends MovementAI
 	{
 		if (ent1.getPos(b.ID).distance(ent2.getPos(b.ID)) == 1)
 		{
-			//			if (showVisualization)
-			//				b.setFloorColor(Color.white);
-			//			if (showCosts)
-			//				RenderManager.clearText(b.ID);
 			return pos;
 		}
-
 		if (cachedTargetPos != null)
 			if (cachedTargetPos.equals(targetPos))
 			{
@@ -94,14 +92,15 @@ public class AStarMovementAI extends MovementAI
 		while (current.getPos() != targetPos);
 
 		Node node = getLast(closed.get(closed.size() - 1));
+		//		visualizationColor = new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat());
 		if (showCosts || showVisualization)
 			for (int i = 0; i < closed.size(); i++)
 			{
 				if (showVisualization)
-					b.setFloorColor(closed.get(i).getPos(), new Color(255 - (255 / closed.size() * i), 255, 255 - (255 / closed.size() * i)));
+					b.setFloorColor(closed.get(i).getPos(), new Color((255 - ((255 - visualizationColor.getRed()) / closed.size() * i)), (255 - ((255 - visualizationColor.getGreen()) / closed.size() * i)), (255 - ((255 - visualizationColor.getBlue()) / closed.size() * i))));
 				if (showCosts)
-					RenderManager
-							.setText(b.ID, new Coordinates(closed.get(i).getPos().getY(), closed.get(i).getPos().getX()), "F" + (int)(calcG(current, closed.get(i).getPos()) + calcH(closed.get(i).getPos(), targetPos))/* "G" + (int) calcG(current, closed.get(i).getPos()) + "H" + (int) calcH(closed.get(i).getPos(), targetPos)*/);
+					RenderManager.setText(b.ID, new Coordinates(closed.get(i).getPos().getY(), closed.get(i).getPos().getX()), /*"F" + (int)(calcG(current, closed.get(i).getPos()) + calcH(closed.get(i).getPos(), targetPos))*/
+					"G" + (int) calcG(current, closed.get(i).getPos()) + "H" + (int) calcH(closed.get(i).getPos(), targetPos), costColor);
 			}
 
 		cachedNodePath = closed;
@@ -130,6 +129,7 @@ public class AStarMovementAI extends MovementAI
 	private double calcH(Coordinates start, Coordinates end)
 	{
 		return Math.abs(start.getX() - end.getX()) + Math.abs(start.getY() - end.getY());
+		//		return Math.sqrt(Math.pow(Math.abs(start.getX() - end.getX()), 2) + Math.pow(Math.abs(start.getY() - start.getY()), 2));
 	}
 
 	private boolean contains(ArrayList<Node> list, Coordinates pos)
@@ -178,7 +178,7 @@ public class AStarMovementAI extends MovementAI
 
 	public String toString()
 	{
-		return "A* Pathfinding";
+		return "A* Pathfinding AI";
 	}
 
 	private static class Node
@@ -236,23 +236,25 @@ public class AStarMovementAI extends MovementAI
 			return "G:" + this.gCost + " H:" + this.hCost + " F:" + this.fCost + " pos:" + this.pos;
 		}
 	}
-	
-	public interface shit
-	{
-		public void penis();
-	}
 
 	public static void main(String[] args)
 	{
+		GrameUtils.loadBasicCommands();
+		GrameManager.initialize(new AStarPathfindingMovementAI());
+	}
+
+	@Override
+	public void newGame()
+	{
 		Base b = new Base(20, 20);
+		b.setWraparound(true);
 		Entity player = new Entity("Player", Color.gray);
 		Entity monster = new Entity("Monster", Color.red);
-		GrameUtils.loadBasicCommands();
 		b.addGrameObjectLayer(new GrameObjectLayer(b.getColumns(), b.getRows()), 1);
 		player.makePlayer(1, true, b.ID);
 		player.setSpeed(1);
 		monster.setTarget(player.ID);
-		AStarMovementAI aStar = new AStarMovementAI();
+		AStarPathfindingMovementAI aStar = new AStarPathfindingMovementAI();
 		monster.addAI(aStar, b.ID);
 		monster.setSpeed(5);
 		b.addGrameObject(player, new Coordinates(0, 0));
@@ -262,6 +264,15 @@ public class AStarMovementAI extends MovementAI
 		RenderManager.render(b.ID, new PlainGridRender());
 		RenderManager.setVisible(true);
 		aStar.showVisualization = true;
-//		aStar.showCosts = true;
+		//		for (int i = 0; i < b.getColumns(); i++)
+		//			for (int j = 0; j < b.getRows(); j++)
+		//				if (!b.isOccupied(new Coordinates(i, j)) && !b.isOccupied(new Coordinates(i, j), 1))
+		//					b.addGrameObject(new Coin(), new Coordinates(i, j));
+	}
+
+	@Override
+	public String getGameName()
+	{
+		return "A* Pathfinding Test";
 	}
 }

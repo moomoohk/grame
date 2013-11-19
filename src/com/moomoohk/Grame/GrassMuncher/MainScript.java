@@ -12,19 +12,43 @@ import com.moomoohk.Grame.Essentials.GrameManager;
 import com.moomoohk.Grame.Essentials.GrameObjectLayer;
 import com.moomoohk.Grame.Essentials.GrameUtils;
 import com.moomoohk.Grame.Graphics.RenderManager;
+import com.moomoohk.Grame.Interfaces.MainGrameClass;
 import com.moomoohk.Grame.test.SpriteRender;
 
-public class MainScript
+public class MainScript implements MainGrameClass
 {
-	public static Base b = new Base(20, 20);
-	public static Player p = new Player();
-	public static Chaser c = new Chaser();
+	public static Base b;
+	public static Player p;
+	public static Chaser c;
 	public static int maxCoins = 0;
 
 	public static void main(String[] args)
 	{
-		GrameManager.pauseAllGrameObjects(true);
 		GrameUtils.loadBasicCommands();
+		GrameManager.initialize(new MainScript());
+	}
+
+	public static void win()
+	{
+		GrameManager.pauseAllGrameObjects(true);
+		JOptionPane.showMessageDialog(new JFrame(), "You win!", "", JOptionPane.PLAIN_MESSAGE);
+		System.exit(0);
+	}
+
+	public static void lose()
+	{
+		GrameManager.pauseAllGrameObjects(true);
+		JOptionPane.showMessageDialog(new JFrame(), "You lose!\nYour score: " + p.getPoints(), "", JOptionPane.PLAIN_MESSAGE);
+		System.exit(0);
+	}
+
+	@Override
+	public void newGame()
+	{
+		b = new Base(20, 20);
+		p = new Player();
+		c = new Chaser();
+		GrameManager.pauseAllGrameObjects(true);
 		c.setTarget(p);
 		c.setSpeed(20);
 		p.setSpeed(5);
@@ -43,7 +67,7 @@ public class MainScript
 		for (int i = 1; i <= 60; i++)
 		{
 			Coordinates temp = GrameUtils.randomCoordinates(b);
-			while (b.isOccupied(temp)) 
+			while (b.isOccupied(temp))
 				temp = GrameUtils.randomCoordinates(b);
 			b.addGrameObject(new Wall(), temp, 0);
 			b.addGrameObject(new Wall(), temp, 1);
@@ -54,20 +78,12 @@ public class MainScript
 		RenderManager.setVisible(true);
 		JOptionPane.showMessageDialog(new JFrame(), "Ready to begin?", "Grass Muncher!", JOptionPane.PLAIN_MESSAGE);
 		GrameManager.pauseAllGrameObjects(false);
-//		c.pause(true);
+		//		c.pause(true);
 	}
 
-	public static void win()
+	@Override
+	public String getGameName()
 	{
-		GrameManager.pauseAllGrameObjects(true);
-		JOptionPane.showMessageDialog(new JFrame(), "You win!", "", JOptionPane.PLAIN_MESSAGE);
-		System.exit(0);
-	}
-
-	public static void lose()
-	{
-		GrameManager.pauseAllGrameObjects(true);
-		JOptionPane.showMessageDialog(new JFrame(), "You lose!\nYour score: " + p.getPoints(), "", JOptionPane.PLAIN_MESSAGE);
-		System.exit(0);
+		return "Grass Muncher";
 	}
 }

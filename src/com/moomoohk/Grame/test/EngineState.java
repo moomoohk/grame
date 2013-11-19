@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Interfaces.GrameObject;
+import com.moomoohk.Mootilities.ObjectUtils.ObjectUtils;
 
 public class EngineState implements Serializable
 {
@@ -19,6 +20,16 @@ public class EngineState implements Serializable
 		this.grameObjects = new ArrayList<GrameObject>();
 	}
 
+	public void addGrameObject(GrameObject go)
+	{
+		this.grameObjects.add(go);
+	}
+
+	public void addBase(Base b)
+	{
+		this.bases.add(b);
+	}
+
 	public ArrayList<Base> getBases()
 	{
 		return this.bases;
@@ -27,5 +38,10 @@ public class EngineState implements Serializable
 	public ArrayList<GrameObject> getGrameObjects()
 	{
 		return this.grameObjects;
+	}
+
+	public boolean save(String path, String fileName, String extension)
+	{
+		return ObjectUtils.save(this, path, fileName, extension);
 	}
 }
