@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.HashMap;
 
 import javax.swing.JButton;
@@ -61,8 +62,6 @@ public class GrameManager implements Runnable
 	 * Current game time.
 	 */
 	public static int time = 1;
-	//	private static ArrayList<GrameObject> grameObjectList;
-	//	private static ArrayList<Base> baseList;
 	private static boolean initialized = false;
 	private static EngineState engineState = null;
 	private static HashMap<String, Render> renders = new HashMap<String, Render>();
@@ -106,8 +105,6 @@ public class GrameManager implements Runnable
 				disposeAll();
 			}
 		}));
-		//		GrameUtils.console.setOutputOverride();
-		//GrameUtils.console.setLocation(GrameUtils.console.getLocation().x, Toolkit.getDefaultToolkit().getScreenSize().height);
 		mainMenu = new MainMenu(mainClass);
 		mainMenu.setVisible(true);
 	}
@@ -563,10 +560,8 @@ public class GrameManager implements Runnable
 	{
 		private static final long serialVersionUID = -2989260620184596791L;
 		private JPanel contentPane;
-
-		private MenuButton btnResume, btnNewGame, btnLoadGame, btnSettings, btnEndGame;
-
-		private static final Rectangle BUTTON1 = new Rectangle(10, 50, 130, 30), BUTTON2 = new Rectangle(20, 90, 110, 30), BUTTON3 = new Rectangle(20, 130, 110, 30), BUTTON4 = new Rectangle(20, 170, 110, 30), BUTTON5 = new Rectangle(20, 210, 110, 30);
+		private MenuButton btnResume, btnNewGame, btnSaveGame, btnLoadGame, btnSettings, btnEndGame;
+		private static final Rectangle BUTTON1 = new Rectangle(10, 50, 130, 30), BUTTON2 = new Rectangle(20, 90, 110, 30), BUTTON3 = new Rectangle(20, 130, 110, 30), BUTTON4 = new Rectangle(20, 170, 110, 30), BUTTON5 = new Rectangle(20, 210, 110, 30), BUTTON6 = new Rectangle(20, 250, 110, 30);
 
 		public MainMenu(final MainGrameClass mainClass)
 		{
@@ -586,7 +581,7 @@ public class GrameManager implements Runnable
 			lblGameName.setBounds(20, 6, 560, 33);
 			contentPane.add(lblGameName);
 
-			btnResume = new MenuButton("Resume Game", Color.red, Color.yellow, Color.blue);
+			btnResume = new MenuButton("Resume Game", Color.red, Color.yellow, Color.blue, "Unpause the game");
 			btnResume.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent arg0)
@@ -597,7 +592,7 @@ public class GrameManager implements Runnable
 			});
 			contentPane.add(btnResume);
 
-			btnNewGame = new MenuButton("New Game", Color.red, Color.yellow, Color.blue);
+			btnNewGame = new MenuButton("New Game", Color.red, Color.yellow, Color.blue, "Start a new game");
 			btnNewGame.setBounds(BUTTON1);
 			btnNewGame.addActionListener(new ActionListener()
 			{
@@ -615,7 +610,11 @@ public class GrameManager implements Runnable
 			});
 			contentPane.add(btnNewGame);
 
-			btnLoadGame = new MenuButton("Load Game", Color.red, Color.yellow, Color.blue);
+			btnSaveGame = new MenuButton("Save Game", Color.red, Color.yellow, Color.blue, "Save your game to file");
+			btnSaveGame.setEnabled(false);
+			contentPane.add(btnSaveGame);
+
+			btnLoadGame = new MenuButton("Load Game", Color.red, Color.yellow, Color.blue, "Load a saved game");
 			btnLoadGame.setEnabled(false);
 			btnLoadGame.setBounds(BUTTON2);
 			btnLoadGame.addActionListener(new ActionListener()
@@ -627,12 +626,12 @@ public class GrameManager implements Runnable
 			});
 			contentPane.add(btnLoadGame);
 
-			btnSettings = new MenuButton("Settings", Color.red, Color.yellow, Color.blue);
+			btnSettings = new MenuButton("Settings", Color.red, Color.yellow, Color.blue, "Show the settings");
 			btnSettings.setBounds(BUTTON3);
 			btnSettings.setEnabled(false);
 			contentPane.add(btnSettings);
 
-			btnEndGame = new MenuButton("End Game", Color.red, Color.yellow, Color.blue);
+			btnEndGame = new MenuButton("End Game", Color.red, Color.yellow, Color.blue, "Abandon the current game");
 			btnEndGame.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent arg0)
@@ -649,17 +648,17 @@ public class GrameManager implements Runnable
 			panel.setBounds(150, 50, 430, 290);
 			contentPane.add(panel);
 
-			final JLabel lblMadeWithGrame = new JLabel("Made with moomoohk's Grame engine");
+			final JLabel lblMadeWithGrame = new JLabel();
 			lblMadeWithGrame.addMouseListener(new MouseAdapter()
 			{
 				public void mouseEntered(MouseEvent me)
 				{
-					lblMadeWithGrame.setText("Version: " + GrameManager.VERSION_NUMBER);
+					lblMadeWithGrame.setText("Made with moomoohk's Grame (v" + GrameManager.VERSION_NUMBER + ")");
 				}
 
 				public void mouseExited(MouseEvent me)
 				{
-					lblMadeWithGrame.setText("Made with moomoohk's Grame engine");
+					lblMadeWithGrame.setText("");
 				}
 			});
 			lblMadeWithGrame.setFont(new Font("Lucida Grande", Font.BOLD | Font.ITALIC, 11));
@@ -667,7 +666,7 @@ public class GrameManager implements Runnable
 			lblMadeWithGrame.setBounds(18, 353, 421, 37);
 			contentPane.add(lblMadeWithGrame);
 
-			MenuButton btnQuit = new MenuButton("Quit", Color.red, Color.yellow, Color.blue);
+			MenuButton btnQuit = new MenuButton("Quit", Color.red, Color.yellow, Color.blue, "Quit the game");
 			btnQuit.setBounds(450, 350, 130, 40);
 			btnQuit.addActionListener(new ActionListener()
 			{
@@ -678,6 +677,32 @@ public class GrameManager implements Runnable
 			});
 			contentPane.add(btnQuit);
 
+			MouseListener helpTextListener = (new MouseAdapter()
+			{
+				public void mouseEntered(MouseEvent me)
+				{
+					lblMadeWithGrame.setText(((MenuButton) me.getSource()).getHelpText());
+				}
+
+				public void mouseExited(MouseEvent me)
+				{
+					lblMadeWithGrame.setText("");
+				}
+
+				public void mouseReleased(MouseEvent me)
+				{
+					if (((MenuButton) me.getSource()).isEnabled())
+						lblMadeWithGrame.setText("");
+				}
+			});
+			btnResume.addMouseListener(helpTextListener);
+			btnNewGame.addMouseListener(helpTextListener);
+			btnSaveGame.addMouseListener(helpTextListener);
+			btnLoadGame.addMouseListener(helpTextListener);
+			btnSettings.addMouseListener(helpTextListener);
+			btnEndGame.addMouseListener(helpTextListener);
+			btnQuit.addMouseListener(helpTextListener);
+
 			new FrameDragger().applyTo(this);
 		}
 
@@ -687,9 +712,10 @@ public class GrameManager implements Runnable
 			{
 				btnResume.setBounds(BUTTON1);
 				btnNewGame.setBounds(BUTTON2);
-				btnLoadGame.setBounds(BUTTON3);
-				btnSettings.setBounds(BUTTON4);
-				btnEndGame.setBounds(BUTTON5);
+				btnSaveGame.setBounds(BUTTON3);
+				btnLoadGame.setBounds(BUTTON4);
+				btnSettings.setBounds(BUTTON5);
+				btnEndGame.setBounds(BUTTON6);
 			}
 			else
 			{
@@ -714,6 +740,7 @@ public class GrameManager implements Runnable
 			public boolean mouseOn = false, mouseDown = false;
 			private double animTime = 0;
 			private Color startColor, endColor, clickColor, fill;
+			private String helpText;
 			private Timer t = new Timer(10, new ActionListener()
 			{
 				public void actionPerformed(ActionEvent arg0)
@@ -723,16 +750,16 @@ public class GrameManager implements Runnable
 				}
 			});
 
-			public MenuButton(String text, Color startColor, Color endColor, Color clickColor)
+			public MenuButton(String text, Color startColor, Color endColor, Color clickColor, String helpText)
 			{
 				super(text);
 				this.startColor = startColor;
 				this.endColor = endColor;
 				this.clickColor = clickColor;
 				this.fill = this.startColor;
+				this.helpText = helpText;
 				addMouseListener(new MouseAdapter()
 				{
-
 					public void mouseReleased(MouseEvent arg0)
 					{
 						mouseDown = false;
@@ -767,6 +794,11 @@ public class GrameManager implements Runnable
 				});
 			}
 
+			public String getHelpText()
+			{
+				return this.helpText;
+			}
+
 			protected void paintComponent(Graphics g)
 			{
 				super.paintComponent(g);
@@ -777,7 +809,6 @@ public class GrameManager implements Runnable
 					if (mouseDown && mouseOn)
 						fill = clickColor;
 					else
-					{
 						if (mouseOn)
 							fill = new Color((int) (endColor.getRed() * Math.abs(Math.sin(animTime)) + startColor.getRed() * (1 - Math.abs(Math.sin(animTime)))), (int) (endColor.getGreen() * Math.abs(Math.sin(animTime)) + startColor.getGreen() * (1 - Math.abs(Math.sin(animTime)))),
 									(int) (endColor.getBlue() * Math.abs(Math.sin(animTime)) + startColor.getBlue() * (1 - Math.abs(Math.sin(animTime)))));
@@ -794,13 +825,10 @@ public class GrameManager implements Runnable
 									fill = startColor;
 							}
 						}
-					}
 					g2.setPaint(fill);
 				}
 				else
-				{
 					g2.setPaint(Color.LIGHT_GRAY);
-				}
 				g2.fillRoundRect(0, 0, getWidth(), getHeight(), 6, 6);
 				g2.setPaint(Color.black);
 				if (mouseOn && isEnabled())

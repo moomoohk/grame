@@ -6,7 +6,6 @@ import com.moomoohk.Grame.AI.PlayerSimAI;
 import com.moomoohk.Grame.AI.SimpleChaseAI;
 import com.moomoohk.Grame.AI.SimpleStrollAI;
 import com.moomoohk.Grame.Basics.Entity;
-import com.moomoohk.Grame.Basics.Schematic;
 import com.moomoohk.Grame.Basics.Wall;
 import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
@@ -19,6 +18,8 @@ public class AISystemTest implements MainGrameClass
 {
 	public static void main(String[] args)
 	{
+		GrameUtils.loadBasicCommands();
+		GrameUtils.loadBasicAIs();
 		GrameManager.initialize(new AISystemTest());
 	}
 
@@ -100,11 +101,7 @@ public class AISystemTest implements MainGrameClass
 	{
 		GrameManager.setDebug(true);
 		GrameManager.setSpam(false);
-		GrameUtils.loadBasicCommands();
-		GrameUtils.loadBasicAIs();
 		Base b = new Base(20, 20);
-		Schematic s = new Schematic(12);
-		System.out.println(s.toString());
 		b.setWraparound(true);
 		generatePlayers(1, 1, b);
 		generatePlayerSims(1, b);
@@ -121,6 +118,6 @@ public class AISystemTest implements MainGrameClass
 	@Override
 	public String getGameName()
 	{
-		return "A* Pathfinding Test";
+		return "AI System Test";
 	}
 }
