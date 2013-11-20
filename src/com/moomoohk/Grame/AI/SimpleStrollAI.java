@@ -15,6 +15,8 @@ import com.moomoohk.Grame.Interfaces.MovementAI;
  */
 public class SimpleStrollAI extends MovementAI
 {
+	private static final long serialVersionUID = 5810610984037692653L;
+
 	public Coordinates getNext(Coordinates pos, Coordinates target, Base b, Entity ent1, Entity ent2)
 	{
 		Coordinates[] sur = pos.getAllSurrounding(b);

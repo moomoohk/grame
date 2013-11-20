@@ -1,5 +1,7 @@
 package com.moomoohk.Grame.Essentials;
 
+import java.io.Serializable;
+
 import com.moomoohk.Grame.Essentials.GrameUtils.MessageLevel;
 import com.moomoohk.Grame.Interfaces.GrameObject;
 
@@ -10,8 +12,9 @@ import com.moomoohk.Grame.Interfaces.GrameObject;
  * @version 3.0
  * @since 2013-04-05
  */
-public class GrameObjectLayer
+public class GrameObjectLayer implements Serializable
 {
+	private static final long serialVersionUID = 4254735732818296783L;
 	private GrameObject[] objects;
 	private int width, height;
 	

@@ -7,7 +7,7 @@ import com.moomoohk.Grame.Interfaces.GrameObject;
 
 public class TestGrameObject extends GrameObject
 {
-	
+	private static final long serialVersionUID = -480851231518169067L;
 	private int time=0;
 	public TestGrameObject(String name, int speed, Color color, boolean paused)
 	{

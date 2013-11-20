@@ -1,6 +1,7 @@
 package com.moomoohk.Grame.Graphics;
 
 import java.awt.Color;
+import java.io.Serializable;
 
 import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
@@ -13,8 +14,10 @@ import com.moomoohk.Grame.Interfaces.Render;
  * @version 1.0
  * @since 2013-04-05
  */
-public class GridRender implements Render
+public class GridRender implements Render, Serializable
 {
+	private static final long serialVersionUID = 2057716349989082233L;
+
 	public int[] getPixels(int[] pixels, Base b, int width, int height)
 	{
 		for (int x = 0; x < width; x++)

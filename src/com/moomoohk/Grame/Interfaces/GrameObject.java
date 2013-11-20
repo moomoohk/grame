@@ -1,6 +1,7 @@
 package com.moomoohk.Grame.Interfaces;
 
 import java.awt.Color;
+import java.io.Serializable;
 
 import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
@@ -15,8 +16,9 @@ import com.moomoohk.Grame.Essentials.GrameUtils.MessageLevel;
  * @version 1.0
  * @since 2013-04-05
  */
-public abstract class GrameObject
+public abstract class GrameObject implements Serializable
 {
+	private static final long serialVersionUID = 636001538082230753L;
 	/**
 	 * The ID of this Grame Object.
 	 * <p>

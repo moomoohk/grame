@@ -1,6 +1,8 @@
 package com.moomoohk.Grame.Essentials;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -9,15 +11,29 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.border.BevelBorder;
@@ -34,6 +50,7 @@ import com.moomoohk.Grame.Interfaces.Render;
 import com.moomoohk.Grame.test.EngineState;
 import com.moomoohk.Mootilities.FrameDragger.FrameDragger;
 import com.moomoohk.Mootilities.OSUtils.OSUtils;
+import com.moomoohk.Mootilities.ObjectUtils.ObjectUtils;
 
 /**
  * The Grame Manager takes care of all the internal Grame operations.
@@ -49,7 +66,7 @@ public class GrameManager implements Runnable
 	/**
 	 * The Grame version number.
 	 */
-	public static final String VERSION_NUMBER = "3.1";
+	public static final String VERSION_NUMBER = "4.0";
 	/**
 	 * The WASD keys parsed to a {@link Dir}.
 	 */
@@ -76,7 +93,7 @@ public class GrameManager implements Runnable
 	private static Thread thread;
 	private static int fps = 0;
 	private static Render defaultRender = new GridRender();
-	private static String savePath = OSUtils.getDynamicStorageLocation() + "Grame/Saves/";
+	private static File savePath;
 	private static MainMenu mainMenu;
 
 	public static void initialize(MainGrameClass mainClass)
@@ -105,6 +122,9 @@ public class GrameManager implements Runnable
 				disposeAll();
 			}
 		}));
+		savePath = new File(OSUtils.getDynamicStorageLocation() + "Grame/Saves/" + mainClass.getGameName() + "/");
+		if (!savePath.exists())
+			savePath.mkdirs();
 		mainMenu = new MainMenu(mainClass);
 		mainMenu.setVisible(true);
 	}
@@ -556,12 +576,73 @@ public class GrameManager implements Runnable
 		return fps;
 	}
 
+	public static void setMainBase(int bID)
+	{
+		engineState.setMainBase(bID);
+	}
+
+	public static int getMainBase()
+	{
+		return engineState.getMainBase();
+	}
+
+	public static void setMainRender(Render r)
+	{
+		engineState.setMainRender(r);
+	}
+
+	public static Render getMainRender()
+	{
+		return engineState.getMainRender();
+	}
+
+	public static boolean saveEngineState(String saveName, boolean overwrite, Component parent)
+	{
+		paused = true;
+		boolean save = overwrite;
+		if (!overwrite)
+			if (new File(savePath.toString() + "/" + saveName + ".GrameSave").exists())
+				save = JOptionPane.showConfirmDialog(parent, "Would you like to overwrite the " + saveName + " save?", "Overwrite save", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.YES_OPTION;
+			else
+				save = true;
+		if (save)
+			try
+			{
+				engineState.setSaved(new GregorianCalendar().getTime());
+				ObjectUtils.save(engineState, savePath.toString(), saveName, "GrameSave");
+			}
+			catch (IOException e)
+			{
+				System.out.println("There was a problem saving!");
+				new File(savePath.toString() + "/" + saveName + ".GrameSave").delete();
+				e.printStackTrace();
+			}
+		paused = false;
+		return save;
+	}
+
 	private static class MainMenu extends JFrame
 	{
 		private static final long serialVersionUID = -2989260620184596791L;
-		private JPanel contentPane;
-		private MenuButton btnResume, btnNewGame, btnSaveGame, btnLoadGame, btnSettings, btnEndGame;
-		private static final Rectangle BUTTON1 = new Rectangle(10, 50, 130, 30), BUTTON2 = new Rectangle(20, 90, 110, 30), BUTTON3 = new Rectangle(20, 130, 110, 30), BUTTON4 = new Rectangle(20, 170, 110, 30), BUTTON5 = new Rectangle(20, 210, 110, 30), BUTTON6 = new Rectangle(20, 250, 110, 30);
+		private static JPanel contentPane;
+		private static MenuButton btnResume, btnNewGame, btnSaveGame, btnLoadGame, btnSettings, btnEndGame;
+		private static JLabel lblMadeWithGrame;
+		public static JScrollPane sidePanel;
+		public static MouseListener helpTextListener = (new MouseAdapter()
+		{
+			public void mouseEntered(MouseEvent me)
+			{
+				lblMadeWithGrame.setText(((MenuButton) me.getSource()).getHelpText());
+			}
+
+			public void mouseExited(MouseEvent me)
+			{
+				lblMadeWithGrame.setText("");
+			}
+		});
+		private static final Rectangle BUTTON1 = new Rectangle(10, 50, 130, 40), BUTTON2 = new Rectangle(20, 100, 110, 30), BUTTON3 = new Rectangle(20, 140, 110, 30), BUTTON4 = new Rectangle(20, 180, 110, 30), BUTTON5 = new Rectangle(20, 220, 110, 30), BUTTON6 = new Rectangle(20, 260, 110, 30);
+		private static LoadGamePanel loadGamePanel = new LoadGamePanel(savePath.toString());
+		private static SaveGamePanel saveGamePanel = new SaveGamePanel(savePath.toString());
 
 		public MainMenu(final MainGrameClass mainClass)
 		{
@@ -575,7 +656,7 @@ public class GrameManager implements Runnable
 			setContentPane(contentPane);
 			contentPane.setLayout(null);
 
-			JLabel lblGameName = new JLabel(gameName);
+			JLabel lblGameName = new JLabel(mainClass.getGameName());
 			lblGameName.setFont(new Font("Lucida Grande", Font.BOLD, 22));
 			lblGameName.setHorizontalAlignment(SwingConstants.CENTER);
 			lblGameName.setBounds(20, 6, 560, 33);
@@ -599,34 +680,48 @@ public class GrameManager implements Runnable
 				public void actionPerformed(ActionEvent arg0)
 				{
 					dispose();
+					paused = true;
 					GrameUtils.console.setVisible(true);
+					RenderManager.dispose();
+					RenderManager.initialize();
 					RenderManager.clearAllText();
 					engineState = new EngineState();
 					mainClass.newGame();
-					if (!running)
-						start();
+					start();
 					paused = false;
 				}
 			});
 			contentPane.add(btnNewGame);
 
 			btnSaveGame = new MenuButton("Save Game", Color.red, Color.yellow, Color.blue, "Save your game to file");
-			btnSaveGame.setEnabled(false);
+			btnSaveGame.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent arg0)
+				{
+					saveGamePanel.loadInfo();
+					saveGamePanel.showPanel();
+					sidePanel.setViewportView(saveGamePanel);
+				}
+			});
 			contentPane.add(btnSaveGame);
 
 			btnLoadGame = new MenuButton("Load Game", Color.red, Color.yellow, Color.blue, "Load a saved game");
-			btnLoadGame.setEnabled(false);
 			btnLoadGame.setBounds(BUTTON2);
 			btnLoadGame.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent arg0)
 				{
-					System.out.println("Path: " + savePath);
+					if (sidePanel.getViewport().getView() == null || sidePanel.getViewport().getView() != null && !sidePanel.getViewport().getView().equals(loadGamePanel))
+					{
+						loadGamePanel.loadInfo();
+						loadGamePanel.updateGUI();
+						sidePanel.setViewportView(loadGamePanel);
+					}
 				}
 			});
 			contentPane.add(btnLoadGame);
 
-			btnSettings = new MenuButton("Settings", Color.red, Color.yellow, Color.blue, "Show the settings");
+			btnSettings = new MenuButton("Settings", Color.red, Color.yellow, Color.blue, "Show the settings (not yet implemented)");
 			btnSettings.setBounds(BUTTON3);
 			btnSettings.setEnabled(false);
 			contentPane.add(btnSettings);
@@ -636,6 +731,7 @@ public class GrameManager implements Runnable
 			{
 				public void actionPerformed(ActionEvent arg0)
 				{
+					sidePanel.setViewportView(null);
 					paused = false;
 					stop();
 					updateButtons();
@@ -643,12 +739,12 @@ public class GrameManager implements Runnable
 			});
 			contentPane.add(btnEndGame);
 
-			JPanel panel = new JPanel();
-			panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-			panel.setBounds(150, 50, 430, 290);
-			contentPane.add(panel);
+			sidePanel = new JScrollPane();
+			sidePanel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+			sidePanel.setBounds(150, 50, 430, 290);
+			contentPane.add(sidePanel);
 
-			final JLabel lblMadeWithGrame = new JLabel();
+			lblMadeWithGrame = new JLabel();
 			lblMadeWithGrame.addMouseListener(new MouseAdapter()
 			{
 				public void mouseEntered(MouseEvent me)
@@ -677,24 +773,6 @@ public class GrameManager implements Runnable
 			});
 			contentPane.add(btnQuit);
 
-			MouseListener helpTextListener = (new MouseAdapter()
-			{
-				public void mouseEntered(MouseEvent me)
-				{
-					lblMadeWithGrame.setText(((MenuButton) me.getSource()).getHelpText());
-				}
-
-				public void mouseExited(MouseEvent me)
-				{
-					lblMadeWithGrame.setText("");
-				}
-
-				public void mouseReleased(MouseEvent me)
-				{
-					if (((MenuButton) me.getSource()).isEnabled())
-						lblMadeWithGrame.setText("");
-				}
-			});
 			btnResume.addMouseListener(helpTextListener);
 			btnNewGame.addMouseListener(helpTextListener);
 			btnSaveGame.addMouseListener(helpTextListener);
@@ -706,13 +784,20 @@ public class GrameManager implements Runnable
 			new FrameDragger().applyTo(this);
 		}
 
+		public void dispose()
+		{
+			super.dispose();
+			sidePanel.setViewportView(null);
+			lblMadeWithGrame.setText("");
+		}
+
 		public void updateButtons()
 		{
 			if (paused)
 			{
 				btnResume.setBounds(BUTTON1);
-				btnNewGame.setBounds(BUTTON2);
-				btnSaveGame.setBounds(BUTTON3);
+				btnSaveGame.setBounds(BUTTON2);
+				btnNewGame.setBounds(BUTTON3);
 				btnLoadGame.setBounds(BUTTON4);
 				btnSettings.setBounds(BUTTON5);
 				btnEndGame.setBounds(BUTTON6);
@@ -720,6 +805,7 @@ public class GrameManager implements Runnable
 			else
 			{
 				btnResume.setBounds(0, 0, 0, 0);
+				btnSaveGame.setBounds(0, 0, 0, 0);
 				btnNewGame.setBounds(BUTTON1);
 				btnLoadGame.setBounds(BUTTON2);
 				btnSettings.setBounds(BUTTON3);
@@ -733,7 +819,7 @@ public class GrameManager implements Runnable
 			super.setVisible(f);
 		}
 
-		private static class MenuButton extends JButton
+		public static class MenuButton extends JButton
 		{
 			private static final long serialVersionUID = -2192610213120657509L;
 
@@ -839,6 +925,306 @@ public class GrameManager implements Runnable
 				FontMetrics fm = g2.getFontMetrics();
 				g2.drawString(getText(), (getWidth() / 2) - (fm.stringWidth(getText()) / 2), (getHeight() / 2) + 4);
 				g2.dispose();
+			}
+		}
+
+		public static class LoadGamePanel extends JPanel
+		{
+			private static final long serialVersionUID = -2270645491547851288L;
+
+			private String savePath;
+			private HashMap<String, EngineState> saves;
+			private JScrollPane scrollPane;
+			private MenuButton btnLoad;
+			private JLabel noSaves = new JLabel("No saves found");
+			private JList saveList;
+
+			public LoadGamePanel(String savePath)
+			{
+				this.savePath = savePath;
+				this.saves = new HashMap<String, EngineState>();
+				this.noSaves.setHorizontalAlignment(SwingConstants.CENTER);
+				this.noSaves.setFont(new Font("Lucida Grande", Font.BOLD | Font.ITALIC, 15));
+				this.noSaves.setForeground(Color.lightGray);
+
+				SpringLayout springLayout = new SpringLayout();
+				setLayout(springLayout);
+
+				JLabel lblSelectSaveFile = new JLabel("Select save file to load:");
+				lblSelectSaveFile.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+				springLayout.putConstraint(SpringLayout.NORTH, lblSelectSaveFile, 20, SpringLayout.NORTH, this);
+				springLayout.putConstraint(SpringLayout.WEST, lblSelectSaveFile, 20, SpringLayout.WEST, this);
+				springLayout.putConstraint(SpringLayout.EAST, lblSelectSaveFile, -20, SpringLayout.EAST, this);
+				add(lblSelectSaveFile);
+
+				scrollPane = new JScrollPane();
+				scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+				springLayout.putConstraint(SpringLayout.NORTH, scrollPane, 10, SpringLayout.SOUTH, lblSelectSaveFile);
+				springLayout.putConstraint(SpringLayout.WEST, scrollPane, 20, SpringLayout.WEST, this);
+				springLayout.putConstraint(SpringLayout.SOUTH, scrollPane, -100, SpringLayout.SOUTH, this);
+				springLayout.putConstraint(SpringLayout.EAST, scrollPane, -20, SpringLayout.EAST, this);
+				add(scrollPane);
+
+				btnLoad = new MenuButton("Load", Color.red, Color.yellow, Color.blue, "Load the selected save");
+				btnLoad.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent arg0)
+					{
+						mainMenu.dispose();
+						paused = true;
+						GrameUtils.console.setVisible(true);
+						RenderManager.dispose();
+						RenderManager.initialize();
+						RenderManager.clearAllText();
+						engineState = saves.get(((String) saveList.getSelectedValue()).substring(0, ((String) saveList.getSelectedValue()).indexOf(':')));
+						RenderManager.render(engineState.getMainBase(), engineState.getMainRender());
+						RenderManager.setVisible(true);
+						start();
+						paused = false;
+					}
+				});
+				springLayout.putConstraint(SpringLayout.SOUTH, btnLoad, -20, SpringLayout.SOUTH, this);
+				springLayout.putConstraint(SpringLayout.EAST, btnLoad, 0, SpringLayout.EAST, lblSelectSaveFile);
+				springLayout.putConstraint(SpringLayout.SOUTH, scrollPane, -20, SpringLayout.NORTH, btnLoad);
+				btnLoad.setPreferredSize(new Dimension(100, 30));
+				add(btnLoad);
+
+				MenuButton btnCancel = new MenuButton("Cancel", Color.red, Color.yellow, Color.blue, "Cancels this operation");
+				springLayout.putConstraint(SpringLayout.WEST, btnCancel, 0, SpringLayout.WEST, lblSelectSaveFile);
+				springLayout.putConstraint(SpringLayout.SOUTH, btnCancel, 0, SpringLayout.SOUTH, btnLoad);
+				btnCancel.setPreferredSize(new Dimension(100, 30));
+				btnCancel.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent arg0)
+					{
+						sidePanel.setViewportView(null);
+					}
+				});
+				add(btnCancel);
+
+				btnLoad.addMouseListener(helpTextListener);
+				btnCancel.addMouseListener(helpTextListener);
+			}
+
+			public void loadInfo()
+			{
+				File f = new File(savePath);
+				if (!f.exists())
+					return;
+				for (File child : f.listFiles(new FilenameFilter()
+				{
+					@Override
+					public boolean accept(File paramFile, String paramString)
+					{
+						return paramString.endsWith(".GrameSave");
+					}
+				}))
+				{
+					String name = child.toString().substring(f.toString().length() + 1, child.toString().indexOf("."));
+					try
+					{
+						this.saves.put(name, ((EngineState) ObjectUtils.load(f.toString(), name, "GrameSave")));
+					}
+					catch (IOException e)
+					{
+						e.printStackTrace();
+					}
+				}
+			}
+
+			private void updateGUI()
+			{
+				if (this.saves.size() == 0)
+					scrollPane.setViewportView(noSaves);
+				else
+				{
+					ArrayList<String> list = new ArrayList<String>();
+					for (String key : saves.keySet())
+						list.add(key + ": (Last saved: " + new SimpleDateFormat("hh:mm:ss dd/MM/yyyy").format(saves.get(key).getSaved().getTime()) + ", Created " + new SimpleDateFormat("hh:mm:ss dd/MM/yyyy").format(saves.get(key).getDateCreated().getTime()) + ")");
+					saveList = new JList(list.toArray());
+					saveList.addMouseListener(new MouseAdapter()
+					{
+						public void mousePressed(MouseEvent arg0)
+						{
+							btnLoad.setEnabled(true);
+						}
+					});
+					saveList.addKeyListener(new KeyAdapter()
+					{
+						public void keyPressed(KeyEvent arg0)
+						{
+							if (arg0.getKeyCode() == 10)
+								btnLoad.doClick();
+						}
+					});
+					btnLoad.setEnabled(false);
+					scrollPane.setViewportView(saveList);
+				}
+			}
+		}
+
+		public static class SaveGamePanel extends JPanel
+		{
+			private static final long serialVersionUID = -2270645491547851288L;
+
+			private String savePath;
+			private HashMap<String, EngineState> saves;
+			private JScrollPane scrollPane;
+			private MenuButton btnSave;
+			private JLabel noSaves = new JLabel("No saves found");
+			private JList saveList;
+			private JTextField saveField;
+
+			public SaveGamePanel(String savePath)
+			{
+				this.savePath = savePath;
+				this.saves = new HashMap<String, EngineState>();
+				this.noSaves.setHorizontalAlignment(SwingConstants.CENTER);
+				this.noSaves.setFont(new Font("Lucida Grande", Font.BOLD | Font.ITALIC, 15));
+				this.noSaves.setForeground(Color.lightGray);
+
+				SpringLayout springLayout = new SpringLayout();
+				setLayout(springLayout);
+
+				JLabel lblSelectSaveFile = new JLabel("Name your save:");
+				lblSelectSaveFile.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+				springLayout.putConstraint(SpringLayout.NORTH, lblSelectSaveFile, 20, SpringLayout.NORTH, this);
+				springLayout.putConstraint(SpringLayout.WEST, lblSelectSaveFile, 20, SpringLayout.WEST, this);
+				springLayout.putConstraint(SpringLayout.EAST, lblSelectSaveFile, -20, SpringLayout.EAST, this);
+				add(lblSelectSaveFile);
+
+				saveField = new JTextField();
+				springLayout.putConstraint(SpringLayout.WEST, saveField, 0, SpringLayout.WEST, lblSelectSaveFile);
+				springLayout.putConstraint(SpringLayout.EAST, saveField, 0, SpringLayout.EAST, lblSelectSaveFile);
+				springLayout.putConstraint(SpringLayout.NORTH, saveField, 10, SpringLayout.SOUTH, lblSelectSaveFile);
+				saveField.addKeyListener(new KeyAdapter()
+				{
+					@Override
+					public void keyReleased(KeyEvent arg0)
+					{
+						if (saveField.getText().trim().length() == 0)
+							btnSave.setEnabled(false);
+						else
+							btnSave.setEnabled(true);
+					}
+
+					@Override
+					public void keyPressed(KeyEvent arg0)
+					{
+						if (saveList != null)
+							saveList.clearSelection();
+						if (arg0.getKeyCode() == 27)
+							saveField.setText("");
+						if (arg0.getKeyCode() == 10)
+							btnSave.doClick();
+					}
+				});
+				add(saveField);
+
+				scrollPane = new JScrollPane();
+				scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+				springLayout.putConstraint(SpringLayout.NORTH, scrollPane, 10, SpringLayout.SOUTH, saveField);
+				springLayout.putConstraint(SpringLayout.WEST, scrollPane, 20, SpringLayout.WEST, this);
+				springLayout.putConstraint(SpringLayout.SOUTH, scrollPane, -100, SpringLayout.SOUTH, this);
+				springLayout.putConstraint(SpringLayout.EAST, scrollPane, -20, SpringLayout.EAST, this);
+				add(scrollPane);
+
+				btnSave = new MenuButton("Save", Color.red, Color.yellow, Color.blue, "Save your game");
+				btnSave.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent arg0)
+					{
+						if (saveEngineState(saveField.getText(), false, mainMenu))
+							saveField.setText("");
+						loadInfo();
+						updateGUI();
+					}
+				});
+				springLayout.putConstraint(SpringLayout.SOUTH, btnSave, -20, SpringLayout.SOUTH, this);
+				springLayout.putConstraint(SpringLayout.EAST, btnSave, 0, SpringLayout.EAST, lblSelectSaveFile);
+				springLayout.putConstraint(SpringLayout.SOUTH, scrollPane, -20, SpringLayout.NORTH, btnSave);
+				btnSave.setPreferredSize(new Dimension(100, 30));
+				add(btnSave);
+
+				MenuButton btnCancel = new MenuButton("Cancel", Color.red, Color.yellow, Color.blue, "Cancels this operation");
+				springLayout.putConstraint(SpringLayout.WEST, btnCancel, 0, SpringLayout.WEST, lblSelectSaveFile);
+				springLayout.putConstraint(SpringLayout.SOUTH, btnCancel, 0, SpringLayout.SOUTH, btnSave);
+				btnCancel.setPreferredSize(new Dimension(100, 30));
+				btnCancel.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent arg0)
+					{
+						sidePanel.setViewportView(null);
+					}
+				});
+				add(btnCancel);
+
+				btnSave.addMouseListener(helpTextListener);
+				btnCancel.addMouseListener(helpTextListener);
+			}
+
+			public void loadInfo()
+			{
+				File f = new File(savePath);
+				if (!f.exists())
+					return;
+				for (File child : f.listFiles(new FilenameFilter()
+				{
+					@Override
+					public boolean accept(File paramFile, String paramString)
+					{
+						return paramString.endsWith(".GrameSave");
+					}
+				}))
+				{
+					String name = child.toString().substring(f.toString().length() + 1, child.toString().indexOf("."));
+					try
+					{
+						this.saves.put(name, ((EngineState) ObjectUtils.load(f.toString(), name, "GrameSave")));
+					}
+					catch (IOException e)
+					{
+						e.printStackTrace();
+					}
+				}
+			}
+
+			private void showPanel()
+			{
+				saveField.setText("");
+				updateGUI();
+			}
+
+			private void updateGUI()
+			{
+				if (this.saves.size() == 0)
+					scrollPane.setViewportView(noSaves);
+				else
+				{
+					ArrayList<String> list = new ArrayList<String>();
+					for (String key : saves.keySet())
+						list.add(key + ": (Last saved: " + new SimpleDateFormat("hh:mm:ss dd/MM/yyyy").format(saves.get(key).getSaved().getTime()) + ", Created " + new SimpleDateFormat("hh:mm:ss dd/MM/yyyy").format(saves.get(key).getDateCreated().getTime()) + ")");
+					saveList = new JList(list.toArray());
+					saveList.addMouseListener(new MouseAdapter()
+					{
+						public void mouseReleased(MouseEvent arg0)
+						{
+							saveField.setText(((String) saveList.getSelectedValue()).substring(0, ((String) saveList.getSelectedValue()).indexOf(':')));
+							btnSave.setEnabled(true);
+						}
+					});
+					saveList.addKeyListener(new KeyAdapter()
+					{
+						public void keyPressed(KeyEvent arg0)
+						{
+							if (arg0.getKeyCode() == 10)
+								btnSave.doClick();
+						}
+					});
+					if (saveField.getText().trim().length() == 0)
+						btnSave.setEnabled(false);
+					scrollPane.setViewportView(saveList);
+				}
 			}
 		}
 	}

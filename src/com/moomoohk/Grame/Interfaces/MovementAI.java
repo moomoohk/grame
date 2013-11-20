@@ -1,5 +1,7 @@
 package com.moomoohk.Grame.Interfaces;
 
+import java.io.Serializable;
+
 import com.moomoohk.Grame.Basics.Dir;
 import com.moomoohk.Grame.Basics.Entity;
 import com.moomoohk.Grame.Essentials.Base;
@@ -13,8 +15,10 @@ import com.moomoohk.Grame.Essentials.GrameManager;
  * @version 1.0
  * @since 2013-04-05
  */
-public abstract class MovementAI
+public abstract class MovementAI implements Serializable
 {
+	private static final long serialVersionUID = 1621624976123203611L;
+
 	/**
 	 * Constructor.
 	 */

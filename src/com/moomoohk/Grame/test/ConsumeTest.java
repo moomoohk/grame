@@ -14,6 +14,8 @@ public class ConsumeTest implements MainGrameClass
 {
 	public static class Player extends Entity
 	{
+		private static final long serialVersionUID = -3253634438661661214L;
+
 		public void consume(GrameObject go)
 		{
 			System.out.println("Consumed");

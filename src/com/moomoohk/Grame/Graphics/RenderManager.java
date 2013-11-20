@@ -32,17 +32,21 @@ public class RenderManager
 {
 	private static HashMap<Integer, Render> renders;
 	private static HashMap<Integer, TextLayer> text;
-	private static JFrame mainFrame = new JFrame();
-	private static Canvas mainCanvas = null;
-	private static int mainBase = -1;
-	private static boolean drawCoordinates = false;
+	private static JFrame mainFrame;
+	private static Canvas mainCanvas;
+	private static int mainBase;
+	private static boolean drawCoordinates;
 	private static int squareSize = 30;
 
-	static
+	public static void initialize()
 	{
 		renders = new HashMap<Integer, Render>();
 		text = new HashMap<Integer, TextLayer>();
 		loadRenders();
+		mainFrame = new JFrame();
+		mainCanvas = null;
+		mainBase = -1;
+		drawCoordinates = false;
 		GrameUtils.print("Initialized successfully.", MessageLevel.NORMAL);
 	}
 
@@ -67,14 +71,18 @@ public class RenderManager
 	 */
 	public static void render(final int bID, Render render)
 	{
-		if (bID == -1)
+		if (bID < 0)
 			return;
 		setupFrame(bID);
+		if (bID != mainBase)
+			GrameManager.setMainBase(bID);
 		mainBase = bID;
 		//		mainFrame.setTitle("Rendering Base number " + mainBase);
 		mainFrame.setTitle(GrameManager.getGameName());
 		if (render == null)
 			render = GrameManager.getDefaultRender();
+		if(!render.equals(renders.get(bID)))
+			GrameManager.setMainRender(render);
 		renders.put(bID, render);
 		BufferStrategy bs = mainCanvas.getBufferStrategy();
 		if (bs == null)
@@ -325,7 +333,10 @@ public class RenderManager
 
 	public static void dispose()
 	{
-		mainFrame.removeAll();
-		mainFrame.dispose();
+		if (mainFrame != null)
+		{
+			mainFrame.removeAll();
+			mainFrame.dispose();
+		}
 	}
 }

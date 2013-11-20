@@ -23,6 +23,7 @@ import com.moomoohk.Grame.Interfaces.MovementAI;
  */
 public class Entity extends GrameObject
 {
+	private static final long serialVersionUID = 2137967921422181555L;
 	private String type;
 	private int level;
 	private int range;

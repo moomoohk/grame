@@ -31,7 +31,8 @@ public class TestScript
 		ent.makePlayer(1, true, b.ID);
 		GrameObject go=new GrameObject("test", 1, Color.black, false)
 		{
-			
+			private static final long serialVersionUID = -7904811686747660223L;
+
 			@Override
 			public void tick(int bID)
 			{

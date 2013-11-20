@@ -9,6 +9,7 @@ import com.moomoohk.Grame.Interfaces.GrameObject;
 
 public abstract class Spriteable extends GrameObject
 {
+	private static final long serialVersionUID = 1560994486527156063L;
 	private String path;
 	private BufferedImage sprite;
 

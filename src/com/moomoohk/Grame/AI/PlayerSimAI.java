@@ -19,6 +19,7 @@ import com.moomoohk.Grame.Interfaces.MovementAI;
  */
 public class PlayerSimAI extends MovementAI
 {
+	private static final long serialVersionUID = 7309667291702854785L;
 	private Dir direction;
 	private int step, tries;
 

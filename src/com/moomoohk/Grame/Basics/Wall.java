@@ -12,6 +12,8 @@ import com.moomoohk.Grame.Interfaces.GrameObject;
  */
 public class Wall extends GrameObject
 {
+	private static final long serialVersionUID = 3012316648510197720L;
+
 	/**
 	 * Constructor.
 	 */

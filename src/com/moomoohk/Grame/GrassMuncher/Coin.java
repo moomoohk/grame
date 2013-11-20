@@ -7,6 +7,7 @@ import com.moomoohk.Grame.Interfaces.GrameObject;
 
 public class Coin extends GrameObject
 {
+	private static final long serialVersionUID = 3955843569288863271L;
 	private int worth;
 	public Coin()
 	{

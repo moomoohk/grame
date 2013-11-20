@@ -17,6 +17,7 @@ import com.moomoohk.Grame.Interfaces.MovementAI;
  */
 public class PlayerMovementAI extends MovementAI
 {
+	private static final long serialVersionUID = 4329500019408321580L;
 	private int player = 0;
 
 	/**

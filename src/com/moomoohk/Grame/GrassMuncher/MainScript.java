@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import com.moomoohk.Grame.Basics.Wall;
 import com.moomoohk.Grame.Essentials.Base;
@@ -30,16 +31,28 @@ public class MainScript implements MainGrameClass
 
 	public static void win()
 	{
-		GrameManager.pauseAllGrameObjects(true);
-		JOptionPane.showMessageDialog(new JFrame(), "You win!", "", JOptionPane.PLAIN_MESSAGE);
-		System.exit(0);
+		SwingUtilities.invokeLater(new Runnable()
+		{
+			public void run()
+			{
+				GrameManager.pauseAllGrameObjects(true);
+				JOptionPane.showMessageDialog(new JFrame(), "You win!", "", JOptionPane.PLAIN_MESSAGE);
+				System.exit(0);
+			}
+		});
 	}
 
 	public static void lose()
 	{
-		GrameManager.pauseAllGrameObjects(true);
-		JOptionPane.showMessageDialog(new JFrame(), "You lose!\nYour score: " + p.getPoints(), "", JOptionPane.PLAIN_MESSAGE);
-		System.exit(0);
+		SwingUtilities.invokeLater(new Runnable()
+		{
+			public void run()
+			{
+				GrameManager.pauseAllGrameObjects(true);
+				JOptionPane.showMessageDialog(new JFrame(), "You lose!\nYour score: " + p.getPoints(), "", JOptionPane.PLAIN_MESSAGE);
+				System.exit(0);
+			}
+		});
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.moomoohk.Grame.Essentials;
 
 import java.awt.Color;
+import java.io.Serializable;
 
 import com.moomoohk.Grame.Essentials.GrameUtils.MessageLevel;
 
@@ -10,8 +11,9 @@ import com.moomoohk.Grame.Essentials.GrameUtils.MessageLevel;
  * @version 1.0
  * @since 2013-04-05
  */
-public class ColorLayer
+public class ColorLayer implements Serializable
 {
+	private static final long serialVersionUID = 4166643485256534497L;
 	private Color[] colors;
 	private int width, height;
 	

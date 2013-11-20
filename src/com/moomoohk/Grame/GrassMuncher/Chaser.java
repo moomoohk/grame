@@ -10,6 +10,7 @@ import com.moomoohk.Grame.Interfaces.GrameObject;
 
 public class Chaser extends GrameObject
 {
+	private static final long serialVersionUID = -3075457796713552182L;
 	private GrameObject target;
 	public Chaser()
 	{

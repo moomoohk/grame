@@ -18,6 +18,8 @@ import com.moomoohk.Grame.Interfaces.MovementAI;
 
 public class AStarPathfindingMovementAI extends MovementAI implements MainGrameClass
 {
+	private static final long serialVersionUID = -5135305842198542597L;
+
 	private static final double NORMAL_COST = 1, DIAGONAL_COST = Math.sqrt(2);
 
 	private Coordinates cachedTargetPos = null;

@@ -11,6 +11,7 @@ import com.moomoohk.Grame.Interfaces.GrameObject;
 
 public class Player extends GrameObject
 {
+	private static final long serialVersionUID = 1615372944054959042L;
 	private int points;
 	public Player()
 	{

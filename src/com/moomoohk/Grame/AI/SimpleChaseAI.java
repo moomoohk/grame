@@ -19,6 +19,8 @@ import com.moomoohk.Grame.Interfaces.MovementAI;
  */
 public class SimpleChaseAI extends MovementAI
 {
+	private static final long serialVersionUID = 4361422461574615758L;
+
 	public Coordinates getNext(Coordinates pos, Coordinates target, Base b, Entity ent1, Entity ent2)
 	{
 		if (target == null)
