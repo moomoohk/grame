@@ -860,6 +860,11 @@ public class GrameManager implements Runnable
 				}
 			});
 
+			public MenuButton()
+			{
+				this("Default", Color.red, new Color(255, 127, 0), Color.blue, "Default");
+			}
+
 			public MenuButton(String text, Color startColor, Color endColor, Color clickColor, String helpText)
 			{
 				super(text);
@@ -902,6 +907,26 @@ public class GrameManager implements Runnable
 						t.start();
 					}
 				});
+			}
+
+			public void setStartColor(Color c)
+			{
+				this.startColor = c;
+			}
+
+			public void setEndColor(Color c)
+			{
+				this.endColor = c;
+			}
+
+			public void setClickColor(Color c)
+			{
+				this.clickColor = c;
+			}
+
+			public void setHelpText(String helpText)
+			{
+				this.helpText = helpText;
 			}
 
 			public String getHelpText()
@@ -952,19 +977,16 @@ public class GrameManager implements Runnable
 			}
 		}
 
-		public static class LoadGamePanel extends JPanel
+		public abstract static class MenuPanel extends JPanel
 		{
-			private static final long serialVersionUID = -2270645491547851288L;
+			private static final long serialVersionUID = 8536992209102721367L;
+			protected String savePath;
+			protected HashMap<String, EngineState> saves;
+			protected JScrollPane scrollPane;
+			protected MenuButton btnConfirm, btnCancel;
+			protected JLabel noSaves = new JLabel("No saves found");
 
-			private String savePath;
-			private HashMap<String, EngineState> saves;
-			private JScrollPane scrollPane;
-			private MenuButton btnLoad, btnDeleteSave;
-			private JLabel noSaves = new JLabel("No saves found");
-			private JPanel selectedPanel;
-			private String selectedEngineStateName;
-
-			public LoadGamePanel(String savePath)
+			public MenuPanel(String savePath)
 			{
 				this.savePath = savePath;
 				this.saves = new HashMap<String, EngineState>();
@@ -975,7 +997,7 @@ public class GrameManager implements Runnable
 				SpringLayout springLayout = new SpringLayout();
 				setLayout(springLayout);
 
-				JLabel lblSelectSaveFile = new JLabel("Select save file to load:");
+				JLabel lblSelectSaveFile = new JLabel();
 				lblSelectSaveFile.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 				springLayout.putConstraint(SpringLayout.NORTH, lblSelectSaveFile, 20, SpringLayout.NORTH, this);
 				springLayout.putConstraint(SpringLayout.WEST, lblSelectSaveFile, 20, SpringLayout.WEST, this);
@@ -990,35 +1012,25 @@ public class GrameManager implements Runnable
 				springLayout.putConstraint(SpringLayout.EAST, scrollPane, -20, SpringLayout.EAST, this);
 				add(scrollPane);
 
-				btnLoad = new MenuButton("Load", Color.red, Color.yellow, Color.blue, "Load the selected save");
-				btnLoad.addActionListener(new ActionListener()
+				btnConfirm = new MenuButton();
+				springLayout.putConstraint(SpringLayout.SOUTH, btnConfirm, -20, SpringLayout.SOUTH, this);
+				springLayout.putConstraint(SpringLayout.EAST, btnConfirm, 0, SpringLayout.EAST, lblSelectSaveFile);
+				springLayout.putConstraint(SpringLayout.SOUTH, scrollPane, -20, SpringLayout.NORTH, btnConfirm);
+				btnConfirm.setPreferredSize(new Dimension(100, 30));
+				btnConfirm.addActionListener(new ActionListener()
 				{
-					public void actionPerformed(ActionEvent arg0)
+					public void actionPerformed(ActionEvent paramActionEvent)
 					{
-						mainMenu.dispose();
-						paused = true;
-						GrameUtils.console.setVisible(true);
-						RenderManager.dispose();
-						RenderManager.initialize();
-						RenderManager.clearAllText();
-						engineState = saves.get(selectedEngineStateName);
-						RenderManager.render(engineState.getMainBase(), engineState.getMainRender());
-						RenderManager.setVisible(true);
-						start();
-						paused = false;
+						confirm();
 					}
 				});
-				springLayout.putConstraint(SpringLayout.SOUTH, btnLoad, -20, SpringLayout.SOUTH, this);
-				springLayout.putConstraint(SpringLayout.EAST, btnLoad, 0, SpringLayout.EAST, lblSelectSaveFile);
-				springLayout.putConstraint(SpringLayout.SOUTH, scrollPane, -20, SpringLayout.NORTH, btnLoad);
-				btnLoad.setPreferredSize(new Dimension(100, 30));
-				add(btnLoad);
+				add(btnConfirm);
 
-				MenuButton btnClose = new MenuButton("Cancel", Color.red, Color.yellow, Color.blue, "Close this panel");
-				springLayout.putConstraint(SpringLayout.WEST, btnClose, 0, SpringLayout.WEST, lblSelectSaveFile);
-				springLayout.putConstraint(SpringLayout.SOUTH, btnClose, 0, SpringLayout.SOUTH, btnLoad);
-				btnClose.setPreferredSize(new Dimension(100, 30));
-				btnClose.addActionListener(new ActionListener()
+				btnCancel = new MenuButton("Cancel", Color.red, Color.yellow, Color.blue, "Close this panel");
+				springLayout.putConstraint(SpringLayout.WEST, btnCancel, 0, SpringLayout.WEST, lblSelectSaveFile);
+				springLayout.putConstraint(SpringLayout.SOUTH, btnCancel, 0, SpringLayout.SOUTH, btnConfirm);
+				btnCancel.setPreferredSize(new Dimension(100, 30));
+				btnCancel.addActionListener(new ActionListener()
 				{
 					public void actionPerformed(ActionEvent arg0)
 					{
@@ -1026,35 +1038,12 @@ public class GrameManager implements Runnable
 						lblMadeWithGrame.setText("");
 					}
 				});
-				add(btnClose);
+				add(btnCancel);
 
-				btnDeleteSave = new MenuButton("Delete", Color.red, Color.yellow, Color.blue, "Delete selected save");
-				btnDeleteSave.addActionListener(new ActionListener()
-				{
-					public void actionPerformed(ActionEvent arg0)
-					{
-						if (JOptionPane.showConfirmDialog(mainMenu, "Delete this save?", "Are you sure?", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.YES_OPTION)
-							try
-							{
-								FileUtils.delete(new File(GrameManager.savePath.toString() + "/" + selectedEngineStateName + ".GrameSave"));
-								loadInfo();
-								updateGUI();
-							}
-							catch (IOException e)
-							{
-								e.printStackTrace();
-							}
-					}
-				});
-				springLayout.putConstraint(SpringLayout.SOUTH, btnDeleteSave, 0, SpringLayout.SOUTH, btnLoad);
-				springLayout.putConstraint(SpringLayout.WEST, btnDeleteSave, 20, SpringLayout.EAST, btnClose);
-				springLayout.putConstraint(SpringLayout.EAST, btnDeleteSave, -20, SpringLayout.WEST, btnLoad);
-				springLayout.putConstraint(SpringLayout.NORTH, btnDeleteSave, 0, SpringLayout.NORTH, btnLoad);
-				add(btnDeleteSave);
+				btnConfirm.addMouseListener(helpTextListener);
+				btnCancel.addMouseListener(helpTextListener);
 
-				btnLoad.addMouseListener(helpTextListener);
-				btnClose.addMouseListener(helpTextListener);
-				btnDeleteSave.addMouseListener(helpTextListener);
+				initGUI();
 			}
 
 			public void loadInfo()
@@ -1086,11 +1075,93 @@ public class GrameManager implements Runnable
 				}
 			}
 
-			private void updateGUI()
+			protected SpringLayout getSpringLayout()
+			{
+				return (SpringLayout) getLayout();
+			}
+
+			protected abstract void confirm();
+
+			protected abstract void initGUI();
+
+			protected abstract void updateGUI();
+		}
+
+		public static class LoadGamePanel extends MenuPanel
+		{
+			private static final long serialVersionUID = 5362729999369047215L;
+			private MenuButton btnDeleteSave;
+			private JPanel selectedPanel;
+			private String selectedEngineStateName;
+
+			public LoadGamePanel(String savePath)
+			{
+				super(savePath);
+			}
+
+			@Override
+			protected void confirm()
+			{
+				mainMenu.dispose();
+				paused = true;
+				GrameUtils.console.setVisible(true);
+				RenderManager.dispose();
+				RenderManager.initialize();
+				RenderManager.clearAllText();
+				engineState = saves.get(selectedEngineStateName);
+				RenderManager.render(engineState.getMainBase(), engineState.getMainRender());
+				RenderManager.setVisible(true);
+				start();
+				paused = false;
+			}
+
+			protected void initGUI()
+			{				
+				btnConfirm.setText("Load");
+				btnConfirm.setStartColor(Color.red);
+				btnConfirm.setEndColor(Color.yellow);
+				btnConfirm.setClickColor(Color.blue);
+				btnConfirm.setHelpText("Load the selected save");
+				
+				JLabel lblSelectSaveFile = new JLabel("Select save file to load:");
+				lblSelectSaveFile.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+                getSpringLayout().putConstraint(SpringLayout.NORTH, lblSelectSaveFile, 20, SpringLayout.NORTH, this);
+                getSpringLayout().putConstraint(SpringLayout.WEST, lblSelectSaveFile, 20, SpringLayout.WEST, this);
+                getSpringLayout().putConstraint(SpringLayout.EAST, lblSelectSaveFile, -20, SpringLayout.EAST, this);
+				add(lblSelectSaveFile);
+				
+				getSpringLayout().putConstraint(SpringLayout.NORTH, scrollPane, 10, SpringLayout.SOUTH, lblSelectSaveFile);
+
+				btnDeleteSave = new MenuButton("Delete", Color.red, Color.yellow, Color.blue, "Delete selected save");
+				getSpringLayout().putConstraint(SpringLayout.SOUTH, btnDeleteSave, 0, SpringLayout.SOUTH, btnConfirm);
+				getSpringLayout().putConstraint(SpringLayout.WEST, btnDeleteSave, 20, SpringLayout.EAST, btnCancel);
+				getSpringLayout().putConstraint(SpringLayout.EAST, btnDeleteSave, -20, SpringLayout.WEST, btnConfirm);
+				getSpringLayout().putConstraint(SpringLayout.NORTH, btnDeleteSave, 0, SpringLayout.NORTH, btnConfirm);
+				btnDeleteSave.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent arg0)
+					{
+						if (JOptionPane.showConfirmDialog(mainMenu, "Delete this save?", "Are you sure?", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.YES_OPTION)
+							try
+							{
+								FileUtils.delete(new File(GrameManager.savePath.toString() + "/" + selectedEngineStateName + ".GrameSave"));
+								loadInfo();
+								updateGUI();
+							}
+							catch (IOException e)
+							{
+								e.printStackTrace();
+							}
+					}
+				});
+				add(btnDeleteSave);
+			}
+
+			public void updateGUI()
 			{
 				if (this.saves.size() == 0)
 				{
-					this.btnLoad.setEnabled(false);
+					this.btnConfirm.setEnabled(false);
 					this.btnDeleteSave.setEnabled(false);
 					scrollPane.setViewportView(noSaves);
 				}
@@ -1131,7 +1202,7 @@ public class GrameManager implements Runnable
 									selectedPanel = savePanel;
 									selectedEngineStateName = key;
 									savePanel.setBorder(BorderFactory.createMatteBorder(1, 5, 1, 1, Color.gray));
-									btnLoad.setEnabled(true);
+									btnConfirm.setEnabled(true);
 									btnDeleteSave.setEnabled(true);
 								}
 							});
@@ -1165,58 +1236,71 @@ public class GrameManager implements Runnable
 						}
 						catch (Exception e)
 						{
-							System.out.println("Conflict");
+							System.out.println("Conflict"); //TODO: Handle conflicts
 						}
-					btnLoad.setEnabled(false);
+					btnConfirm.setEnabled(false);
 					btnDeleteSave.setEnabled(false);
-					//					scrollPane.setViewportView(saveList);
 					scrollPane.setViewportView(savesListPanel);
 				}
 			}
 		}
 
-		public static class SaveGamePanel extends JPanel
+		public static class SaveGamePanel extends MenuPanel
 		{
-			private static final long serialVersionUID = -2270645491547851288L;
+			private static final long serialVersionUID = 812980996331735043L;
 
-			private String savePath;
-			private HashMap<String, EngineState> saves;
-			private JScrollPane scrollPane;
-			private MenuButton btnSave;
-			private JLabel noSaves = new JLabel("No saves found");
 			private JTextField saveField;
+			private JLabel lblSelectSaveFile;
 
 			public SaveGamePanel(String savePath)
 			{
-				this.savePath = savePath;
-				this.saves = new HashMap<String, EngineState>();
-				this.noSaves.setHorizontalAlignment(SwingConstants.CENTER);
-				this.noSaves.setFont(new Font("Lucida Grande", Font.BOLD | Font.ITALIC, 15));
-				this.noSaves.setForeground(Color.lightGray);
+				super(savePath);
+			}
 
-				SpringLayout springLayout = new SpringLayout();
-				setLayout(springLayout);
+			public void showPanel()
+			{
+				saveField.setText("");
+				updateGUI();
+			}
 
-				JLabel lblSelectSaveFile = new JLabel("Name your save:");
+			@Override
+			protected void confirm()
+			{
+				if (saveEngineState(saveField.getText(), false, mainMenu))
+					saveField.setText("");
+				loadInfo();
+				updateGUI();
+			}
+
+			@Override
+			protected void initGUI()
+			{
+				btnConfirm.setText("Save");
+				btnConfirm.setStartColor(Color.red);
+				btnConfirm.setEndColor(Color.yellow);
+				btnConfirm.setClickColor(Color.blue);
+				btnConfirm.setHelpText("Save your game");
+
+				lblSelectSaveFile = new JLabel("Name your save:");
 				lblSelectSaveFile.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-				springLayout.putConstraint(SpringLayout.NORTH, lblSelectSaveFile, 20, SpringLayout.NORTH, this);
-				springLayout.putConstraint(SpringLayout.WEST, lblSelectSaveFile, 20, SpringLayout.WEST, this);
-				springLayout.putConstraint(SpringLayout.EAST, lblSelectSaveFile, -20, SpringLayout.EAST, this);
+				getSpringLayout().putConstraint(SpringLayout.NORTH, lblSelectSaveFile, 20, SpringLayout.NORTH, this);
+				getSpringLayout().putConstraint(SpringLayout.WEST, lblSelectSaveFile, 20, SpringLayout.WEST, this);
+				getSpringLayout().putConstraint(SpringLayout.EAST, lblSelectSaveFile, -20, SpringLayout.EAST, this);
 				add(lblSelectSaveFile);
 
 				saveField = new JTextField();
-				springLayout.putConstraint(SpringLayout.WEST, saveField, 0, SpringLayout.WEST, lblSelectSaveFile);
-				springLayout.putConstraint(SpringLayout.EAST, saveField, 0, SpringLayout.EAST, lblSelectSaveFile);
-				springLayout.putConstraint(SpringLayout.NORTH, saveField, 10, SpringLayout.SOUTH, lblSelectSaveFile);
+				getSpringLayout().putConstraint(SpringLayout.WEST, saveField, 0, SpringLayout.WEST, lblSelectSaveFile);
+				getSpringLayout().putConstraint(SpringLayout.EAST, saveField, 0, SpringLayout.EAST, lblSelectSaveFile);
+				getSpringLayout().putConstraint(SpringLayout.NORTH, saveField, 10, SpringLayout.SOUTH, lblSelectSaveFile);
 				saveField.addKeyListener(new KeyAdapter()
 				{
 					@Override
 					public void keyReleased(KeyEvent arg0)
 					{
 						if (saveField.getText().trim().length() == 0)
-							btnSave.setEnabled(false);
+							btnConfirm.setEnabled(false);
 						else
-							btnSave.setEnabled(true);
+							btnConfirm.setEnabled(true);
 					}
 
 					@Override
@@ -1225,90 +1309,19 @@ public class GrameManager implements Runnable
 						if (arg0.getKeyCode() == 27)
 							saveField.setText("");
 						if (arg0.getKeyCode() == 10)
-							btnSave.doClick();
+							btnConfirm.doClick();
 					}
 				});
 				add(saveField);
 
-				scrollPane = new JScrollPane();
-				scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-				springLayout.putConstraint(SpringLayout.NORTH, scrollPane, 10, SpringLayout.SOUTH, saveField);
-				springLayout.putConstraint(SpringLayout.WEST, scrollPane, 20, SpringLayout.WEST, this);
-				springLayout.putConstraint(SpringLayout.SOUTH, scrollPane, -100, SpringLayout.SOUTH, this);
-				springLayout.putConstraint(SpringLayout.EAST, scrollPane, -20, SpringLayout.EAST, this);
-				add(scrollPane);
-
-				btnSave = new MenuButton("Save", Color.red, Color.yellow, Color.blue, "Save your game");
-				btnSave.addActionListener(new ActionListener()
-				{
-					public void actionPerformed(ActionEvent arg0)
-					{
-						if (saveEngineState(saveField.getText(), false, mainMenu))
-							saveField.setText("");
-						loadInfo();
-						updateGUI();
-					}
-				});
-				springLayout.putConstraint(SpringLayout.SOUTH, btnSave, -20, SpringLayout.SOUTH, this);
-				springLayout.putConstraint(SpringLayout.EAST, btnSave, 0, SpringLayout.EAST, lblSelectSaveFile);
-				springLayout.putConstraint(SpringLayout.SOUTH, scrollPane, -20, SpringLayout.NORTH, btnSave);
-				btnSave.setPreferredSize(new Dimension(100, 30));
-				add(btnSave);
-
-				MenuButton btnClose = new MenuButton("Cancel", Color.red, Color.yellow, Color.blue, "Close this panel1");
-				springLayout.putConstraint(SpringLayout.WEST, btnClose, 0, SpringLayout.WEST, lblSelectSaveFile);
-				springLayout.putConstraint(SpringLayout.SOUTH, btnClose, 0, SpringLayout.SOUTH, btnSave);
-				btnClose.setPreferredSize(new Dimension(100, 30));
-				btnClose.addActionListener(new ActionListener()
-				{
-					public void actionPerformed(ActionEvent arg0)
-					{
-						sidePanel.setViewportView(null);
-						lblMadeWithGrame.setText("");
-					}
-				});
-				add(btnClose);
-
-				btnSave.addMouseListener(helpTextListener);
-				btnClose.addMouseListener(helpTextListener);
+				getSpringLayout().putConstraint(SpringLayout.NORTH, scrollPane, 10, SpringLayout.SOUTH, saveField);
+				getSpringLayout().putConstraint(SpringLayout.WEST, scrollPane, 20, SpringLayout.WEST, this);
+				getSpringLayout().putConstraint(SpringLayout.SOUTH, scrollPane, -10, SpringLayout.NORTH, btnConfirm);
+				getSpringLayout().putConstraint(SpringLayout.EAST, scrollPane, -20, SpringLayout.EAST, this);
 			}
 
-			public void loadInfo()
-			{
-				File f = new File(savePath);
-				if (!f.exists())
-					return;
-				saves = new HashMap<String, EngineState>();
-				for (File child : f.listFiles(new FilenameFilter()
-				{
-					@Override
-					public boolean accept(File paramFile, String paramString)
-					{
-						return paramString.endsWith(".GrameSave");
-					}
-				}))
-				{
-					String name = child.toString().substring(f.toString().length() + 1, child.toString().lastIndexOf("."));
-					try
-					{
-						Object save = ObjectUtils.load(f.toString(), name, "GrameSave");
-						if (save != null)
-							this.saves.put(name, ((EngineState) save));
-					}
-					catch (IOException e)
-					{
-						e.printStackTrace();
-					}
-				}
-			}
-
-			private void showPanel()
-			{
-				saveField.setText("");
-				updateGUI();
-			}
-
-			private void updateGUI()
+			@Override
+			protected void updateGUI()
 			{
 				if (this.saves.size() == 0)
 				{
@@ -1345,7 +1358,7 @@ public class GrameManager implements Runnable
 								public void mousePressed(MouseEvent arg0)
 								{
 									saveField.setText(key);
-									btnSave.setEnabled(true);
+									btnConfirm.setEnabled(true);
 								}
 							});
 
@@ -1380,14 +1393,11 @@ public class GrameManager implements Runnable
 						{
 							System.out.println("Conflict");
 						}
-					btnSave.setEnabled(false);
-					//					scrollPane.setViewportView(saveList);
+					btnConfirm.setEnabled(false);
 					scrollPane.setViewportView(savesListPanel);
 				}
 				if (saveField.getText().trim().length() == 0)
-				{
-					btnSave.setEnabled(false);
-				}
+					btnConfirm.setEnabled(false);
 			}
 		}
 	}
