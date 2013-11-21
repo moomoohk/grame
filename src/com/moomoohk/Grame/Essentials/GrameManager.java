@@ -1062,7 +1062,7 @@ public class GrameManager implements Runnable
 				File f = new File(savePath);
 				if (!f.exists())
 					return;
-				this.saves = new HashMap<String, EngineState>();
+				saves = new HashMap<String, EngineState>();
 				for (File child : f.listFiles(new FilenameFilter()
 				{
 					@Override
@@ -1182,11 +1182,9 @@ public class GrameManager implements Runnable
 			private String savePath;
 			private HashMap<String, EngineState> saves;
 			private JScrollPane scrollPane;
-			private MenuButton btnSave, btnDeleteSave;
+			private MenuButton btnSave;
 			private JLabel noSaves = new JLabel("No saves found");
 			private JTextField saveField;
-			private JPanel selectedPanel;
-			private String selectedEngineStateName;
 
 			public SaveGamePanel(String savePath)
 			{
@@ -1271,30 +1269,6 @@ public class GrameManager implements Runnable
 				});
 				add(btnClose);
 
-				btnDeleteSave = new MenuButton("Delete", Color.red, Color.yellow, Color.blue, "Delete selected save");
-				btnDeleteSave.addActionListener(new ActionListener()
-				{
-					public void actionPerformed(ActionEvent arg0)
-					{
-						if (JOptionPane.showConfirmDialog(mainMenu, "Delete this save?", "Are you sure?", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.YES_OPTION)
-							try
-							{
-								FileUtils.delete(new File(GrameManager.savePath.toString() + "/" + selectedEngineStateName + ".GrameSave"));
-								loadInfo();
-								updateGUI();
-							}
-							catch (IOException e)
-							{
-								e.printStackTrace();
-							}
-					}
-				});
-				springLayout.putConstraint(SpringLayout.SOUTH, btnDeleteSave, 0, SpringLayout.SOUTH, btnSave);
-				springLayout.putConstraint(SpringLayout.WEST, btnDeleteSave, 20, SpringLayout.EAST, btnClose);
-				springLayout.putConstraint(SpringLayout.EAST, btnDeleteSave, -20, SpringLayout.WEST, btnSave);
-				springLayout.putConstraint(SpringLayout.NORTH, btnDeleteSave, 0, SpringLayout.NORTH, btnSave);
-				add(btnDeleteSave);
-
 				btnSave.addMouseListener(helpTextListener);
 				btnClose.addMouseListener(helpTextListener);
 			}
@@ -1342,7 +1316,6 @@ public class GrameManager implements Runnable
 				}
 				else
 				{
-					selectedPanel = new JPanel();
 					JPanel savesListPanel = new JPanel();
 					savesListPanel.setLayout(new GridBagLayout());
 					for (final String key : saves.keySet())
@@ -1360,23 +1333,19 @@ public class GrameManager implements Runnable
 								@Override
 								public void mouseExited(MouseEvent paramMouseEvent)
 								{
-									if (!selectedPanel.equals(savePanel))
-										savePanel.setBorder(BorderFactory.createLineBorder(Color.black));
+									savePanel.setBorder(BorderFactory.createLineBorder(Color.black));
 								}
 
 								@Override
 								public void mouseEntered(MouseEvent paramMouseEvent)
 								{
-									if (!selectedPanel.equals(savePanel))
-										savePanel.setBorder(BorderFactory.createMatteBorder(1, 5, 1, 1, Color.black));
+									savePanel.setBorder(BorderFactory.createMatteBorder(1, 5, 1, 1, Color.black));
 								}
 
 								public void mousePressed(MouseEvent arg0)
 								{
-									selectedPanel = savePanel;
 									saveField.setText(key);
 									btnSave.setEnabled(true);
-									btnDeleteSave.setEnabled(true);
 								}
 							});
 
@@ -1412,14 +1381,12 @@ public class GrameManager implements Runnable
 							System.out.println("Conflict");
 						}
 					btnSave.setEnabled(false);
-					btnDeleteSave.setEnabled(false);
 					//					scrollPane.setViewportView(saveList);
 					scrollPane.setViewportView(savesListPanel);
 				}
 				if (saveField.getText().trim().length() == 0)
 				{
 					btnSave.setEnabled(false);
-					btnDeleteSave.setEnabled(false);
 				}
 			}
 		}
