@@ -1,5 +1,6 @@
 package com.moomoohk.Grame.Essentials;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.moomoohk.Grame.Basics.Dir;
@@ -12,8 +13,9 @@ import com.moomoohk.Grame.Interfaces.GrameObject;
  * @version 1.0
  * @since 2013-04-05
  */
-public class Coordinates
+public class Coordinates implements Serializable
 {
+	private static final long serialVersionUID = 3383675004833512203L;
 	protected int x;
 	protected int y;
 

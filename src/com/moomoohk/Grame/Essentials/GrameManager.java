@@ -7,6 +7,9 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
@@ -19,18 +22,17 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpringLayout;
@@ -67,7 +69,7 @@ public class GrameManager implements Runnable
 	/**
 	 * The Grame version number.
 	 */
-	public static final String VERSION_NUMBER = "4.0";
+	public static final String VERSION_NUMBER = "4.0.1";
 	/**
 	 * The WASD keys parsed to a {@link Dir}.
 	 */
@@ -959,7 +961,8 @@ public class GrameManager implements Runnable
 			private JScrollPane scrollPane;
 			private MenuButton btnLoad, btnDeleteSave;
 			private JLabel noSaves = new JLabel("No saves found");
-			private JList saveList;
+			private JPanel selectedPanel;
+			private String selectedEngineStateName;
 
 			public LoadGamePanel(String savePath)
 			{
@@ -998,7 +1001,7 @@ public class GrameManager implements Runnable
 						RenderManager.dispose();
 						RenderManager.initialize();
 						RenderManager.clearAllText();
-						engineState = saves.get(((String) saveList.getSelectedValue()).substring(0, ((String) saveList.getSelectedValue()).indexOf(':')));
+						engineState = saves.get(selectedEngineStateName);
 						RenderManager.render(engineState.getMainBase(), engineState.getMainRender());
 						RenderManager.setVisible(true);
 						start();
@@ -1011,11 +1014,11 @@ public class GrameManager implements Runnable
 				btnLoad.setPreferredSize(new Dimension(100, 30));
 				add(btnLoad);
 
-				MenuButton btnCancel = new MenuButton("Cancel", Color.red, Color.yellow, Color.blue, "Cancels this operation");
-				springLayout.putConstraint(SpringLayout.WEST, btnCancel, 0, SpringLayout.WEST, lblSelectSaveFile);
-				springLayout.putConstraint(SpringLayout.SOUTH, btnCancel, 0, SpringLayout.SOUTH, btnLoad);
-				btnCancel.setPreferredSize(new Dimension(100, 30));
-				btnCancel.addActionListener(new ActionListener()
+				MenuButton btnClose = new MenuButton("Cancel", Color.red, Color.yellow, Color.blue, "Close this panel");
+				springLayout.putConstraint(SpringLayout.WEST, btnClose, 0, SpringLayout.WEST, lblSelectSaveFile);
+				springLayout.putConstraint(SpringLayout.SOUTH, btnClose, 0, SpringLayout.SOUTH, btnLoad);
+				btnClose.setPreferredSize(new Dimension(100, 30));
+				btnClose.addActionListener(new ActionListener()
 				{
 					public void actionPerformed(ActionEvent arg0)
 					{
@@ -1023,7 +1026,7 @@ public class GrameManager implements Runnable
 						lblMadeWithGrame.setText("");
 					}
 				});
-				add(btnCancel);
+				add(btnClose);
 
 				btnDeleteSave = new MenuButton("Delete", Color.red, Color.yellow, Color.blue, "Delete selected save");
 				btnDeleteSave.addActionListener(new ActionListener()
@@ -1033,7 +1036,7 @@ public class GrameManager implements Runnable
 						if (JOptionPane.showConfirmDialog(mainMenu, "Delete this save?", "Are you sure?", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.YES_OPTION)
 							try
 							{
-								FileUtils.delete(new File(GrameManager.savePath.toString() + "/" + ((String) saveList.getSelectedValue()).substring(0, ((String) saveList.getSelectedValue()).indexOf(':')) + ".GrameSave"));
+								FileUtils.delete(new File(GrameManager.savePath.toString() + "/" + selectedEngineStateName + ".GrameSave"));
 								loadInfo();
 								updateGUI();
 							}
@@ -1044,13 +1047,13 @@ public class GrameManager implements Runnable
 					}
 				});
 				springLayout.putConstraint(SpringLayout.SOUTH, btnDeleteSave, 0, SpringLayout.SOUTH, btnLoad);
-				springLayout.putConstraint(SpringLayout.WEST, btnDeleteSave, 20, SpringLayout.EAST, btnCancel);
+				springLayout.putConstraint(SpringLayout.WEST, btnDeleteSave, 20, SpringLayout.EAST, btnClose);
 				springLayout.putConstraint(SpringLayout.EAST, btnDeleteSave, -20, SpringLayout.WEST, btnLoad);
 				springLayout.putConstraint(SpringLayout.NORTH, btnDeleteSave, 0, SpringLayout.NORTH, btnLoad);
 				add(btnDeleteSave);
 
 				btnLoad.addMouseListener(helpTextListener);
-				btnCancel.addMouseListener(helpTextListener);
+				btnClose.addMouseListener(helpTextListener);
 				btnDeleteSave.addMouseListener(helpTextListener);
 			}
 
@@ -1069,7 +1072,7 @@ public class GrameManager implements Runnable
 					}
 				}))
 				{
-					String name = child.toString().substring(f.toString().length() + 1, child.toString().indexOf("."));
+					String name = child.toString().substring(f.toString().length() + 1, child.toString().lastIndexOf("."));
 					try
 					{
 						Object save = ObjectUtils.load(f.toString(), name, "GrameSave");
@@ -1093,36 +1096,81 @@ public class GrameManager implements Runnable
 				}
 				else
 				{
-					ArrayList<String> list = new ArrayList<String>();
-					for (String key : saves.keySet())
+					selectedPanel = new JPanel();
+					JPanel savesListPanel = new JPanel();
+					savesListPanel.setLayout(new GridBagLayout());
+					for (final String key : saves.keySet())
 						try
 						{
-							list.add(key + ": (Last saved: " + new SimpleDateFormat("hh:mm:ss dd/MM/yyyy").format(saves.get(key).getSaved().getTime()) + ", Created " + new SimpleDateFormat("hh:mm:ss dd/MM/yyyy").format(saves.get(key).getDateCreated().getTime()) + ")");
+							GridBagConstraints gbc = new GridBagConstraints();
+							gbc.gridwidth = GridBagConstraints.REMAINDER;
+							gbc.insets = new Insets(3, 0, 3, 0);
+							final JPanel savePanel = new JPanel();
+							savePanel.setLayout(null);
+							savePanel.setPreferredSize(new Dimension(360, 85));
+							savePanel.setBorder(BorderFactory.createLineBorder(Color.black));
+							savePanel.addMouseListener(new MouseAdapter()
+							{
+								@Override
+								public void mouseExited(MouseEvent paramMouseEvent)
+								{
+									if (!selectedPanel.equals(savePanel))
+										savePanel.setBorder(BorderFactory.createLineBorder(Color.black));
+								}
+
+								@Override
+								public void mouseEntered(MouseEvent paramMouseEvent)
+								{
+									if (!selectedPanel.equals(savePanel))
+										savePanel.setBorder(BorderFactory.createMatteBorder(1, 5, 1, 1, Color.black));
+								}
+
+								public void mousePressed(MouseEvent arg0)
+								{
+									selectedPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+									selectedPanel = savePanel;
+									selectedEngineStateName = key;
+									savePanel.setBorder(BorderFactory.createMatteBorder(1, 5, 1, 1, Color.gray));
+									btnLoad.setEnabled(true);
+									btnDeleteSave.setEnabled(true);
+								}
+							});
+
+							JLabel lblName = new JLabel(key);
+							lblName.setFont(new Font(lblName.getFont().getName(), Font.BOLD, 14));
+							lblName.setBounds(10, 0, 340, 30);
+							savePanel.add(lblName);
+
+							JSeparator separator = new JSeparator(JSeparator.HORIZONTAL);
+							separator.setBounds(10, 20, 340, 30);
+							savePanel.add(separator);
+
+							JLabel lblSavedTitle = new JLabel("Last saved:");
+							lblSavedTitle.setBounds(10, 25, 80, 30);
+							savePanel.add(lblSavedTitle);
+
+							JLabel lblSaved = new JLabel("" + saves.get(key).getSaved());
+							lblSaved.setBounds(90, 25, 230, 30);
+							savePanel.add(lblSaved);
+
+							JLabel lblCreatedTitle = new JLabel("Created:");
+							lblCreatedTitle.setBounds(10, 50, 80, 30);
+							savePanel.add(lblCreatedTitle);
+
+							JLabel lblCreated = new JLabel("" + saves.get(key).getDateCreated().getTime());
+							lblCreated.setBounds(90, 50, 240, 30);
+							savePanel.add(lblCreated);
+
+							savesListPanel.add(savePanel, gbc);
 						}
 						catch (Exception e)
 						{
 							System.out.println("Conflict");
 						}
-					saveList = new JList(list.toArray());
-					saveList.addMouseListener(new MouseAdapter()
-					{
-						public void mousePressed(MouseEvent arg0)
-						{
-							btnLoad.setEnabled(true);
-							btnDeleteSave.setEnabled(true);
-						}
-					});
-					saveList.addKeyListener(new KeyAdapter()
-					{
-						public void keyPressed(KeyEvent arg0)
-						{
-							if (arg0.getKeyCode() == 10)
-								btnLoad.doClick();
-						}
-					});
 					btnLoad.setEnabled(false);
 					btnDeleteSave.setEnabled(false);
-					scrollPane.setViewportView(saveList);
+					//					scrollPane.setViewportView(saveList);
+					scrollPane.setViewportView(savesListPanel);
 				}
 			}
 		}
@@ -1136,8 +1184,9 @@ public class GrameManager implements Runnable
 			private JScrollPane scrollPane;
 			private MenuButton btnSave, btnDeleteSave;
 			private JLabel noSaves = new JLabel("No saves found");
-			private JList saveList;
 			private JTextField saveField;
+			private JPanel selectedPanel;
+			private String selectedEngineStateName;
 
 			public SaveGamePanel(String savePath)
 			{
@@ -1175,8 +1224,6 @@ public class GrameManager implements Runnable
 					@Override
 					public void keyPressed(KeyEvent arg0)
 					{
-						if (saveList != null)
-							saveList.clearSelection();
 						if (arg0.getKeyCode() == 27)
 							saveField.setText("");
 						if (arg0.getKeyCode() == 10)
@@ -1210,11 +1257,11 @@ public class GrameManager implements Runnable
 				btnSave.setPreferredSize(new Dimension(100, 30));
 				add(btnSave);
 
-				MenuButton btnCancel = new MenuButton("Cancel", Color.red, Color.yellow, Color.blue, "Cancels this operation");
-				springLayout.putConstraint(SpringLayout.WEST, btnCancel, 0, SpringLayout.WEST, lblSelectSaveFile);
-				springLayout.putConstraint(SpringLayout.SOUTH, btnCancel, 0, SpringLayout.SOUTH, btnSave);
-				btnCancel.setPreferredSize(new Dimension(100, 30));
-				btnCancel.addActionListener(new ActionListener()
+				MenuButton btnClose = new MenuButton("Cancel", Color.red, Color.yellow, Color.blue, "Close this panel1");
+				springLayout.putConstraint(SpringLayout.WEST, btnClose, 0, SpringLayout.WEST, lblSelectSaveFile);
+				springLayout.putConstraint(SpringLayout.SOUTH, btnClose, 0, SpringLayout.SOUTH, btnSave);
+				btnClose.setPreferredSize(new Dimension(100, 30));
+				btnClose.addActionListener(new ActionListener()
 				{
 					public void actionPerformed(ActionEvent arg0)
 					{
@@ -1222,7 +1269,7 @@ public class GrameManager implements Runnable
 						lblMadeWithGrame.setText("");
 					}
 				});
-				add(btnCancel);
+				add(btnClose);
 
 				btnDeleteSave = new MenuButton("Delete", Color.red, Color.yellow, Color.blue, "Delete selected save");
 				btnDeleteSave.addActionListener(new ActionListener()
@@ -1232,7 +1279,7 @@ public class GrameManager implements Runnable
 						if (JOptionPane.showConfirmDialog(mainMenu, "Delete this save?", "Are you sure?", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.YES_OPTION)
 							try
 							{
-								FileUtils.delete(new File(GrameManager.savePath.toString() + "/" + ((String) saveList.getSelectedValue()).substring(0, ((String) saveList.getSelectedValue()).indexOf(':')) + ".GrameSave"));
+								FileUtils.delete(new File(GrameManager.savePath.toString() + "/" + selectedEngineStateName + ".GrameSave"));
 								loadInfo();
 								updateGUI();
 							}
@@ -1243,13 +1290,13 @@ public class GrameManager implements Runnable
 					}
 				});
 				springLayout.putConstraint(SpringLayout.SOUTH, btnDeleteSave, 0, SpringLayout.SOUTH, btnSave);
-				springLayout.putConstraint(SpringLayout.WEST, btnDeleteSave, 20, SpringLayout.EAST, btnCancel);
+				springLayout.putConstraint(SpringLayout.WEST, btnDeleteSave, 20, SpringLayout.EAST, btnClose);
 				springLayout.putConstraint(SpringLayout.EAST, btnDeleteSave, -20, SpringLayout.WEST, btnSave);
 				springLayout.putConstraint(SpringLayout.NORTH, btnDeleteSave, 0, SpringLayout.NORTH, btnSave);
 				add(btnDeleteSave);
 
 				btnSave.addMouseListener(helpTextListener);
-				btnCancel.addMouseListener(helpTextListener);
+				btnClose.addMouseListener(helpTextListener);
 			}
 
 			public void loadInfo()
@@ -1267,7 +1314,7 @@ public class GrameManager implements Runnable
 					}
 				}))
 				{
-					String name = child.toString().substring(f.toString().length() + 1, child.toString().indexOf("."));
+					String name = child.toString().substring(f.toString().length() + 1, child.toString().lastIndexOf("."));
 					try
 					{
 						Object save = ObjectUtils.load(f.toString(), name, "GrameSave");
@@ -1295,28 +1342,79 @@ public class GrameManager implements Runnable
 				}
 				else
 				{
-					ArrayList<String> list = new ArrayList<String>();
-					for (String key : saves.keySet())
-						list.add(key + ": (Last saved: " + new SimpleDateFormat("hh:mm:ss dd/MM/yyyy").format(saves.get(key).getSaved().getTime()) + ", Created " + new SimpleDateFormat("hh:mm:ss dd/MM/yyyy").format(saves.get(key).getDateCreated().getTime()) + ")");
-					saveList = new JList(list.toArray());
-					saveList.addMouseListener(new MouseAdapter()
-					{
-						public void mouseReleased(MouseEvent arg0)
+					selectedPanel = new JPanel();
+					JPanel savesListPanel = new JPanel();
+					savesListPanel.setLayout(new GridBagLayout());
+					for (final String key : saves.keySet())
+						try
 						{
-							saveField.setText(((String) saveList.getSelectedValue()).substring(0, ((String) saveList.getSelectedValue()).indexOf(':')));
-							btnSave.setEnabled(true);
-							btnDeleteSave.setEnabled(true);
+							GridBagConstraints gbc = new GridBagConstraints();
+							gbc.gridwidth = GridBagConstraints.REMAINDER;
+							gbc.insets = new Insets(3, 0, 3, 0);
+							final JPanel savePanel = new JPanel();
+							savePanel.setLayout(null);
+							savePanel.setPreferredSize(new Dimension(360, 85));
+							savePanel.setBorder(BorderFactory.createLineBorder(Color.black));
+							savePanel.addMouseListener(new MouseAdapter()
+							{
+								@Override
+								public void mouseExited(MouseEvent paramMouseEvent)
+								{
+									if (!selectedPanel.equals(savePanel))
+										savePanel.setBorder(BorderFactory.createLineBorder(Color.black));
+								}
+
+								@Override
+								public void mouseEntered(MouseEvent paramMouseEvent)
+								{
+									if (!selectedPanel.equals(savePanel))
+										savePanel.setBorder(BorderFactory.createMatteBorder(1, 5, 1, 1, Color.black));
+								}
+
+								public void mousePressed(MouseEvent arg0)
+								{
+									selectedPanel = savePanel;
+									saveField.setText(key);
+									btnSave.setEnabled(true);
+									btnDeleteSave.setEnabled(true);
+								}
+							});
+
+							JLabel lblName = new JLabel(key);
+							lblName.setFont(new Font(lblName.getFont().getName(), Font.BOLD, 14));
+							lblName.setBounds(10, 0, 340, 30);
+							savePanel.add(lblName);
+
+							JSeparator separator = new JSeparator(JSeparator.HORIZONTAL);
+							separator.setBounds(10, 20, 340, 30);
+							savePanel.add(separator);
+
+							JLabel lblSavedTitle = new JLabel("Last saved:");
+							lblSavedTitle.setBounds(10, 25, 80, 30);
+							savePanel.add(lblSavedTitle);
+
+							JLabel lblSaved = new JLabel("" + saves.get(key).getSaved());
+							lblSaved.setBounds(90, 25, 230, 30);
+							savePanel.add(lblSaved);
+
+							JLabel lblCreatedTitle = new JLabel("Created:");
+							lblCreatedTitle.setBounds(10, 50, 80, 30);
+							savePanel.add(lblCreatedTitle);
+
+							JLabel lblCreated = new JLabel("" + saves.get(key).getDateCreated().getTime());
+							lblCreated.setBounds(90, 50, 240, 30);
+							savePanel.add(lblCreated);
+
+							savesListPanel.add(savePanel, gbc);
 						}
-					});
-					saveList.addKeyListener(new KeyAdapter()
-					{
-						public void keyPressed(KeyEvent arg0)
+						catch (Exception e)
 						{
-							if (arg0.getKeyCode() == 10)
-								btnSave.doClick();
+							System.out.println("Conflict");
 						}
-					});
-					scrollPane.setViewportView(saveList);
+					btnSave.setEnabled(false);
+					btnDeleteSave.setEnabled(false);
+					//					scrollPane.setViewportView(saveList);
+					scrollPane.setViewportView(savesListPanel);
 				}
 				if (saveField.getText().trim().length() == 0)
 				{
