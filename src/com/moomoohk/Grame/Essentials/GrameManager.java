@@ -48,6 +48,7 @@ import com.moomoohk.Grame.Interfaces.MainGrameClass;
 import com.moomoohk.Grame.Interfaces.MovementAI;
 import com.moomoohk.Grame.Interfaces.Render;
 import com.moomoohk.Grame.test.EngineState;
+import com.moomoohk.Mootilities.FileUtils.FileUtils;
 import com.moomoohk.Mootilities.FrameDragger.FrameDragger;
 import com.moomoohk.Mootilities.OSUtils.OSUtils;
 import com.moomoohk.Mootilities.ObjectUtils.ObjectUtils;
@@ -122,7 +123,16 @@ public class GrameManager implements Runnable
 				disposeAll();
 			}
 		}));
-		savePath = new File(OSUtils.getDynamicStorageLocation() + "Grame/Saves/" + mainClass.getGameName() + "/");
+		try
+		{
+			savePath = new File(OSUtils.getDynamicStorageLocation() + "Grame/Saves/" + mainClass.getGameName() + "/");
+		}
+		catch (Error e)
+		{
+			System.out.println("You don't appear to have Mootilities installed!");
+			System.out.println("Get it at: https://github.com/moomoohk/Mootilities/raw/master/Build/Mootilities.jar");
+			System.exit(0);
+		}
 		if (!savePath.exists())
 			savePath.mkdirs();
 		mainMenu = new MainMenu(mainClass);
@@ -143,6 +153,7 @@ public class GrameManager implements Runnable
 	{
 		if (!running)
 			return;
+		paused = true;
 		running = false;
 	}
 
@@ -310,6 +321,11 @@ public class GrameManager implements Runnable
 	 */
 	public static int add(GrameObject go)
 	{
+		if (!initialized)
+		{
+			System.out.println("FATAL: Grame Manager not initialized! All GrameObject instantiations should be made from in the newGame method.");
+			System.exit(0);
+		}
 		if (engineState.getGrameObjects().contains(go))
 		{
 			GrameUtils.print(go.getName() + " already exists in the Grame Object list!", MessageLevel.ERROR);
@@ -331,6 +347,11 @@ public class GrameManager implements Runnable
 	 */
 	public static int add(Base b)
 	{
+		if (!initialized)
+		{
+			System.out.println("FATAL: Grame Manager not initialized! All Base instantiations should be made from in the newGame method.");
+			System.exit(0);
+		}
 		if (engineState.getBases().contains(b))
 		{
 			GrameUtils.print(b.toString() + " already exists in the Grame Object list!", MessageLevel.ERROR);
@@ -598,6 +619,7 @@ public class GrameManager implements Runnable
 
 	public static boolean saveEngineState(String saveName, boolean overwrite, Component parent)
 	{
+		boolean isPaused = paused;
 		paused = true;
 		boolean save = overwrite;
 		if (!overwrite)
@@ -617,7 +639,7 @@ public class GrameManager implements Runnable
 				new File(savePath.toString() + "/" + saveName + ".GrameSave").delete();
 				e.printStackTrace();
 			}
-		paused = false;
+		paused = isPaused;
 		return save;
 	}
 
@@ -732,8 +754,8 @@ public class GrameManager implements Runnable
 				public void actionPerformed(ActionEvent arg0)
 				{
 					sidePanel.setViewportView(null);
-					paused = false;
 					stop();
+					paused = false;
 					updateButtons();
 				}
 			});
@@ -935,7 +957,7 @@ public class GrameManager implements Runnable
 			private String savePath;
 			private HashMap<String, EngineState> saves;
 			private JScrollPane scrollPane;
-			private MenuButton btnLoad;
+			private MenuButton btnLoad, btnDeleteSave;
 			private JLabel noSaves = new JLabel("No saves found");
 			private JList saveList;
 
@@ -998,12 +1020,38 @@ public class GrameManager implements Runnable
 					public void actionPerformed(ActionEvent arg0)
 					{
 						sidePanel.setViewportView(null);
+						lblMadeWithGrame.setText("");
 					}
 				});
 				add(btnCancel);
 
+				btnDeleteSave = new MenuButton("Delete", Color.red, Color.yellow, Color.blue, "Delete selected save");
+				btnDeleteSave.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent arg0)
+					{
+						if (JOptionPane.showConfirmDialog(mainMenu, "Delete this save?", "Are you sure?", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.YES_OPTION)
+							try
+							{
+								FileUtils.delete(new File(GrameManager.savePath.toString() + "/" + ((String) saveList.getSelectedValue()).substring(0, ((String) saveList.getSelectedValue()).indexOf(':')) + ".GrameSave"));
+								loadInfo();
+								updateGUI();
+							}
+							catch (IOException e)
+							{
+								e.printStackTrace();
+							}
+					}
+				});
+				springLayout.putConstraint(SpringLayout.SOUTH, btnDeleteSave, 0, SpringLayout.SOUTH, btnLoad);
+				springLayout.putConstraint(SpringLayout.WEST, btnDeleteSave, 20, SpringLayout.EAST, btnCancel);
+				springLayout.putConstraint(SpringLayout.EAST, btnDeleteSave, -20, SpringLayout.WEST, btnLoad);
+				springLayout.putConstraint(SpringLayout.NORTH, btnDeleteSave, 0, SpringLayout.NORTH, btnLoad);
+				add(btnDeleteSave);
+
 				btnLoad.addMouseListener(helpTextListener);
 				btnCancel.addMouseListener(helpTextListener);
+				btnDeleteSave.addMouseListener(helpTextListener);
 			}
 
 			public void loadInfo()
@@ -1011,6 +1059,7 @@ public class GrameManager implements Runnable
 				File f = new File(savePath);
 				if (!f.exists())
 					return;
+				this.saves = new HashMap<String, EngineState>();
 				for (File child : f.listFiles(new FilenameFilter()
 				{
 					@Override
@@ -1023,7 +1072,9 @@ public class GrameManager implements Runnable
 					String name = child.toString().substring(f.toString().length() + 1, child.toString().indexOf("."));
 					try
 					{
-						this.saves.put(name, ((EngineState) ObjectUtils.load(f.toString(), name, "GrameSave")));
+						Object save = ObjectUtils.load(f.toString(), name, "GrameSave");
+						if (save != null)
+							this.saves.put(name, ((EngineState) save));
 					}
 					catch (IOException e)
 					{
@@ -1035,18 +1086,30 @@ public class GrameManager implements Runnable
 			private void updateGUI()
 			{
 				if (this.saves.size() == 0)
+				{
+					this.btnLoad.setEnabled(false);
+					this.btnDeleteSave.setEnabled(false);
 					scrollPane.setViewportView(noSaves);
+				}
 				else
 				{
 					ArrayList<String> list = new ArrayList<String>();
 					for (String key : saves.keySet())
-						list.add(key + ": (Last saved: " + new SimpleDateFormat("hh:mm:ss dd/MM/yyyy").format(saves.get(key).getSaved().getTime()) + ", Created " + new SimpleDateFormat("hh:mm:ss dd/MM/yyyy").format(saves.get(key).getDateCreated().getTime()) + ")");
+						try
+						{
+							list.add(key + ": (Last saved: " + new SimpleDateFormat("hh:mm:ss dd/MM/yyyy").format(saves.get(key).getSaved().getTime()) + ", Created " + new SimpleDateFormat("hh:mm:ss dd/MM/yyyy").format(saves.get(key).getDateCreated().getTime()) + ")");
+						}
+						catch (Exception e)
+						{
+							System.out.println("Conflict");
+						}
 					saveList = new JList(list.toArray());
 					saveList.addMouseListener(new MouseAdapter()
 					{
 						public void mousePressed(MouseEvent arg0)
 						{
 							btnLoad.setEnabled(true);
+							btnDeleteSave.setEnabled(true);
 						}
 					});
 					saveList.addKeyListener(new KeyAdapter()
@@ -1058,6 +1121,7 @@ public class GrameManager implements Runnable
 						}
 					});
 					btnLoad.setEnabled(false);
+					btnDeleteSave.setEnabled(false);
 					scrollPane.setViewportView(saveList);
 				}
 			}
@@ -1070,7 +1134,7 @@ public class GrameManager implements Runnable
 			private String savePath;
 			private HashMap<String, EngineState> saves;
 			private JScrollPane scrollPane;
-			private MenuButton btnSave;
+			private MenuButton btnSave, btnDeleteSave;
 			private JLabel noSaves = new JLabel("No saves found");
 			private JList saveList;
 			private JTextField saveField;
@@ -1155,9 +1219,34 @@ public class GrameManager implements Runnable
 					public void actionPerformed(ActionEvent arg0)
 					{
 						sidePanel.setViewportView(null);
+						lblMadeWithGrame.setText("");
 					}
 				});
 				add(btnCancel);
+
+				btnDeleteSave = new MenuButton("Delete", Color.red, Color.yellow, Color.blue, "Delete selected save");
+				btnDeleteSave.addActionListener(new ActionListener()
+				{
+					public void actionPerformed(ActionEvent arg0)
+					{
+						if (JOptionPane.showConfirmDialog(mainMenu, "Delete this save?", "Are you sure?", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.YES_OPTION)
+							try
+							{
+								FileUtils.delete(new File(GrameManager.savePath.toString() + "/" + ((String) saveList.getSelectedValue()).substring(0, ((String) saveList.getSelectedValue()).indexOf(':')) + ".GrameSave"));
+								loadInfo();
+								updateGUI();
+							}
+							catch (IOException e)
+							{
+								e.printStackTrace();
+							}
+					}
+				});
+				springLayout.putConstraint(SpringLayout.SOUTH, btnDeleteSave, 0, SpringLayout.SOUTH, btnSave);
+				springLayout.putConstraint(SpringLayout.WEST, btnDeleteSave, 20, SpringLayout.EAST, btnCancel);
+				springLayout.putConstraint(SpringLayout.EAST, btnDeleteSave, -20, SpringLayout.WEST, btnSave);
+				springLayout.putConstraint(SpringLayout.NORTH, btnDeleteSave, 0, SpringLayout.NORTH, btnSave);
+				add(btnDeleteSave);
 
 				btnSave.addMouseListener(helpTextListener);
 				btnCancel.addMouseListener(helpTextListener);
@@ -1168,6 +1257,7 @@ public class GrameManager implements Runnable
 				File f = new File(savePath);
 				if (!f.exists())
 					return;
+				saves = new HashMap<String, EngineState>();
 				for (File child : f.listFiles(new FilenameFilter()
 				{
 					@Override
@@ -1180,7 +1270,9 @@ public class GrameManager implements Runnable
 					String name = child.toString().substring(f.toString().length() + 1, child.toString().indexOf("."));
 					try
 					{
-						this.saves.put(name, ((EngineState) ObjectUtils.load(f.toString(), name, "GrameSave")));
+						Object save = ObjectUtils.load(f.toString(), name, "GrameSave");
+						if (save != null)
+							this.saves.put(name, ((EngineState) save));
 					}
 					catch (IOException e)
 					{
@@ -1198,7 +1290,9 @@ public class GrameManager implements Runnable
 			private void updateGUI()
 			{
 				if (this.saves.size() == 0)
+				{
 					scrollPane.setViewportView(noSaves);
+				}
 				else
 				{
 					ArrayList<String> list = new ArrayList<String>();
@@ -1211,6 +1305,7 @@ public class GrameManager implements Runnable
 						{
 							saveField.setText(((String) saveList.getSelectedValue()).substring(0, ((String) saveList.getSelectedValue()).indexOf(':')));
 							btnSave.setEnabled(true);
+							btnDeleteSave.setEnabled(true);
 						}
 					});
 					saveList.addKeyListener(new KeyAdapter()
@@ -1221,9 +1316,12 @@ public class GrameManager implements Runnable
 								btnSave.doClick();
 						}
 					});
-					if (saveField.getText().trim().length() == 0)
-						btnSave.setEnabled(false);
 					scrollPane.setViewportView(saveList);
+				}
+				if (saveField.getText().trim().length() == 0)
+				{
+					btnSave.setEnabled(false);
+					btnDeleteSave.setEnabled(false);
 				}
 			}
 		}

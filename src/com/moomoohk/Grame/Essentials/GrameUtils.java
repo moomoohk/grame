@@ -87,6 +87,7 @@ public class GrameUtils
 		{
 			System.out.println("You don't appear to have MooConsole installed!");
 			System.out.println("Get it at: https://github.com/moomoohk/MooConsole/raw/master/Build/MooConsole.jar");
+			System.exit(0);
 		}
 	}
 
