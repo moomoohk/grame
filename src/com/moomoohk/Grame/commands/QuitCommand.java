@@ -1,21 +1,48 @@
-
 package com.moomoohk.Grame.commands;
 
 import com.moomoohk.MooCommands.Command;
-import com.moomoohk.MooConsole.Console;
 
-public class QuitCommand extends Command<Console>
+public class QuitCommand extends Command
 {
 
-	public QuitCommand(Console handler, String command, String help, int minParams, int maxParams)
+	public QuitCommand()
 	{
-		super(handler, command, help, minParams, maxParams);
+		super();
 	}
 
 	@Override
-	public void execute(Console arg0, String[] arg1)
+	public void execute(String[] params)
 	{
-		System.exit(0);	
+		System.exit(0);
+	}
+
+	@Override
+	public String getCommand()
+	{
+		return "quit";
+	}
+
+	@Override
+	public String getHelpMessage()
+	{
+		return "Quits the game";
+	}
+
+	@Override
+	public String getUsage()
+	{
+		return "quit";
+	}
+
+	@Override
+	public int getMaxParams()
+	{
+		return 0;
+	}
+
+	@Override
+	public int getMinParams()
+	{
+		return 0;
 	}
 }
-

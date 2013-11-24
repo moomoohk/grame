@@ -1,34 +1,85 @@
-
 package com.moomoohk.Grame.commands;
+
+import java.awt.Color;
 
 import com.moomoohk.Grame.Basics.Dir;
 import com.moomoohk.Grame.Essentials.Coordinates;
 import com.moomoohk.Grame.Essentials.GrameManager;
 import com.moomoohk.MooCommands.Command;
-import com.moomoohk.MooConsole.Console;
 
-public class MoveGrameObjectCommand extends Command<Console>
+public class MoveGrameObjectCommand extends Command
 {
 
-	public MoveGrameObjectCommand(Console handler, String command, String help, int minParams, int maxParams)
+	public MoveGrameObjectCommand()
 	{
-		super(handler, command, help, minParams, maxParams);
+		super();
+	}
+
+	public boolean check(String[] params)
+	{
+		if (GrameManager.findGrameObject(Integer.parseInt(params[0])) == null)
+		{
+			this.outputMessage = "Grame Object with ID:" + params[0] + " does not exist!";
+			this.outputColor = Color.red;
+			return false;
+		}
+		if (GrameManager.findBase(Integer.parseInt(params[1])) == null)
+		{
+			this.outputMessage = "Base with ID:" + params[1] + " does not exist!";
+			this.outputColor = Color.red;
+			return false;
+		}
+		if (params.length == 3 && !GrameManager.findBase(Integer.parseInt(params[1])).isInBase(GrameManager.findGrameObject(Integer.parseInt(params[0])).getPos(Integer.parseInt(params[1])).addDir(new Dir(params[2]))))
+		{
+			this.outputMessage = "Can't move there!";
+			this.outputColor = Color.red;
+			return false;
+		}
+		if (params.length == 4 && !GrameManager.findBase(Integer.parseInt(params[1])).isInBase(new Coordinates(Integer.parseInt(params[2]), Integer.parseInt(params[3]))))
+		{
+			this.outputMessage = "Can't move there!";
+			this.outputColor = Color.red;
+			return false;
+		}
+		return super.check(params);
 	}
 
 	@Override
-	public void execute(Console arg0, String[] arg1)
+	public void execute(String[] params)
 	{
-		if(arg1.length==3)
-			if(GrameManager.findBase(Integer.parseInt(arg1[1])).isInBase(GrameManager.findGrameObject(Integer.parseInt(arg1[0])).getPos(Integer.parseInt(arg1[1])).addDir(new Dir(arg1[2]))))
-				GrameManager.findGrameObject(Integer.parseInt(arg1[0])).setPos(Integer.parseInt(arg1[1]), GrameManager.findGrameObject(Integer.parseInt(arg1[0])).getPos(Integer.parseInt(arg1[1])).addDir(new Dir(arg1[2])));
-			else
-				this.message="Can't move there!";
-		if(arg1.length==4)
-			if(GrameManager.findBase(Integer.parseInt(arg1[1])).isInBase(new Coordinates(Integer.parseInt(arg1[2]), Integer.parseInt(arg1[3]))))
-				GrameManager.findGrameObject(Integer.parseInt(arg1[0])).setPos(Integer.parseInt(arg1[1]), new Coordinates(Integer.parseInt(arg1[2]), Integer.parseInt(arg1[3])));
-			else
-				this.message="Can't move there!";
+		if (params.length == 3)
+			GrameManager.findGrameObject(Integer.parseInt(params[0])).setPos(Integer.parseInt(params[1]), GrameManager.findGrameObject(Integer.parseInt(params[0])).getPos(Integer.parseInt(params[1])).addDir(new Dir(params[2])));
+		if (params.length == 4)
+			GrameManager.findGrameObject(Integer.parseInt(params[0])).setPos(Integer.parseInt(params[1]), new Coordinates(Integer.parseInt(params[2]), Integer.parseInt(params[3])));
 	}
 
-}
+	@Override
+	public String getCommand()
+	{
+		return "move";
+	}
 
+	@Override
+	public String getHelpMessage()
+	{
+		return "Moves a Grame Object.";
+	}
+
+	@Override
+	public String getUsage()
+	{
+		return "move <go ID> <base ID> <dir>";
+	}
+
+	@Override
+	public int getMaxParams()
+	{
+		return 4;
+	}
+
+	@Override
+	public int getMinParams()
+	{
+		return 3;
+	}
+}

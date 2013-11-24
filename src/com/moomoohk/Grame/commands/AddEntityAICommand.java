@@ -1,35 +1,82 @@
 package com.moomoohk.Grame.commands;
 
-import com.moomoohk.Grame.Essentials.GrameManager;
-import com.moomoohk.Grame.Basics.Entity;
-import com.moomoohk.MooCommands.Command;
-import com.moomoohk.MooConsole.Console;
+import java.awt.Color;
 
-public class AddEntityAICommand extends Command<Console>
+import com.moomoohk.Grame.Basics.Entity;
+import com.moomoohk.Grame.Essentials.GrameManager;
+import com.moomoohk.MooCommands.Command;
+
+public class AddEntityAICommand extends Command
 {
 
-	public AddEntityAICommand(Console handler, String command, String help, int minParams, int maxParams)
+	public AddEntityAICommand()
 	{
-		super(handler, command, help, minParams, maxParams);
+		super();
+	}
+
+	protected boolean check(String[] params)
+	{
+		if (GrameManager.getAIs().size() == 0)
+		{
+			this.outputMessage = "No AIs loaded!";
+			this.outputColor = Color.red;
+			return false;
+		}
+		if (GrameManager.getAIs().get(params[2]) == null)
+		{
+			this.outputMessage = "Valid AIs: ";
+			for (String name : GrameManager.getAIs().keySet())
+				this.outputMessage += name + " ";
+			return false;
+		}
+		if (GrameManager.findGrameObject(Integer.parseInt(params[0])) == null)
+		{
+			this.outputMessage = "Grame Object with ID:" + params[0] + " does not exist!";
+			this.outputColor = Color.red;
+			return false;
+		}
+		if (!(GrameManager.findGrameObject(Integer.parseInt(params[0])) instanceof Entity))
+		{
+			this.outputMessage = "Grame Object with ID:" + params[0] + " is not an Entity!";
+			this.outputColor = Color.red;
+			return false;
+		}
+		return super.check(params);
 	}
 
 	@Override
-	public void execute(Console arg0, String[] arg1)
+	public void execute(String[] params)
 	{
-		if(GrameManager.getAIs().size()==0)
-		{
-			this.message="No AIs loaded!";
-			return;
-		}
-		if(GrameManager.getAIs().get(arg1[2])==null)
-		{
-			this.message="Valid AIs: ";
-			for(String name:GrameManager.getAIs().keySet())
-				this.message+=name+ " ";
-			return;
-		}
-		this.message="";
-		((Entity)(GrameManager.findGrameObject(Integer.parseInt(arg1[0])))).addAI(GrameManager.getAIs().get(arg1[2]), Integer.parseInt(arg1[1]));
+		((Entity) (GrameManager.findGrameObject(Integer.parseInt(params[0])))).addAI(GrameManager.getAIs().get(params[2]), Integer.parseInt(params[1]));
+	}
+
+	@Override
+	public String getCommand()
+	{
+		return "addentityai";
+	}
+
+	@Override
+	public String getHelpMessage()
+	{
+		return "Adds a MovememntAI to an Entity's AI list";
+	}
+
+	@Override
+	public String getUsage()
+	{
+		return "addentityai <entity ID> <base ID> <movementai name>";
+	}
+
+	@Override
+	public int getMaxParams()
+	{
+		return 3;
+	}
+
+	@Override
+	public int getMinParams()
+	{
+		return 3;
 	}
 }
-

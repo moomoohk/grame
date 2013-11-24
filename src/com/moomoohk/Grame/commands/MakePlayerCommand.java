@@ -1,30 +1,70 @@
-
 package com.moomoohk.Grame.commands;
+
+import java.awt.Color;
 
 import com.moomoohk.Grame.Basics.Entity;
 import com.moomoohk.Grame.Essentials.GrameManager;
 import com.moomoohk.MooCommands.Command;
-import com.moomoohk.MooConsole.Console;
 
-public class MakePlayerCommand extends Command<Console>
+public class MakePlayerCommand extends Command
 {
-	public MakePlayerCommand(Console handler, String command, String help, int minParams, int maxParams)
+	public MakePlayerCommand()
 	{
-		super(handler, command, help, minParams, maxParams);
+		super();
+	}
+
+	public boolean check(String[] params)
+	{
+		if (GrameManager.findGrameObject(Integer.parseInt(params[0])) == null)
+		{
+			this.outputMessage = "Grame Object with ID:" + params[0] + " does not exist!";
+			this.outputColor = Color.red;
+			return false;
+		}
+		return super.check(params);
 	}
 
 	@Override
-	public void execute(Console arg0, String[] arg1)
+	public void execute(String[] params)
 	{
-		if(arg1[0].equalsIgnoreCase("all"))
+		if (params[0].equalsIgnoreCase("all"))
 		{
-			for(int i=0; i<GrameManager.getObjectListLength(); i++)
-				if(GrameManager.findGrameObject(i) instanceof Entity)
-					((Entity)(GrameManager.findGrameObject(i))).makePlayer(Integer.parseInt(arg1[1]), Boolean.parseBoolean(arg1[3]), Integer.parseInt(arg1[2]));
+			for (int i = 0; i < GrameManager.getObjectListLength(); i++)
+				if (GrameManager.findGrameObject(i) instanceof Entity)
+					((Entity) (GrameManager.findGrameObject(i))).makePlayer(Integer.parseInt(params[1]), Boolean.parseBoolean(params[3]), Integer.parseInt(params[2]));
 		}
 		else
-			if(GrameManager.findGrameObject(Integer.parseInt(arg1[0])) instanceof Entity)
-				((Entity)(GrameManager.findGrameObject(Integer.parseInt(arg1[0])))).makePlayer(Integer.parseInt(arg1[1]), Boolean.parseBoolean(arg1[3]), Integer.parseInt(arg1[2]));
+			if (GrameManager.findGrameObject(Integer.parseInt(params[0])) instanceof Entity)
+				((Entity) (GrameManager.findGrameObject(Integer.parseInt(params[0])))).makePlayer(Integer.parseInt(params[1]), Boolean.parseBoolean(params[3]), Integer.parseInt(params[2]));
+	}
+
+	@Override
+	public String getCommand()
+	{
+		return "makeplayer";
+	}
+
+	@Override
+	public String getHelpMessage()
+	{
+		return "Turns an Entity into a controllable \"player\"";
+	}
+
+	@Override
+	public String getUsage()
+	{
+		return "makeplayer <entity ID> <player 1/2> <base ID> <true/false>";
+	}
+
+	@Override
+	public int getMaxParams()
+	{
+		return 4;
+	}
+
+	@Override
+	public int getMinParams()
+	{
+		return 4;
 	}
 }
-

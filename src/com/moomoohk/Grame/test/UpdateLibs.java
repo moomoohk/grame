@@ -17,18 +17,18 @@ public class UpdateLibs
 		{
 			File workspace = new File("/Users/MeshulamSilk/Documents/workspace");
 			File target = new File("/Users/MeshulamSilk/Documents/workspace/Grame/res/Libraries");
-			String[] libraries={"MooCommands", "MooConsole"};
-			for(int i=0; i<libraries.length; i++)
+			String[] libraries = { "MooCommands", "MooConsole", "Mootilities" };
+			for (int i = 0; i < libraries.length; i++)
 			{
-				inStream = new FileInputStream(workspace+"/"+libraries[i]+"/Build/"+libraries[i]+".jar");
-				outStream = new FileOutputStream(target+"/"+libraries[i]+".jar");
+				inStream = new FileInputStream(workspace + "/" + libraries[i] + "/Build/" + libraries[i] + ".jar");
+				outStream = new FileOutputStream(target + "/" + libraries[i] + ".jar");
 				byte[] buffer = new byte[1024];
 				int length;
 				while ((length = inStream.read(buffer)) > 0)
 					outStream.write(buffer, 0, length);
 				inStream.close();
 				outStream.close();
-				System.out.println(libraries[i]+" updated successfully!");
+				System.out.println(libraries[i] + " updated successfully!");
 			}
 		}
 		catch (IOException e)
