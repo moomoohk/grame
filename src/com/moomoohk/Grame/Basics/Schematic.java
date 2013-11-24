@@ -37,7 +37,6 @@ public class Schematic
 	 */
 	public Schematic(int type)
 	{
-		System.out.println(type);
 		this.type = type;
 		this.map = new Color[5][5];
 		this.height = this.map.length;
@@ -416,14 +415,8 @@ public class Schematic
 			for (int j = loc.getX(); j < loc.getX() + this.width; j++)
 			{
 				mapx = j;
-				//System.out.println((this.map[sy][sx]==null)+" "+!b.isOccupied(new Coordinates(mapx, mapy))+" "+b.isInMap(new Coordinates(mapx, mapy))+" "+new Coordinates(mapx, mapy));
-				if (this.map[sy][sx] == null)
-					continue;
-				if (b.isInBase(new Coordinates(mapx, mapy)) && !b.isOccupied(new Coordinates(mapx, mapy)))
-				{
-					//	System.out.println("hi");
+				if (this.map[sy][sx] != null && b.isInBase(new Coordinates(mapx, mapy)) && !b.isOccupied(new Coordinates(mapx, mapy)))
 					b.addGrameObject(new Wall(getColor(new Coordinates(sx, sy))), new Coordinates(mapx, mapy));
-				}
 				sx++;
 			}
 			sx = 0;

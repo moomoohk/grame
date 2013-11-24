@@ -25,7 +25,6 @@ public class MainScript implements MainGrameClass
 
 	public static void main(String[] args)
 	{
-		GrameUtils.loadBasicCommands();
 		GrameManager.initialize(new MainScript());
 	}
 

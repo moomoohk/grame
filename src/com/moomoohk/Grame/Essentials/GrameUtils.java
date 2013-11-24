@@ -91,6 +91,8 @@ public class GrameUtils
 			System.out.println("Get it at: https://github.com/moomoohk/MooConsole/raw/master/Build/MooConsole.jar");
 			System.exit(0);
 		}
+		loadBasicCommands();
+		loadBasicAIs();
 	}
 
 	/**
@@ -457,10 +459,7 @@ public class GrameUtils
 		return link;
 	}
 
-	/**
-	 * Loads some basic commands.
-	 */
-	public static void loadBasicCommands()
+	private static void loadBasicCommands()
 	{
 		int prevLength = CommandsManager.getAllCommands().size();
 		new HelpCommand();
@@ -483,10 +482,7 @@ public class GrameUtils
 		print("Loaded " + (CommandsManager.getAllCommands().size() - prevLength) + " commands.", MessageLevel.DEBUG);
 	}
 
-	/**
-	 * Loads some basic AIs.
-	 */
-	public static void loadBasicAIs()
+	private static void loadBasicAIs()
 	{
 		GrameManager.addAI(new SimpleStrollAI());
 		GrameManager.addAI(new PlayerMovementAI(1));

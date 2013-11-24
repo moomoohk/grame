@@ -2,7 +2,7 @@ package com.moomoohk.Grame.commands;
 
 import java.awt.Color;
 
-import com.moomoohk.Grame.Basics.OldEntity;
+import com.moomoohk.Grame.Basics.Entity;
 import com.moomoohk.Grame.Essentials.GrameManager;
 import com.moomoohk.MooCommands.Command;
 
@@ -16,7 +16,7 @@ public class ClearEntityAI extends Command
 			this.outputColor = Color.red;
 			return false;
 		}
-		if (!(GrameManager.findGrameObject(Integer.parseInt(params[0])) instanceof OldEntity))
+		if (!(GrameManager.findGrameObject(Integer.parseInt(params[0])) instanceof Entity))
 		{
 			this.outputMessage = "Grame Object with ID:" + params[0] + " is not an Entity!";
 			this.outputColor = Color.red;
@@ -33,7 +33,7 @@ public class ClearEntityAI extends Command
 	@Override
 	public void execute(String[] params)
 	{
-		((OldEntity) (GrameManager.findGrameObject(Integer.parseInt(params[0])))).clearAI();
+		((Entity) (GrameManager.findGrameObject(Integer.parseInt(params[0])))).clearAI();
 	}
 
 	@Override

@@ -15,16 +15,17 @@ public class SetVisibleCommand extends Command
 
 	public boolean check(String[] params)
 	{
-		try
-		{
-			Boolean.parseBoolean(params[0]);
-		}
-		catch (Exception e)
-		{
-			this.outputMessage = "Only true or false are accepted inputs!";
-			this.outputColor = Color.red;
-			return false;
-		}
+		if (params.length > 0)
+			try
+			{
+				Boolean.parseBoolean(params[0]);
+			}
+			catch (Exception e)
+			{
+				this.outputMessage = "Only true or false are accepted inputs!";
+				this.outputColor = Color.red;
+				return false;
+			}
 		return true;
 	}
 

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import com.moomoohk.Grame.Basics.Dir;
 import com.moomoohk.Grame.Basics.Entity;
-import com.moomoohk.Grame.Basics.OldEntity;
 import com.moomoohk.Grame.Basics.Schematic;
 import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
@@ -240,7 +239,6 @@ public class AStarPathfindingMovementAI extends MovementAI implements MainGrameC
 
 	public static void main(String[] args)
 	{
-		GrameUtils.loadBasicCommands();
 		GrameManager.initialize(new AStarPathfindingMovementAI());
 	}
 
@@ -249,8 +247,8 @@ public class AStarPathfindingMovementAI extends MovementAI implements MainGrameC
 	{
 		Base b = new Base(20, 20);
 		b.setWraparound(true);
-		OldEntity player = new OldEntity("Player", Color.gray);
-		OldEntity monster = new OldEntity("Monster", Color.red);
+		Entity player = new Entity("Player", Color.gray);
+		Entity monster = new Entity("Monster", Color.red);
 		b.addGrameObjectLayer(new GrameObjectLayer(b.getColumns(), b.getRows()), 1);
 		player.makePlayer(1, true, b.ID);
 		player.setSpeed(1);
@@ -262,6 +260,9 @@ public class AStarPathfindingMovementAI extends MovementAI implements MainGrameC
 		b.addGrameObject(monster, new Coordinates(18, 10), 1);
 		for (int i = 1; i <= 10; i++)
 			new Schematic().load(b, GrameUtils.randomCoordinates(b));
+//		Schematic s = new Schematic(1);
+//		System.out.println(s.toString());
+//		s.load(b, new Coordinates(10, 10));
 		RenderManager.render(b.ID, new PlainGridRender());
 		RenderManager.setVisible(true);
 		aStar.showVisualization = true;

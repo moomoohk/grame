@@ -48,7 +48,7 @@ public class Entity extends GrameObject
 	{
 		this(new DefaultRandomGen().nameGen(), c, speed);
 	}
-	
+
 	public Entity(String name, Color c)
 	{
 		this(name, c, 5);
@@ -124,7 +124,7 @@ public class Entity extends GrameObject
 			this.activeAI.put(bID, this.overrideAI.get(bID));
 		}
 	}
-	
+
 	public void addAI(MovementAI AI, int bID)
 	{
 		if (!AI.isOverride())
@@ -136,6 +136,38 @@ public class Entity extends GrameObject
 		else
 			GrameUtils.print(AI + " is an override AI, it doens't belong in my AI list!", MessageLevel.ERROR);
 	}
+	
+	public void printAI()
+	{
+		GrameUtils.print("Override AIs:", MessageLevel.NORMAL);
+		if (overrideAI.size() != 0)
+			for (int bID : overrideAI.keySet())
+				GrameUtils.print(bID + ": " + overrideAI.get(bID) + " (" + overrideAI.get(bID).author() + ")", MessageLevel.NORMAL);
+		else
+			GrameUtils.print("[Empty]", MessageLevel.NORMAL);
+		GrameUtils.print("Active AIs:", MessageLevel.NORMAL);
+		if (activeAI.size() != 0)
+			for (int bID : activeAI.keySet())
+				GrameUtils.print(bID + ": " + activeAI.get(bID) + " (" + activeAI.get(bID).author() + ")", MessageLevel.NORMAL);
+		else
+			GrameUtils.print("[Empty]", MessageLevel.NORMAL);
+		for (int bID : AI.keySet())
+		{
+			GrameUtils.print("For base ID:" + bID, MessageLevel.NORMAL);
+			String st = "null";
+			if (this.AI.size() == 0)
+				GrameUtils.print("My AI list is empty!", MessageLevel.ERROR);
+			else
+				for (int i = 0; i < this.AI.size(); i++)
+				{
+					st = "null";
+					if (this.AI.get(i) != null)
+						st = this.AI.get(i) + " (" + ((MovementAI) this.AI.get(bID).get(i)).author() + ")";
+					GrameUtils.print(i + 1 + ") " + st, MessageLevel.NORMAL);
+				}
+		}
+		}
+
 
 	public void clearAI()
 	{
@@ -143,7 +175,7 @@ public class Entity extends GrameObject
 		this.activeAI = null;
 		this.overrideAI = null;
 	}
-	
+
 	public void setOverrideAI(MovementAI mai, int bID)
 	{
 		if (mai.isOverride())
@@ -201,8 +233,8 @@ public class Entity extends GrameObject
 			GrameUtils.print("Cannot set that Entity (ID:" + eID + ") as target for Entity with ID:" + ID + " (Entity not found)", MessageLevel.ERROR);
 	}
 
-	public OldEntity getTarget()
+	public Entity getTarget()
 	{
-		return (OldEntity) (GrameManager.findGrameObject(this.targetID));
+		return (Entity) (GrameManager.findGrameObject(this.targetID));
 	}
 }

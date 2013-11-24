@@ -1,6 +1,5 @@
 package com.moomoohk.Grame.Interfaces;
 
-import com.moomoohk.Grame.Basics.OldEntity;
 
 /**
  * This interface is used to create generators which generate names and types
