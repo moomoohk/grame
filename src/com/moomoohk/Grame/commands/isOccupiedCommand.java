@@ -1,29 +1,69 @@
-
 package com.moomoohk.Grame.commands;
+
+import java.awt.Color;
 
 import com.moomoohk.Grame.Essentials.Coordinates;
 import com.moomoohk.Grame.Essentials.GrameManager;
 import com.moomoohk.MooCommands.Command;
-import com.moomoohk.MooConsole.Console;
 
-public class IsOccupiedCommand extends Command<Console>
+public class IsOccupiedCommand extends Command
 {
 
-	public IsOccupiedCommand(Console handler, String command, String help, int minParams, int maxParams)
+	public IsOccupiedCommand()
 	{
-		super(handler, command, help, minParams, maxParams);
+		super();
+	}
+
+	public boolean check(String[] params)
+	{
+		if (GrameManager.findGrameObject(Integer.parseInt(params[0])) == null)
+		{
+			this.outputMessage = "Base with ID:" + params[1] + " does not exist!";
+			this.outputColor = Color.red;
+			return false;
+		}
+		if (!GrameManager.findBase(Integer.parseInt(params[0])).isInBase(new Coordinates(Integer.parseInt(params[1]), Integer.parseInt(params[2]))))
+		{
+			this.outputMessage = "Coordinates (" + params[1] + ", " + params[2] + ") are not in Base ID:" + params[0];
+			this.outputColor = Color.red;
+			return false;
+		}
+		return super.check(params);
 	}
 
 	@Override
-	public void execute(Console arg0, String[]arg1)
+	public void execute(String[] params)
 	{
-		if(!GrameManager.findBase(Integer.parseInt(arg1[0])).isInBase(new Coordinates(Integer.parseInt(arg1[1]), Integer.parseInt(arg1[1]))))
-		{
-			this.message="Coordinates "+new Coordinates(Integer.parseInt(arg1[1]), Integer.parseInt(arg1[1])).toString()+" isn't in Base ID:"+arg1[0];
-			return;
-		}
-		boolean isOccupied=GrameManager.findBase(Integer.parseInt(arg1[0])).isOccupied(new Coordinates(Integer.parseInt(arg1[1]), Integer.parseInt(arg1[1])));
-		this.message=""+isOccupied;
+		this.outputMessage = "" + GrameManager.findBase(Integer.parseInt(params[0])).isOccupied(new Coordinates(Integer.parseInt(params[1]), Integer.parseInt(params[2])));
+	}
+
+	@Override
+	public String getCommand()
+	{
+		return "isinbase";
+	}
+
+	@Override
+	public String getHelpMessage()
+	{
+		return "Checks whether Coordinates in a Base are occupied by a Grame object";
+	}
+
+	@Override
+	public String getUsage()
+	{
+		return "isoccupied <base ID> <x> <y>";
+	}
+
+	@Override
+	public int getMaxParams()
+	{
+		return 3;
+	}
+
+	@Override
+	public int getMinParams()
+	{
+		return 3;
 	}
 }
-

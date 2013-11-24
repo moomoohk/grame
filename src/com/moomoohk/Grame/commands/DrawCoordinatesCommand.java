@@ -1,21 +1,65 @@
-
 package com.moomoohk.Grame.commands;
+
+import java.awt.Color;
 
 import com.moomoohk.Grame.Graphics.RenderManager;
 import com.moomoohk.MooCommands.Command;
-import com.moomoohk.MooConsole.Console;
 
-public class DrawCoordinatesCommand extends Command<Console>
+public class DrawCoordinatesCommand extends Command
 {
-	public DrawCoordinatesCommand(Console handler, String command, String help, int minParams, int maxParams)
+	public DrawCoordinatesCommand()
 	{
-		super(handler, command, help, minParams, maxParams);
+		super();
+	}
+
+	public boolean check(String[] params)
+	{
+		try
+		{
+			Boolean.parseBoolean(params[0]);
+		}
+		catch (Exception e)
+		{
+			this.outputMessage = "Only true or false are accepted inputs!";
+			this.outputColor = Color.red;
+			return false;
+		}
+		return super.check(params);
 	}
 
 	@Override
-	public void execute(Console arg0, String[] arg1)
+	public void execute(String[] params)
 	{
-		RenderManager.drawCoordinates(Boolean.parseBoolean(arg1[0]));
+		RenderManager.drawCoordinates(Boolean.parseBoolean(params[0]));
+	}
+
+	@Override
+	public String getCommand()
+	{
+		return "drawcoordinates";
+	}
+
+	@Override
+	public String getHelpMessage()
+	{
+		return "Draws the coordinates in each square";
+	}
+
+	@Override
+	public String getUsage()
+	{
+		return "drawcoordinates <true/false>";
+	}
+
+	@Override
+	public int getMaxParams()
+	{
+		return 1;
+	}
+
+	@Override
+	public int getMinParams()
+	{
+		return 1;
 	}
 }
-

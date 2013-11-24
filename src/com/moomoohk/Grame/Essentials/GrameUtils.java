@@ -38,19 +38,20 @@ import com.moomoohk.Grame.commands.AddGrameObjectCommand;
 import com.moomoohk.Grame.commands.ClearEntityAI;
 import com.moomoohk.Grame.commands.CreateEntityCommand;
 import com.moomoohk.Grame.commands.DrawCoordinatesCommand;
-import com.moomoohk.Grame.commands.HelpCommand;
+import com.moomoohk.Grame.commands.IsOccupiedCommand;
 import com.moomoohk.Grame.commands.MakePlayerCommand;
 import com.moomoohk.Grame.commands.MoveGrameObjectCommand;
 import com.moomoohk.Grame.commands.PrintEntityAICommand;
 import com.moomoohk.Grame.commands.QuitCommand;
 import com.moomoohk.Grame.commands.RenderBaseCommand;
 import com.moomoohk.Grame.commands.SetEntityOverrideAICommand;
-import com.moomoohk.Grame.commands.SetObjectSpeedCommand;
+import com.moomoohk.Grame.commands.SetSpeedCommand;
 import com.moomoohk.Grame.commands.SetSpriteCommand;
-import com.moomoohk.Grame.commands.IsOccupiedCommand;
 import com.moomoohk.Grame.commands.SetVisibleCommand;
-import com.moomoohk.MooCommands.Command;
+import com.moomoohk.Grame.commands.SetWraparoundCommand;
+import com.moomoohk.MooCommands.CommandsManager;
 import com.moomoohk.MooConsole.Console;
+import com.moomoohk.MooConsole.HelpCommand;
 
 /**
  * The Grame Utils class provides useful utilities.
@@ -460,25 +461,25 @@ public class GrameUtils
 	 */
 	public static void loadBasicCommands()
 	{
-		ArrayList<Command<?>> commands = new ArrayList<Command<?>>();
-		commands.add(new SetVisibleCommand(console, "setvisible", "Toggles the visibility of the main window. Usage: setvisible [true/false]", 0, 1));
-		commands.add(new MoveGrameObjectCommand(console, "move", "Moves a Grame Object. Usage: move <go ID> <base ID> <dir>", 3, 4));
-		commands.add(new HelpCommand(console, "help", "Will print the help of a command. Leave blank for all the commands. Usage: help [command name]", 0, 1));
-		commands.add(new RenderBaseCommand(console, "render", "Will render a base using a render in the Render list. Usage: render <base ID> <render name>", 2, 2));
-		commands.add(new QuitCommand(console, "quit", "Quits the program. Usage: quit", 0, 0));
-		commands.add(new CreateEntityCommand(console, "createentity", "Creates a new Entity. Usage: createentity [n:name] [t:type] [l:level] [c:color]", 0, 4));
-		commands.add(new AddGrameObjectCommand(console, "addobject", "Adds a Grame Object to a Base. Usage: addobject <go ID> <base ID> <x> <y>", 4, 4));
-		commands.add(new AddEntityAICommand(console, "addentityai", "Adds a MovememntAI to an Entity's AI list. Usage: addentityai <entity ID> <base ID> <movementai name>", 3, 3));
-		commands.add(new MakePlayerCommand(console, "makeplayer", "Turns an Entity into a controllable \"player\". Usage: makeplayer <entity ID> <player 1/2> <base ID> <true/false>", 4, 4));
-		commands.add(new SetEntityOverrideAICommand(console, "setentityoverrideai", "Sets the override AI for a given Entity. Usage: setentityoverrideai <entity ID> <base ID> <override movementai name>", 3, 3));
-		commands.add(new ClearEntityAI(console, "clearentityai", "Clears the AI list of an Entity. Usage: clearentityai <entity ID>", 1, 1));
-		commands.add(new PrintEntityAICommand(console, "printentityai", "Prints the AI list for a given Entity. Usage: printentityai <entity ID>", 1, 1));
-		commands.add(new IsOccupiedCommand(console, "isoccupied", "Checks whether Coordinates in a Base are occupied by a Grame object. Usage: isoccupied <base ID> <coordinates x> <coordinates y>", 3, 3));
-		commands.add(new DrawCoordinatesCommand(console, "drawcoordinates", "Draws the coordinates in each square. Usage: drawcoordinates <true/false>", 1, 1));
-		commands.add(new SetObjectSpeedCommand(console, "setspeed", "Sets the speed of an object.", 2, 2));
-		commands.add(new SetSpriteCommand(console, "setsprite", "Sets a certain sprite. Usage: setsprite <sprite name> <path to sprite>", 2, -1));
-		console.loadCommands(commands);
-		print("Loaded " + Command.commands.size() + " commands.", MessageLevel.DEBUG);
+		int prevLength = CommandsManager.getAllCommands().size();
+		new HelpCommand();
+		new SetVisibleCommand();
+		new MoveGrameObjectCommand();
+		new RenderBaseCommand();
+		new QuitCommand();
+		new CreateEntityCommand();
+		new AddGrameObjectCommand();
+		new AddEntityAICommand();
+		new MakePlayerCommand();
+		new SetEntityOverrideAICommand();
+		new ClearEntityAI();
+		new PrintEntityAICommand();
+		new IsOccupiedCommand();
+		new DrawCoordinatesCommand();
+		new SetSpeedCommand();
+		new SetSpriteCommand();
+		new SetWraparoundCommand();
+		print("Loaded " + (CommandsManager.getAllCommands().size() - prevLength) + " commands.", MessageLevel.DEBUG);
 	}
 
 	/**

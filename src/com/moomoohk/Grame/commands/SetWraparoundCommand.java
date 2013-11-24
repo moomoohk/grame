@@ -1,21 +1,71 @@
 package com.moomoohk.Grame.commands;
 
-import com.moomoohk.Grame.Essentials.Base;
+import java.awt.Color;
+
 import com.moomoohk.Grame.Essentials.GrameManager;
 import com.moomoohk.MooCommands.Command;
-import com.moomoohk.MooConsole.Console;
 
-public class SetWraparoundCommand extends Command<Console>
+public class SetWraparoundCommand extends Command
 {
-	public SetWraparoundCommand(Console handler, String command, String help, int minParams, int maxParams)
+	public SetWraparoundCommand()
 	{
-		super(handler, command, help, minParams, maxParams);
+		super();
+	}
+
+	public boolean check(String[] params)
+	{
+		try
+		{
+			Boolean.parseBoolean(params[1]);
+		}
+		catch (Exception e)
+		{
+			this.outputMessage = "Only true or false are accepted inputs!";
+			this.outputColor = Color.red;
+			return false;
+		}
+		if (GrameManager.findGrameObject(Integer.parseInt(params[0])) == null)
+		{
+			this.outputMessage = "Base with ID:" + params[1] + " does not exist!";
+			this.outputColor = Color.red;
+			return false;
+		}
+		return super.check(params);
 	}
 
 	@Override
-	public void execute(Console arg0, String[] arg1)
+	public void execute(String[] params)
 	{
-		Base b = GrameManager.findBase(Integer.parseInt(arg1[0]));
-		b.setWraparound(Boolean.parseBoolean(arg1[1]));
+		GrameManager.findBase(Integer.parseInt(params[0])).setWraparound(Boolean.parseBoolean(params[1]));
+	}
+
+	@Override
+	public String getCommand()
+	{
+		return "setwraparound";
+	}
+
+	@Override
+	public String getHelpMessage()
+	{
+		return "Sets whether the specified Base supports wraparound";
+	}
+
+	@Override
+	public String getUsage()
+	{
+		return "setwraparound <base ID> <true/false>";
+	}
+
+	@Override
+	public int getMaxParams()
+	{
+		return 2;
+	}
+
+	@Override
+	public int getMinParams()
+	{
+		return 2;
 	}
 }

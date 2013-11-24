@@ -109,7 +109,7 @@ public class RenderManager
 		g.drawImage(img, 0, 0, mainCanvas.getWidth(), mainCanvas.getHeight(), null);
 
 		g.setFont(new Font("LucidaTypewriter", 1, 8));
-		int squaresize = mainCanvas.getWidth() / GrameManager.findBase(bID).getColumns(); //TODO: Fix nullpointer
+		int squaresize = mainCanvas.getWidth() / GrameManager.findBase(bID).getColumns(); //FIXME: Nullpointer
 		for (int x = 0; x < GrameManager.findBase(bID).getColumns(); x++)
 			for (int y = 0; y < GrameManager.findBase(bID).getRows(); y++)
 				if (text.get(bID) != null)

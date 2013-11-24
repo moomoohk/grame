@@ -601,6 +601,11 @@ public class GrameManager implements Runnable
 	{
 		return engineState.getGrameObjects().size();
 	}
+	
+	public static int getBaseListLength()
+	{
+		return engineState.getBases().size();
+	}
 
 	/**
 	 * Gets the current FPS (Frames Per Second) count.
