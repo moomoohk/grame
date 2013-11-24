@@ -9,7 +9,7 @@ public class GaussianFilter
 
 	public GaussianFilter()
 	{
-		setRadius(10.0f);
+		setRadius(6.0f);
 	}
 
 	public void setRadius(float radius)

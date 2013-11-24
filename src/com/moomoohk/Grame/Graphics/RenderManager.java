@@ -130,6 +130,7 @@ public class RenderManager
 		{
 			applyGaussianBlur();
 			setOverlayColor(Color.gray.brighter());
+			drawLabel(new Label(mainCanvas.getWidth() / 2, mainCanvas.getHeight() / 2, "Paused", new Font("LucidaTypewriter", Font.BOLD, 40), Color.white, Color.black, 10, 15, 15, 10));
 			for (Label l : labels)
 				drawLabel(l);
 		}
@@ -160,9 +161,9 @@ public class RenderManager
 		Rectangle fixed = new Rectangle((int) (l.getCenterX() - (textBounds.getWidth() / 2)), (int) (l.getCenterY() - (textBounds.getHeight() / 2)), (int) textBounds.getWidth(), (int) textBounds.getHeight());
 
 		Rectangle back = new Rectangle((int) fixed.getX() - l.getPaddingLeft(), (int) fixed.getY() - l.getPaddingTop(), (int) (fixed.getWidth()) + l.getPaddingRight() + l.getPaddingLeft(), (int) (fixed.getHeight()) + l.getPaddingBottom() + l.getPaddingTop());
-		g2.setColor(new Color(0, 0, 0, 200));
+		g2.setColor(new Color(0, 0, 0, 180));
 		g2.fillRoundRect((int) back.getX(), (int) back.getY(), (int) back.getWidth(), (int) back.getHeight(), 10, 10);
-		g2.setColor(new Color(l.getTextColor().getRed(), l.getTextColor().getGreen(), l.getTextColor().getBlue(), 200));
+		g2.setColor(new Color(l.getTextColor().getRed(), l.getTextColor().getGreen(), l.getTextColor().getBlue(), 180));
 		g2.drawString(l.getText(), (int) (fixed.getX()), (int) (fixed.getY() + Math.max(fm.getMaxAscent(), fm.getMaxDescent())));
 
 		//					g2.setColor(Color.cyan);

@@ -60,7 +60,6 @@ public class TestScript implements MainGrameClass
 		b.addGrameObject(ent2, GrameUtils.randomCoordinates(b));
 		b.addGrameObject(ent, new Coordinates(10, 10));
 		b.addGrameObject(go, GrameUtils.randomCoordinates(b));
-		GrameManager.addRender(new SpriteRender());
 		RenderManager.render(b.ID, new SpriteRender());
 		RenderManager.setVisible(true);
 	}
