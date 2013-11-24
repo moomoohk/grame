@@ -1,6 +1,7 @@
 package com.moomoohk.Grame.AI;
 
 import java.awt.Color;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.moomoohk.Grame.Basics.Dir;
@@ -89,7 +90,7 @@ public class AStarPathfindingMovementAI extends MovementAI implements MainGrameC
 			}
 			current = findLowestFCost(open);
 		}
-		while (current.getPos() != targetPos);
+		while (current.getPos() != targetPos); //FIXME: NullPointerException when can't reach target
 
 		Node node = getLast(closed.get(closed.size() - 1));
 		//		visualizationColor = new Color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat());
@@ -181,8 +182,9 @@ public class AStarPathfindingMovementAI extends MovementAI implements MainGrameC
 		return "A* Pathfinding AI";
 	}
 
-	private static class Node
+	private static class Node implements Serializable
 	{
+		private static final long serialVersionUID = -6786064237047397741L;
 		private Coordinates pos;
 		private Node parent;
 		private double gCost, hCost, fCost;
@@ -260,9 +262,9 @@ public class AStarPathfindingMovementAI extends MovementAI implements MainGrameC
 		b.addGrameObject(monster, new Coordinates(18, 10), 1);
 		for (int i = 1; i <= 10; i++)
 			new Schematic().load(b, GrameUtils.randomCoordinates(b));
-//		Schematic s = new Schematic(1);
-//		System.out.println(s.toString());
-//		s.load(b, new Coordinates(10, 10));
+		//		Schematic s = new Schematic(1);
+		//		System.out.println(s.toString());
+		//		s.load(b, new Coordinates(10, 10));
 		RenderManager.render(b.ID, new PlainGridRender());
 		RenderManager.setVisible(true);
 		aStar.showVisualization = true;
