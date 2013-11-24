@@ -106,7 +106,6 @@ public class RenderManager
 			return;
 		}
 		Graphics g = bs.getDrawGraphics();
-		g.drawImage(img, 0, 0, mainCanvas.getWidth(), mainCanvas.getHeight(), null);
 
 		g.setFont(new Font("LucidaTypewriter", 1, 8));
 		int squaresize = mainCanvas.getWidth() / GrameManager.findBase(bID).getColumns(); //FIXME: Nullpointer
@@ -122,6 +121,8 @@ public class RenderManager
 				}
 		if (GrameManager.paused)
 		{
+			g.drawImage(new GaussianFilter().filter(img), 0, 0, mainCanvas.getWidth(), mainCanvas.getHeight(), null);
+
 			Graphics2D g2 = (Graphics2D) g.create();
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -140,20 +141,22 @@ public class RenderManager
 			g2.setColor(Color.black);
 			g2.fillRoundRect((int) back.getX(), (int) back.getY(), (int) back.getWidth(), (int) back.getHeight(), (inPadRight + inPadLeft) / 2, (inPadUp + inPadDown) / 2);
 			g2.setColor(new Color(255, 255, 255, 200));
-			g2.drawString(text, (int) (fixed.getX()), (int) (fixed.getY()+Math.max(fm.getMaxAscent(), fm.getMaxDescent())));
+			g2.drawString(text, (int) (fixed.getX()), (int) (fixed.getY() + Math.max(fm.getMaxAscent(), fm.getMaxDescent())));
 
-//			g2.setColor(Color.cyan);
-//			g2.draw(new Ellipse2D.Double(textCenterX - 5, textCenterY - 5, 10, 10));
-//			g2.setColor(Color.blue);
-//			g2.draw(back);
-//			g2.setColor(Color.green);
-//			g2.draw(textBounds);
-//			g2.setColor(Color.red);
-//			g2.draw(fixed);
-//			g2.fill(new Ellipse2D.Double(fixed.getCenterX() - 2, fixed.getCenterY() - 2, 4, 4));
+			//			g2.setColor(Color.cyan);
+			//			g2.draw(new Ellipse2D.Double(textCenterX - 5, textCenterY - 5, 10, 10));
+			//			g2.setColor(Color.blue);
+			//			g2.draw(back);
+			//			g2.setColor(Color.green);
+			//			g2.draw(textBounds);
+			//			g2.setColor(Color.red);
+			//			g2.draw(fixed);
+			//			g2.fill(new Ellipse2D.Double(fixed.getCenterX() - 2, fixed.getCenterY() - 2, 4, 4));
 
 			g2.dispose();
 		}
+		else
+			g.drawImage(img, 0, 0, mainCanvas.getWidth(), mainCanvas.getHeight(), null);
 
 		if (drawCoordinates)
 		{

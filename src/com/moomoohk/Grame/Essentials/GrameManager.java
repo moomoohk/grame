@@ -1207,12 +1207,13 @@ public class GrameManager implements Runnable
 								{
 									if (!selectedPanel.equals(savePanel))
 										savePanel.setBorder(BorderFactory.createLineBorder(Color.black));
+									else
+										savePanel.setBorder(BorderFactory.createMatteBorder(2, 5, 2, 2, Color.gray.darker().darker()));
 								}
 
 								@Override
 								public void mouseEntered(MouseEvent paramMouseEvent)
 								{
-									if (!selectedPanel.equals(savePanel))
 										savePanel.setBorder(BorderFactory.createMatteBorder(2, 5, 2, 2, Color.black));
 								}
 
