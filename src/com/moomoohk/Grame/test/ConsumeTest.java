@@ -1,6 +1,6 @@
 package com.moomoohk.Grame.test;
 
-import com.moomoohk.Grame.Basics.Entity;
+import com.moomoohk.Grame.Basics.OldEntity;
 import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
 import com.moomoohk.Grame.Essentials.GrameManager;
@@ -12,7 +12,7 @@ import com.moomoohk.Grame.Interfaces.MainGrameClass;
 
 public class ConsumeTest implements MainGrameClass
 {
-	public static class Player extends Entity
+	public static class Player extends OldEntity
 	{
 		private static final long serialVersionUID = -3253634438661661214L;
 

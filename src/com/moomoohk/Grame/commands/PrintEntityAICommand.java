@@ -2,7 +2,7 @@ package com.moomoohk.Grame.commands;
 
 import java.awt.Color;
 
-import com.moomoohk.Grame.Basics.Entity;
+import com.moomoohk.Grame.Basics.OldEntity;
 import com.moomoohk.Grame.Essentials.GrameManager;
 import com.moomoohk.MooCommands.Command;
 
@@ -22,19 +22,19 @@ public class PrintEntityAICommand extends Command
 			this.outputColor = Color.red;
 			return false;
 		}
-		if (!(GrameManager.findGrameObject(Integer.parseInt(params[0])) instanceof Entity))
+		if (!(GrameManager.findGrameObject(Integer.parseInt(params[0])) instanceof OldEntity))
 		{
 			this.outputMessage = "Grame Object with ID:" + params[0] + " is not an Entity!";
 			this.outputColor = Color.red;
 			return false;
 		}
-		return super.check(params);
+		return true;
 	}
 
 	@Override
 	public void execute(String[] params)
 	{
-		((Entity) (GrameManager.findGrameObject(Integer.parseInt(params[0])))).printAI();
+		((OldEntity) (GrameManager.findGrameObject(Integer.parseInt(params[0])))).printAI();
 	}
 
 	@Override

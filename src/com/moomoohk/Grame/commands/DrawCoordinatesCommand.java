@@ -24,7 +24,7 @@ public class DrawCoordinatesCommand extends Command
 			this.outputColor = Color.red;
 			return false;
 		}
-		return super.check(params);
+		return true;
 	}
 
 	@Override

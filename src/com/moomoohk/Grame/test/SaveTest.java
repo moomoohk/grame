@@ -13,6 +13,7 @@ public class SaveTest implements MainGrameClass
 	{
 		MenuConfiguration menuConfig = new MenuConfiguration();
 		GrameUtils.loadBasicCommands();
+		GrameUtils.loadBasicAIs();
 		GrameManager.initialize(new SaveTest(), menuConfig);
 	}
 

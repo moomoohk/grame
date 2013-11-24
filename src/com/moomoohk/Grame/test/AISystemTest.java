@@ -5,7 +5,7 @@ import java.awt.Color;
 import com.moomoohk.Grame.AI.PlayerSimAI;
 import com.moomoohk.Grame.AI.SimpleChaseAI;
 import com.moomoohk.Grame.AI.SimpleStrollAI;
-import com.moomoohk.Grame.Basics.Entity;
+import com.moomoohk.Grame.Basics.OldEntity;
 import com.moomoohk.Grame.Basics.Wall;
 import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
@@ -27,7 +27,7 @@ public class AISystemTest implements MainGrameClass
 	{
 		for (int i = 0; i < amount; i++)
 		{
-			Entity ent = new Entity();
+			OldEntity ent = new OldEntity();
 			ent.addAI(new SimpleStrollAI(), b.ID);
 			ent.setSpeed(5);
 			ent.setColor(Color.blue);
@@ -38,11 +38,11 @@ public class AISystemTest implements MainGrameClass
 		}
 	}
 
-	public static void generateChasers(Base b, int amount, Entity target)
+	public static void generateChasers(Base b, int amount, OldEntity target)
 	{
 		for (int i = 1; i <= amount; i++)
 		{
-			Entity ent = new Entity(Color.red);
+			OldEntity ent = new OldEntity(Color.red);
 			ent.addAI(new SimpleChaseAI(), b.ID);
 			ent.setRange(b.getDiagonal());
 			ent.setTarget(target.ID);
@@ -59,7 +59,7 @@ public class AISystemTest implements MainGrameClass
 	{
 		for (int i = 1; i <= amount; i++)
 		{
-			Entity ent = new Entity();
+			OldEntity ent = new OldEntity();
 			ent.makePlayer(number, true, b.ID);
 			ent.setSpeed(1);
 			ent.setColor(Color.green);
@@ -74,7 +74,7 @@ public class AISystemTest implements MainGrameClass
 	{
 		for (int i = 1; i <= amount; i++)
 		{
-			Entity ent = new Entity();
+			OldEntity ent = new OldEntity();
 			ent.setColor(Color.yellow);
 			ent.setOverrideAI(new PlayerSimAI(), b.ID);
 			ent.setSpeed(1);
@@ -106,8 +106,8 @@ public class AISystemTest implements MainGrameClass
 		generatePlayers(1, 1, b);
 		generatePlayerSims(1, b);
 		generateStrollers(5, b);
-		generateChasers(b, 3, (Entity) GrameManager.findGrameObject(1));
-		generateChasers(b, 3, (Entity) GrameManager.findGrameObject(0));
+		generateChasers(b, 3, (OldEntity) GrameManager.findGrameObject(1));
+		generateChasers(b, 3, (OldEntity) GrameManager.findGrameObject(0));
 		RenderManager.render(b.ID);
 		RenderManager.setVisible(true);
 		RenderManager.setText(b.ID, new Coordinates(6, 6), "test", Color.red);

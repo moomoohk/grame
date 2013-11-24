@@ -601,7 +601,7 @@ public class GrameManager implements Runnable
 	{
 		return engineState.getGrameObjects().size();
 	}
-	
+
 	public static int getBaseListLength()
 	{
 		return engineState.getBases().size();
@@ -1214,7 +1214,7 @@ public class GrameManager implements Runnable
 								@Override
 								public void mouseEntered(MouseEvent paramMouseEvent)
 								{
-										savePanel.setBorder(BorderFactory.createMatteBorder(2, 5, 2, 2, Color.black));
+									savePanel.setBorder(BorderFactory.createMatteBorder(2, 5, 2, 2, Color.black));
 								}
 
 								public void mousePressed(MouseEvent arg0)

@@ -2,7 +2,7 @@ package com.moomoohk.Grame.commands;
 
 import java.awt.Color;
 
-import com.moomoohk.Grame.Basics.Entity;
+import com.moomoohk.Grame.Basics.OldEntity;
 import com.moomoohk.Grame.Essentials.GrameManager;
 import com.moomoohk.MooCommands.Command;
 
@@ -21,7 +21,7 @@ public class MakePlayerCommand extends Command
 			this.outputColor = Color.red;
 			return false;
 		}
-		return super.check(params);
+		return true;
 	}
 
 	@Override
@@ -30,12 +30,12 @@ public class MakePlayerCommand extends Command
 		if (params[0].equalsIgnoreCase("all"))
 		{
 			for (int i = 0; i < GrameManager.getObjectListLength(); i++)
-				if (GrameManager.findGrameObject(i) instanceof Entity)
-					((Entity) (GrameManager.findGrameObject(i))).makePlayer(Integer.parseInt(params[1]), Boolean.parseBoolean(params[3]), Integer.parseInt(params[2]));
+				if (GrameManager.findGrameObject(i) instanceof OldEntity)
+					((OldEntity) (GrameManager.findGrameObject(i))).makePlayer(Integer.parseInt(params[1]), Boolean.parseBoolean(params[3]), Integer.parseInt(params[2]));
 		}
 		else
-			if (GrameManager.findGrameObject(Integer.parseInt(params[0])) instanceof Entity)
-				((Entity) (GrameManager.findGrameObject(Integer.parseInt(params[0])))).makePlayer(Integer.parseInt(params[1]), Boolean.parseBoolean(params[3]), Integer.parseInt(params[2]));
+			if (GrameManager.findGrameObject(Integer.parseInt(params[0])) instanceof OldEntity)
+				((OldEntity) (GrameManager.findGrameObject(Integer.parseInt(params[0])))).makePlayer(Integer.parseInt(params[1]), Boolean.parseBoolean(params[3]), Integer.parseInt(params[2]));
 	}
 
 	@Override

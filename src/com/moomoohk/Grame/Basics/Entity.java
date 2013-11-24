@@ -5,102 +5,86 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.moomoohk.Grame.AI.PlayerMovementAI;
-import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
 import com.moomoohk.Grame.Essentials.GrameManager;
 import com.moomoohk.Grame.Essentials.GrameUtils;
 import com.moomoohk.Grame.Essentials.GrameUtils.MessageLevel;
+import com.moomoohk.Grame.GrassMuncher.Coin;
 import com.moomoohk.Grame.Interfaces.EntityGenerator;
 import com.moomoohk.Grame.Interfaces.GrameObject;
 import com.moomoohk.Grame.Interfaces.MovementAI;
 
-/**
- * Entities are ready to use {@link GrameObject}s which have a lot of configurable aspects.
- * 
- * @author Meshulam Silk <moomoohk@ymail.com>
- * @version 1.0
- * @since 2013-04-05
- */
 public class Entity extends GrameObject
 {
-	private static final long serialVersionUID = 2137967921422181555L;
-	private String type;
-	private int level;
-	private int range;
-	private int points;
 	private HashMap<Integer, Boolean> player;
-	private int targetID;
-	protected EntityGenerator randomGen;
 	private HashMap<Integer, MovementAI> activeAI;
 	private HashMap<Integer, MovementAI> overrideAI;
 	private HashMap<Integer, ArrayList<MovementAI>> AI;
+	private int points;
+	private int range;
+	private int targetID;
 
-	/**
-	 * Constructor.
-	 */
 	public Entity()
 	{
-		this(new DefaultRandomGen().nameGen(), new DefaultRandomGen().typeGen(), 1, GrameUtils.randomColor());
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param c
-	 *            Entity color.
-	 */
-	public Entity(Color c)
-	{
-		this(new DefaultRandomGen().nameGen(), new DefaultRandomGen().typeGen(), 1, c);
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param entGen
-	 *            {@link EntityGenerator} to use.
-	 */
-	public Entity(EntityGenerator entGen)
-	{
-		this(entGen.nameGen(), entGen.typeGen(), 1, GrameUtils.randomColor());
+		this(new DefaultRandomGen());
 	}
 
 	public Entity(String name)
 	{
-		this(name, "", 0, GrameUtils.randomColor());
+		this(name, GrameUtils.randomColor(), 5);
 	}
 
-	public Entity(String name, Color color)
+	public Entity(String name, int speed)
 	{
-		this(name, "", 0, color);
+		this(name, GrameUtils.randomColor(), speed);
 	}
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param name
-	 *            Entity name.
-	 * @param type
-	 *            Entity type.
-	 * @param level
-	 *            Starting level.
-	 * @param color
-	 *            Entity color.
-	 */
-	public Entity(String name, String type, int level, Color color)
+	public Entity(Color c)
 	{
-		super(name, 5, color, false);
-		this.setType(type);
-		this.setLevel(level);
+		this(new DefaultRandomGen().nameGen(), c, 5);
+	}
+
+	public Entity(Color c, int speed)
+	{
+		this(new DefaultRandomGen().nameGen(), c, speed);
+	}
+	
+	public Entity(String name, Color c)
+	{
+		this(name, c, 5);
+	}
+
+	public Entity(EntityGenerator entGen)
+	{
+		this(entGen.nameGen(), GrameUtils.randomColor(), 5);
+	}
+
+	public Entity(EntityGenerator entGen, int speed)
+	{
+		this(entGen.nameGen(), GrameUtils.randomColor(), speed);
+	}
+
+	public Entity(String name, Color c, int speed)
+	{
+		super(name, speed, c, false);
 		this.player = new HashMap<Integer, Boolean>();
 		this.targetID = -1;
 		this.range = 5;
-		this.setPoints(0);
+		this.points = 0;
 		this.AI = new HashMap<Integer, ArrayList<MovementAI>>();
 		this.activeAI = new HashMap<Integer, MovementAI>();
 		this.overrideAI = new HashMap<Integer, MovementAI>();
 	}
 
+	private static final long serialVersionUID = -4997365624920436027L;
+
+	@Override
+	public boolean isCollidable()
+	{
+		return true;
+	}
+
+	@Override
 	public void tick(int bID)
 	{
 		determineAI(bID);
@@ -110,7 +94,7 @@ public class Entity extends GrameObject
 			target = GrameManager.findGrameObject(this.targetID).getPos(bID);
 		if (this.activeAI.size() != 0 && this.activeAI.get(bID) != null)
 			c = this.activeAI.get(bID).getNext(getPos(bID), target, GrameManager.findBase(bID), this, (Entity) GrameManager.findGrameObject(targetID));
-		GrameManager.findBase(bID).moveGrameObject(ID, c);
+		setPos(bID, c);
 	}
 
 	private void determineAI(int bID)
@@ -140,49 +124,7 @@ public class Entity extends GrameObject
 			this.activeAI.put(bID, this.overrideAI.get(bID));
 		}
 	}
-
-	/**
-	 * Prints the {@link MovementAI} list of this Entity.
-	 */
-	public void printAI()
-	{
-		GrameUtils.print("Override AIs:", MessageLevel.NORMAL);
-		if (overrideAI.size() != 0)
-			for (int bID : overrideAI.keySet())
-				GrameUtils.print(bID + ": " + overrideAI.get(bID) + " (" + overrideAI.get(bID).author() + ")", MessageLevel.NORMAL);
-		else
-			GrameUtils.print("[Empty]", MessageLevel.NORMAL);
-		GrameUtils.print("Active AIs:", MessageLevel.NORMAL);
-		if (activeAI.size() != 0)
-			for (int bID : activeAI.keySet())
-				GrameUtils.print(bID + ": " + activeAI.get(bID) + " (" + activeAI.get(bID).author() + ")", MessageLevel.NORMAL);
-		else
-			GrameUtils.print("[Empty]", MessageLevel.NORMAL);
-		for (int bID : AI.keySet())
-		{
-			GrameUtils.print("For base ID:" + bID, MessageLevel.NORMAL);
-			String st = "null";
-			if (this.AI.size() == 0)
-				GrameUtils.print("My AI list is empty!", MessageLevel.ERROR);
-			else
-				for (int i = 0; i < this.AI.size(); i++)
-				{
-					st = "null";
-					if (this.AI.get(i) != null)
-						st = this.AI.get(i) + " (" + ((MovementAI) this.AI.get(bID).get(i)).author() + ")";
-					GrameUtils.print(i + 1 + ") " + st, MessageLevel.NORMAL);
-				}
-		}
-	}
-
-	/**
-	 * Adds a {@link MovementAI} to this Entity's AI list.
-	 * 
-	 * @param AI
-	 *            {@link MovementAI} to add.
-	 * @param bID
-	 *            The {@link Base#ID} of the {@link Base} in which to apply the {@link MovementAI}.
-	 */
+	
 	public void addAI(MovementAI AI, int bID)
 	{
 		if (!AI.isOverride())
@@ -195,24 +137,13 @@ public class Entity extends GrameObject
 			GrameUtils.print(AI + " is an override AI, it doens't belong in my AI list!", MessageLevel.ERROR);
 	}
 
-	/**
-	 * Clears this Entity's AI list.
-	 */
 	public void clearAI()
 	{
 		this.AI = new HashMap<Integer, ArrayList<MovementAI>>();
 		this.activeAI = null;
 		this.overrideAI = null;
 	}
-
-	/**
-	 * Sets the override for this Entity.
-	 * 
-	 * @param mai
-	 *            {@link MovementAI} which is an override AI.
-	 * @param bID
-	 *            The {@link Base#ID} of the {@link Base} in which to apply the {@link MovementAI}.
-	 */
+	
 	public void setOverrideAI(MovementAI mai, int bID)
 	{
 		if (mai.isOverride())
@@ -221,43 +152,13 @@ public class Entity extends GrameObject
 			GrameUtils.print(mai + " is not an override AI!", MessageLevel.ERROR);
 	}
 
-	/**
-	 * Checks whether this Entity has reached its target.
-	 * 
-	 * @param bID
-	 *            {@link Base#ID} of the {@link Base} in which to check.
-	 * @return True if this Entity reached its target, else false.
-	 */
-	public boolean reachedTarget(int bID)
+	@Override
+	public void consume(GrameObject go)
 	{
-		return (targetID != -1) && (this.getPos(bID).distance(GrameManager.findGrameObject(targetID).getPos(bID)) == 1);
+		if (go instanceof Coin)
+			this.points += ((Coin) go).getWorth();
 	}
 
-	public Coordinates getPos(int bID)
-	{
-		if (GrameManager.findBase(bID).containsGrameObject(ID))
-			return GrameManager.findBase(bID).getGrameObjectPos(ID);
-		GrameUtils.print("Base with ID:" + bID + " does not contain Entity with ID:" + ID + ". Returning null.", MessageLevel.ERROR);
-		return null;
-	}
-
-	public void setPos(int bID, Coordinates pos)
-	{
-		if (GrameManager.findBase(bID).containsGrameObject(ID))
-		{
-			GrameManager.findBase(bID).moveGrameObject(ID, pos);
-			return;
-		}
-	}
-
-	/**
-	 * Checks whether or not this Entity is a "player" (controllable by the keyboard).
-	 * 
-	 * @param bID
-	 *            The {@link Base#ID} of the {@link Base} in which to check.
-	 * @return True if this Entity is a "player", else false.
-	 * @see Entity#makePlayer(int, boolean, int)
-	 */
 	public boolean isPlayer(int bID)
 	{
 		if (this.player.get(bID) == null)
@@ -265,17 +166,6 @@ public class Entity extends GrameObject
 		return this.player.get(bID);
 	}
 
-	/**
-	 * Turns this Entity into a "player".
-	 * 
-	 * @param player
-	 *            1 for wasd control, 2 for arrow keys control.
-	 * @param f
-	 *            True to turn this Entity into a "player", else false.
-	 * @param bID
-	 *            The {@link Base#ID} of the {@link Base} in which to turn this Entity into a "player".
-	 * @see Entity#isPlayer(int)
-	 */
 	public void makePlayer(int player, boolean f, int bID)
 	{
 		if (f)
@@ -293,12 +183,16 @@ public class Entity extends GrameObject
 				GrameUtils.print("Not a player!", MessageLevel.ERROR);
 	}
 
-	/**
-	 * Sets the target of this Entity.
-	 * 
-	 * @param eID
-	 *            The {@link GrameObject#ID} of the {@link GrameObject}/Entity to set as target.
-	 */
+	public int getRange()
+	{
+		return this.range;
+	}
+
+	public void setRange(int range)
+	{
+		this.range = range;
+	}
+
 	public void setTarget(int eID)
 	{
 		if (GrameManager.findGrameObject(eID) != null)
@@ -307,108 +201,8 @@ public class Entity extends GrameObject
 			GrameUtils.print("Cannot set that Entity (ID:" + eID + ") as target for Entity with ID:" + ID + " (Entity not found)", MessageLevel.ERROR);
 	}
 
-	/**
-	 * Returns this Entity's target.
-	 * 
-	 * @return This Entity's target.
-	 */
-	public Entity getTarget()
+	public OldEntity getTarget()
 	{
-		return (Entity) (GrameManager.findGrameObject(this.targetID));
-	}
-
-	/**
-	 * Gets the range of this Entity.
-	 * 
-	 * @return The range of this Entity.
-	 */
-	public int getRange()
-	{
-		return this.range;
-	}
-
-	/**
-	 * Sets the range of this Entity.
-	 * 
-	 * @param range
-	 *            The range to set.
-	 */
-	public void setRange(int range)
-	{
-		this.range = range;
-	}
-
-	public boolean isCollidable()
-	{
-		return true;
-	}
-
-	/**
-	 * Sets the type of this Entity.
-	 * 
-	 * @param type
-	 *            The type to set.
-	 */
-	public void setType(String type)
-	{
-		this.type = type;
-	}
-
-	/**
-	 * Gets the type of this Entity.
-	 * 
-	 * @return The type of this Entity.
-	 */
-	public String getType()
-	{
-		return type;
-	}
-
-	/**
-	 * Sets the level of this Entity.
-	 * 
-	 * @param level
-	 *            The level to set.
-	 */
-	public void setLevel(int level)
-	{
-		this.level = level;
-	}
-
-	/**
-	 * Gets the level of this Entity.
-	 * 
-	 * @return The level of this Entity.
-	 */
-	public int getLevel()
-	{
-		return level;
-	}
-
-	/**
-	 * Sets the points of this Entity.
-	 * 
-	 * @param points
-	 *            The points to set.
-	 */
-	public void setPoints(int points)
-	{
-		this.points = points;
-	}
-
-	/**
-	 * Gets the points of this Entity.
-	 * 
-	 * @return The points of this Entity.
-	 */
-	public int getPoints()
-	{
-		return points;
-	}
-
-	@Override
-	public void consume(GrameObject go)
-	{
-
+		return (OldEntity) (GrameManager.findGrameObject(this.targetID));
 	}
 }

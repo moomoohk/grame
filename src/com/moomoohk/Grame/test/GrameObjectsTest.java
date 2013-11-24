@@ -1,6 +1,6 @@
 package com.moomoohk.Grame.test;
 
-import com.moomoohk.Grame.Basics.Entity;
+import com.moomoohk.Grame.Basics.OldEntity;
 import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
 import com.moomoohk.Grame.Essentials.GrameUtils;
@@ -14,7 +14,7 @@ public class GrameObjectsTest
 		Base b=new Base(20, 20);
 		GrameUtils.loadBasicCommands();
 		GrameUtils.loadBasicAIs();
-		Entity ent=new Entity();
+		OldEntity ent=new OldEntity();
 		b.addGrameObject(ent, new Coordinates(10, 10));
 		b.setWraparound(true);
 		ent.makePlayer(1, true, b.ID);

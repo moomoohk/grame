@@ -5,7 +5,7 @@ import java.awt.Color;
 
 import com.moomoohk.Grame.AI.SimpleChaseAI;
 import com.moomoohk.Grame.AI.SimpleStrollAI;
-import com.moomoohk.Grame.Basics.Entity;
+import com.moomoohk.Grame.Basics.OldEntity;
 import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
 import com.moomoohk.Grame.Essentials.GrameManager;
@@ -20,9 +20,9 @@ public class TestScript
 		GrameUtils.loadBasicCommands();
 		Base b=new Base(20, 20);
 		b.setWraparound(true);
-		Entity ent=new Entity(Color.blue);
+		OldEntity ent=new OldEntity(Color.blue);
 		ent.setSpeed(1);
-		Entity ent2=new Entity();
+		OldEntity ent2=new OldEntity();
 		ent2.setTarget(ent.ID);
 		ent2.setSpeed(7);
 		ent2.setRange(b.getDiagonal());

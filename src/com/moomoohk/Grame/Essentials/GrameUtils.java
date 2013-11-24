@@ -28,6 +28,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
+import com.moomoohk.Grame.AI.AStarPathfindingMovementAI;
 import com.moomoohk.Grame.AI.PlayerMovementAI;
 import com.moomoohk.Grame.AI.PlayerSimAI;
 import com.moomoohk.Grame.AI.SimpleChaseAI;
@@ -491,6 +492,7 @@ public class GrameUtils
 		GrameManager.addAI(new PlayerMovementAI(1));
 		GrameManager.addAI(new SimpleChaseAI());
 		GrameManager.addAI(new PlayerSimAI());
+		GrameManager.addAI(new AStarPathfindingMovementAI());
 	}
 
 	/**

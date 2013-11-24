@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import com.moomoohk.Grame.Basics.DefaultRandomGen;
 import com.moomoohk.Grame.Basics.Entity;
+import com.moomoohk.Grame.Basics.OldEntity;
 import com.moomoohk.Grame.Essentials.GrameUtils;
 import com.moomoohk.MooCommands.Command;
 import com.moomoohk.MooCommands.CommandsManager;
@@ -29,7 +30,7 @@ public class CreateEntityCommand extends Command
 			name = flags.get("n");
 		if (flags.get("l") != null)
 			level = Integer.parseInt(flags.get("l"));
-		new Entity(type, name, level, color);
+		new Entity(name, color);
 	}
 
 	public boolean check(String[] params)
@@ -41,7 +42,7 @@ public class CreateEntityCommand extends Command
 				this.outputColor = Color.red;
 				return false;
 			}
-		return super.check(params);
+		return true;
 	}
 
 	@Override

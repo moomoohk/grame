@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.moomoohk.Grame.Basics.Dir;
 import com.moomoohk.Grame.Basics.Entity;
+import com.moomoohk.Grame.Basics.OldEntity;
 import com.moomoohk.Grame.Basics.Schematic;
 import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
@@ -39,9 +40,7 @@ public class AStarPathfindingMovementAI extends MovementAI implements MainGrameC
 	public Coordinates getNext(Coordinates pos, Coordinates targetPos, Base b, Entity ent1, Entity ent2)
 	{
 		if (ent1.getPos(b.ID).distance(ent2.getPos(b.ID)) == 1)
-		{
 			return pos;
-		}
 		if (cachedTargetPos != null)
 			if (cachedTargetPos.equals(targetPos))
 			{
@@ -250,8 +249,8 @@ public class AStarPathfindingMovementAI extends MovementAI implements MainGrameC
 	{
 		Base b = new Base(20, 20);
 		b.setWraparound(true);
-		Entity player = new Entity("Player", Color.gray);
-		Entity monster = new Entity("Monster", Color.red);
+		OldEntity player = new OldEntity("Player", Color.gray);
+		OldEntity monster = new OldEntity("Monster", Color.red);
 		b.addGrameObjectLayer(new GrameObjectLayer(b.getColumns(), b.getRows()), 1);
 		player.makePlayer(1, true, b.ID);
 		player.setSpeed(1);
