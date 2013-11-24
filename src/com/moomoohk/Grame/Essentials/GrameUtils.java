@@ -50,6 +50,7 @@ import com.moomoohk.Grame.commands.SetSpeedCommand;
 import com.moomoohk.Grame.commands.SetSpriteCommand;
 import com.moomoohk.Grame.commands.SetVisibleCommand;
 import com.moomoohk.Grame.commands.SetWraparoundCommand;
+import com.moomoohk.Grame.commands.ShowDialogCommand;
 import com.moomoohk.MooCommands.CommandsManager;
 import com.moomoohk.MooConsole.Console;
 import com.moomoohk.MooConsole.HelpCommand;
@@ -479,6 +480,7 @@ public class GrameUtils
 		new SetSpeedCommand();
 		new SetSpriteCommand();
 		new SetWraparoundCommand();
+		new ShowDialogCommand();
 		print("Loaded " + (CommandsManager.getAllCommands().size() - prevLength) + " commands.", MessageLevel.DEBUG);
 	}
 

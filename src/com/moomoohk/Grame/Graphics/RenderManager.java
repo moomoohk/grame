@@ -131,9 +131,10 @@ public class RenderManager
 			applyGaussianBlur();
 			setOverlayColor(Color.gray.brighter());
 			drawLabel(new Label(mainCanvas.getWidth() / 2, mainCanvas.getHeight() / 2, "Paused", new Font("LucidaTypewriter", Font.BOLD, 40), Color.white, Color.black, 10, 15, 15, 10));
-			for (Label l : labels)
-				drawLabel(l);
 		}
+
+		for (Label l : labels)
+			drawLabel(l);
 
 		if (drawCoordinates)
 		{
@@ -392,5 +393,16 @@ public class RenderManager
 			mainFrame.removeAll();
 			mainFrame.dispose();
 		}
+	}
+
+	public static void addLabel(Label l)
+	{
+		labels.add(l);
+	}
+	
+	public static void removeLabel(Label l)
+	{
+		if(labels.contains(l))
+			labels.remove(l);
 	}
 }

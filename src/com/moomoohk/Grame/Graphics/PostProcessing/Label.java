@@ -10,6 +10,11 @@ public class Label
 	private Color textColor, backColor;
 	private Font font;
 
+	public Label()
+	{
+		this(0, 0, null, null, null, null, 0, 0, 0, 0);
+	}
+
 	public Label(int centerX, int centerY, String text, Font font, Color textColor, Color backColor, int paddingTop, int paddingLeft, int paddingRight, int paddingBottom)
 	{
 		this.centerX = centerX;
@@ -52,6 +57,14 @@ public class Label
 	public int getPaddingLeft()
 	{
 		return paddingLeft;
+	}
+
+	public void setPadding(int padding)
+	{
+		this.paddingTop = padding;
+		this.paddingLeft = padding;
+		this.paddingRight = padding;
+		this.paddingBottom = padding;
 	}
 
 	public void setPaddingBottom(int paddingBottom)

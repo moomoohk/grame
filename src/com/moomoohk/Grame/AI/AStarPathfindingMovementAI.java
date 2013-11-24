@@ -258,7 +258,7 @@ public class AStarPathfindingMovementAI extends MovementAI implements MainGrameC
 		AStarPathfindingMovementAI aStar = new AStarPathfindingMovementAI();
 		monster.addAI(aStar, b.ID);
 		monster.setSpeed(5);
-		b.addGrameObject(player, new Coordinates(0, 0));
+		b.addGrameObject(player, new Coordinates(10, 10));
 		b.addGrameObject(monster, new Coordinates(18, 10), 1);
 		for (int i = 1; i <= 10; i++)
 			new Schematic().load(b, GrameUtils.randomCoordinates(b));
