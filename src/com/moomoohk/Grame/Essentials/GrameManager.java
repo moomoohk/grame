@@ -70,7 +70,7 @@ public class GrameManager implements Runnable
 	/**
 	 * The Grame version number.
 	 */
-	public static final String VERSION_NUMBER = "4.0.2";
+	public static final String VERSION_NUMBER = "4.0.3";
 	/**
 	 * The WASD keys parsed to a {@link Dir}.
 	 */
