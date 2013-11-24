@@ -1,5 +1,7 @@
-bin/*
 bin/
 *.class
 JavaDoc/*
 *.class
+.classpath
+.DS_Store
+.settings/

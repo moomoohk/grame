@@ -27,7 +27,7 @@ public class SetSpriteCommand extends Command
 				this.outputMessage += " " + sprite;
 			return false;
 		}
-		return super.check(params);
+		return true;
 	}
 
 	@Override

@@ -49,7 +49,6 @@ import com.moomoohk.Grame.Interfaces.GrameObject;
 import com.moomoohk.Grame.Interfaces.MainGrameClass;
 import com.moomoohk.Grame.Interfaces.MovementAI;
 import com.moomoohk.Grame.Interfaces.Render;
-import com.moomoohk.Grame.test.EngineState;
 import com.moomoohk.Grame.test.MenuConfiguration;
 import com.moomoohk.Mootilities.FileUtils.FileUtils;
 import com.moomoohk.Mootilities.FrameDragger.FrameDragger;
@@ -71,7 +70,7 @@ public class GrameManager implements Runnable
 	/**
 	 * The Grame version number.
 	 */
-	public static final String VERSION_NUMBER = "4.0.2";
+	public static final String VERSION_NUMBER = "4.0.3";
 	/**
 	 * The WASD keys parsed to a {@link Dir}.
 	 */
@@ -601,7 +600,7 @@ public class GrameManager implements Runnable
 	{
 		return engineState.getGrameObjects().size();
 	}
-	
+
 	public static int getBaseListLength()
 	{
 		return engineState.getBases().size();
@@ -1207,13 +1206,14 @@ public class GrameManager implements Runnable
 								{
 									if (!selectedPanel.equals(savePanel))
 										savePanel.setBorder(BorderFactory.createLineBorder(Color.black));
+									else
+										savePanel.setBorder(BorderFactory.createMatteBorder(2, 5, 2, 2, Color.gray.darker().darker()));
 								}
 
 								@Override
 								public void mouseEntered(MouseEvent paramMouseEvent)
 								{
-									if (!selectedPanel.equals(savePanel))
-										savePanel.setBorder(BorderFactory.createMatteBorder(2, 5, 2, 2, Color.black));
+									savePanel.setBorder(BorderFactory.createMatteBorder(2, 5, 2, 2, Color.black));
 								}
 
 								public void mousePressed(MouseEvent arg0)

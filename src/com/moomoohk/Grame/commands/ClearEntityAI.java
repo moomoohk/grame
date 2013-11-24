@@ -22,7 +22,7 @@ public class ClearEntityAI extends Command
 			this.outputColor = Color.red;
 			return false;
 		}
-		return super.check(params);
+		return true;
 	}
 
 	public ClearEntityAI()

@@ -14,11 +14,7 @@ public class SetWraparoundCommand extends Command
 
 	public boolean check(String[] params)
 	{
-		try
-		{
-			Boolean.parseBoolean(params[1]);
-		}
-		catch (Exception e)
+		if (!params[1].equalsIgnoreCase("true") && !params[1].equalsIgnoreCase("false"))
 		{
 			this.outputMessage = "Only true or false are accepted inputs!";
 			this.outputColor = Color.red;
@@ -30,7 +26,7 @@ public class SetWraparoundCommand extends Command
 			this.outputColor = Color.red;
 			return false;
 		}
-		return super.check(params);
+		return true;
 	}
 
 	@Override

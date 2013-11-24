@@ -18,8 +18,6 @@ public class AISystemTest implements MainGrameClass
 {
 	public static void main(String[] args)
 	{
-		GrameUtils.loadBasicCommands();
-		GrameUtils.loadBasicAIs();
 		GrameManager.initialize(new AISystemTest());
 	}
 

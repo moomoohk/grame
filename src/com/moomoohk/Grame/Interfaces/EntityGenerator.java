@@ -1,12 +1,11 @@
 package com.moomoohk.Grame.Interfaces;
 
-import com.moomoohk.Grame.Basics.Entity;
 
 /**
  * This interface is used to create generators which generate names and types
  * for Entities.
  * 
- * @see Entity
+ * @see OldEntity
  * @author Meshulam Silk <moomoohk@ymail.com>
  * @version 1.0
  * @since 2013-04-05

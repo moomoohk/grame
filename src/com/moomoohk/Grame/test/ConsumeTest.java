@@ -4,7 +4,6 @@ import com.moomoohk.Grame.Basics.Entity;
 import com.moomoohk.Grame.Essentials.Base;
 import com.moomoohk.Grame.Essentials.Coordinates;
 import com.moomoohk.Grame.Essentials.GrameManager;
-import com.moomoohk.Grame.Essentials.GrameUtils;
 import com.moomoohk.Grame.Graphics.RenderManager;
 import com.moomoohk.Grame.GrassMuncher.Coin;
 import com.moomoohk.Grame.Interfaces.GrameObject;
@@ -24,7 +23,6 @@ public class ConsumeTest implements MainGrameClass
 
 	public static void main(String[] args)
 	{
-		GrameUtils.loadBasicCommands();
 		GrameManager.initialize(new ConsumeTest());
 	}
 

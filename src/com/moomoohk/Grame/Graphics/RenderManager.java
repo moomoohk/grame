@@ -4,7 +4,6 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -42,6 +41,8 @@ public class RenderManager
 	private static int mainBase;
 	private static boolean drawCoordinates;
 	private static int squareSize = 30;
+	private static Graphics2D g2;
+	private static BufferedImage img;
 
 	public static void initialize()
 	{
@@ -79,7 +80,7 @@ public class RenderManager
 		if (bID < 0)
 			return;
 		setupFrame(bID);
-		if (bID != mainBase)
+		if (bID != mainBase || GrameManager.findBase(bID) == null)
 			GrameManager.setMainBase(bID);
 		mainBase = bID;
 		mainFrame.setTitle(GrameManager.getGameName());
@@ -95,7 +96,7 @@ public class RenderManager
 				mainCanvas.createBufferStrategy(3);
 			return;
 		}
-		BufferedImage img = new BufferedImage(mainCanvas.getWidth(), mainCanvas.getHeight(), BufferedImage.TYPE_INT_RGB);
+		img = new BufferedImage(mainCanvas.getWidth(), mainCanvas.getHeight(), BufferedImage.TYPE_INT_RGB);
 		int[] pixels = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
 		try
 		{
@@ -105,66 +106,61 @@ public class RenderManager
 		{
 			return;
 		}
-		Graphics g = bs.getDrawGraphics();
-		g.drawImage(img, 0, 0, mainCanvas.getWidth(), mainCanvas.getHeight(), null);
-
-		g.setFont(new Font("LucidaTypewriter", 1, 8));
-		int squaresize = mainCanvas.getWidth() / GrameManager.findBase(bID).getColumns(); //FIXME: Nullpointer
+		g2 = (Graphics2D) bs.getDrawGraphics().create();
+		g2.setFont(new Font("LucidaTypewriter", 1, 8));
+		int squaresize = mainCanvas.getWidth() / GrameManager.findBase(bID).getColumns();
 		for (int x = 0; x < GrameManager.findBase(bID).getColumns(); x++)
 			for (int y = 0; y < GrameManager.findBase(bID).getRows(); y++)
 				if (text.get(bID) != null)
 				{
 					if (text.get(bID).getText(new Coordinates(x, y)) != null && text.get(bID).getText(new Coordinates(x, y)).trim().length() != 0)
 					{
-						g.setColor(text.get(bID).getColor(new Coordinates(x, y)));
-						g.drawString(text.get(bID).getText(new Coordinates(x, y)), y * squaresize, (x + 1) * (squaresize) - ((squaresize / 2) - 5));
+						g2.setColor(text.get(bID).getColor(new Coordinates(x, y)));
+						g2.drawString(text.get(bID).getText(new Coordinates(x, y)), y * squaresize, (x + 1) * (squaresize) - ((squaresize / 2) - 5));
 					}
 				}
-		if (GrameManager.paused)
+
+		if (!GrameManager.paused)
+			g2.drawImage(img, 0, 0, mainCanvas.getWidth(), mainCanvas.getHeight(), null);
+		else
 		{
-			Graphics2D g2 = (Graphics2D) g.create();
+			applyGaussianBlur();
+			setOverlayColor(Color.gray.brighter());
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-			g2.setColor(new Color(Color.gray.getRed(), Color.gray.getGreen(), Color.gray.getBlue(), 127));
-			g2.fillRect(0, 0, mainCanvas.getWidth(), mainCanvas.getHeight());
-
-			int textCenterX = mainCanvas.getWidth() / 2, textCenterY = mainCanvas.getHeight() / 2;
-			String text = "Paused";
 			g2.setFont(new Font("LucidaTypewriter", Font.BOLD, 40));
 			FontMetrics fm = g2.getFontMetrics();
-			Rectangle2D textBounds = fm.getStringBounds(text, g2);
-			Rectangle fixed = new Rectangle((int) (textCenterX - (textBounds.getWidth() / 2)), (int) (textCenterY - (textBounds.getHeight() / 2)), (int) textBounds.getWidth(), (int) textBounds.getHeight());
+			Rectangle2D textBounds = fm.getStringBounds("Paused", g2);
+			Rectangle fixed = new Rectangle((int) (mainCanvas.getWidth() / 2 - (textBounds.getWidth() / 2)), (int) (mainCanvas.getHeight() / 2 - (textBounds.getHeight() / 2)), (int) textBounds.getWidth(), (int) textBounds.getHeight());
 
-			int inPadUp = 10, inPadDown = 10, inPadRight = 10, inPadLeft = 10;
-			Rectangle back = new Rectangle((int) fixed.getX() - inPadLeft, (int) fixed.getY() - inPadUp, (int) (fixed.getWidth()) + inPadRight + inPadLeft, (int) (fixed.getHeight()) + inPadDown + inPadUp);
-			g2.setColor(Color.black);
-			g2.fillRoundRect((int) back.getX(), (int) back.getY(), (int) back.getWidth(), (int) back.getHeight(), (inPadRight + inPadLeft) / 2, (inPadUp + inPadDown) / 2);
-			g2.setColor(new Color(255, 255, 255, 200));
-			g2.drawString(text, (int) (fixed.getX()), (int) (fixed.getY()+Math.max(fm.getMaxAscent(), fm.getMaxDescent())));
-
-//			g2.setColor(Color.cyan);
-//			g2.draw(new Ellipse2D.Double(textCenterX - 5, textCenterY - 5, 10, 10));
-//			g2.setColor(Color.blue);
-//			g2.draw(back);
-//			g2.setColor(Color.green);
-//			g2.draw(textBounds);
-//			g2.setColor(Color.red);
-//			g2.draw(fixed);
-//			g2.fill(new Ellipse2D.Double(fixed.getCenterX() - 2, fixed.getCenterY() - 2, 4, 4));
-
-			g2.dispose();
+			int paddingTop = 10, paddingRight = 10, paddingLeft = 10, paddingBottom = 10;
+			Rectangle back = new Rectangle((int) fixed.getX() - paddingLeft, (int) fixed.getY() - paddingTop, (int) (fixed.getWidth()) + paddingRight + paddingLeft, (int) (fixed.getHeight()) + paddingBottom + paddingTop);
+			g2.setColor(new Color(0, 0, 0, 200));
+			g2.fillRoundRect((int) back.getX(), (int) back.getY(), (int) back.getWidth(), (int) back.getHeight(), 10, 10);
+			g2.setColor(new Color(Color.white.getRed(), Color.white.getGreen(), Color.white.getBlue(), 200));
+			g2.drawString("Paused", (int) (fixed.getX()), (int) (fixed.getY() + Math.max(fm.getMaxAscent(), fm.getMaxDescent())));
 		}
 
 		if (drawCoordinates)
 		{
-			//			squaresize = mainCanvas.getWidth() / GrameManager.findBase(bID).getColumns();
-			g.setColor(Color.blue);
+			g2.setColor(Color.blue);
 			for (int x = 0; x < GrameManager.findBase(bID).getColumns(); x++)
 				for (int y = 0; y < GrameManager.findBase(bID).getRows(); y++)
-					g.drawString("(" + y + ", " + x + ")", y * squaresize, (x + 1) * (squaresize) - ((squaresize / 2) - 5));
+					g2.drawString("(" + y + ", " + x + ")", y * squaresize, (x + 1) * (squaresize) - ((squaresize / 2) - 5));
 		}
-		g.dispose();
+		g2.dispose();
 		bs.show();
+	}
+
+	public static void applyGaussianBlur()
+	{
+		g2.drawImage(new GaussianFilter().filter(img), 0, 0, mainCanvas.getWidth(), mainCanvas.getHeight(), null);
+	}
+
+	public static void setOverlayColor(Color color)
+	{
+		g2.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), 127));
+		g2.fillRect(0, 0, mainCanvas.getWidth(), mainCanvas.getHeight());
 	}
 
 	/**

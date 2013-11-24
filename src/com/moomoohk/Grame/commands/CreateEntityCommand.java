@@ -19,17 +19,18 @@ public class CreateEntityCommand extends Command
 	@Override
 	public void execute(String[] arg1)
 	{
-		String type = new DefaultRandomGen().typeGen(), name = new DefaultRandomGen().nameGen();
-		int level = 0;
+//		String type = new DefaultRandomGen().typeGen(), 
+		String name = new DefaultRandomGen().nameGen();
+//		int level = 0;
 		Color color = GrameUtils.randomColor();
 		HashMap<String, String> flags = CommandsManager.parseFlags(arg1);
-		if (flags.get("t") != null)
-			type = flags.get("t");
+//		if (flags.get("t") != null)
+//			type = flags.get("t");
 		if (flags.get("n") != null)
 			name = flags.get("n");
-		if (flags.get("l") != null)
-			level = Integer.parseInt(flags.get("l"));
-		new Entity(type, name, level, color);
+//		if (flags.get("l") != null)
+//			level = Integer.parseInt(flags.get("l"));
+		new Entity(name, color);
 	}
 
 	public boolean check(String[] params)
@@ -41,7 +42,7 @@ public class CreateEntityCommand extends Command
 				this.outputColor = Color.red;
 				return false;
 			}
-		return super.check(params);
+		return true;
 	}
 
 	@Override
