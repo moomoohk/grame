@@ -11,6 +11,7 @@ import com.moomoohk.Grame.Essentials.Coordinates;
  */
 public class Dir extends Coordinates
 {
+	private static final long serialVersionUID = -8957814328221236455L;
 	/**
 	 * Up Dir.
 	 */
@@ -140,8 +141,7 @@ public class Dir extends Coordinates
 	 * 
 	 * @param key
 	 *            Key code of key to parse.
-	 * @return A Dir representing the key. If the parse fails, null will be
-	 *         returned.
+	 * @return A Dir representing the key. If the parse fails, null will be returned.
 	 */
 	public static Dir parseKey(int key)
 	{
@@ -172,8 +172,7 @@ public class Dir extends Coordinates
 	/**
 	 * Splits diagonal Dirs into two non-diagonal Dirs.
 	 * <p>
-	 * If this Dir is not diagonal the array that is returned will contain this
-	 * Dir.
+	 * If this Dir is not diagonal the array that is returned will contain this Dir.
 	 * 
 	 * @return A Dir[] containing two non-diagonal Dirs.
 	 */
@@ -214,7 +213,6 @@ public class Dir extends Coordinates
 	 */
 	public static Dir[] getAllDirs()
 	{
-		return new Dir[]
-		               { UP, DOWN, LEFT, RIGHT, new Dir(1, 1), new Dir(1, -1), new Dir(-1, -1), new Dir(-1, 1) };
+		return new Dir[] { UP, DOWN, LEFT, RIGHT, new Dir(1, 1), new Dir(1, -1), new Dir(-1, -1), new Dir(-1, 1) };
 	}
 }
