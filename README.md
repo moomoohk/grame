@@ -61,7 +61,7 @@ The engine is split up into two parts:
 
 The two main components of the engine are the `Grid`s and the `GrameObject`s. Every instance of both of those components will automatically get a unique ID number associated with them by the `GrameManager` when they're created. The IDs are created successively. The ID successions for `Grid`s and `GrameObject`s are independent (meaning you can have a `Grid` object with ID:1 and a `GrameObject` object with ID:1).
 
-####GrameManager
+###GrameManager
 
 The `GrameManager` class contains the central engine clock as well as the `GrameObject` and `Base` list. It also keeps tracks of user input so you don't have to.
 
@@ -203,6 +203,20 @@ monster.addAI(new SimpleChaseAI());
 
 The `EntityGenerator` interface lets you create `Entity` generation classes. These are useful when you'd like to procedurally generate them. Grame comes with one implementation of it. The `DefaultRandomGen` will randomly generate names based on some basic language heuristics and types by picking a random spot in an array containing "human", "orc" and "elf".
 
+The `Entity` AI system makes creating player `GrameObject`s really easy:
+
+```java
+ent.makePlayer(1, true, g.ID);
+```
+
+###Wall
+
+`Wall`s are what you'd expect them to be. They are collidable, static `GrameObject`s.
+
+```java
+Wall w1 = new Wall(); //Default wall color is Color.black
+Wall w2 = new Wall(Color.green);
+```
 
 
 I should probably include a picture of a sheep:
