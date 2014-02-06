@@ -5,13 +5,24 @@ An easy to use, lightweight 2D grid based game engine!
 
 [Click here](https://github.com/moomoohk/New-Grame/releases/latest) for the latest major release.
 
-The JavaDocs can be downloaded [here](https://github.com/moomoohk/New-Grame/blob/master/JavaDocs.zip?raw=true) and can be viewed online [here](http://moomoohk.minelord.com/Documentation/Grame/).
+The JavaDocs can be downloaded [here](https://github.com/moomoohk/New-Grame/blob/master/JavaDocs.zip?raw=true) and can be viewed online [here](http://moomoohk.minelord.com/Documentation/Grame/) (although the online version might be outdated!).
 
 My [YouTube channel](http://youtube.com/user/moomoohk) has some old demo videos on it, but they might be outdated.
 
 #Getting started
 
 On top of reading this documentation, I highly encourage you to have a look at the JavaDocs for a detailed list of classes and methods.
+
+##Dependencies
+
+Grame relies on two libraries I wrote:
+
+1. [MooCommands](https://github.com/moomoohk/MooCommands)
+2. [MooConsole](https://github.com/moomoohk/MooConsole)
+
+Unfortunately I haven't yet found a way to bundle dependencies into one JAR file so you'll have to add all three to your classpath.
+
+##Writing your game
 
 Create a new main game class. This class will contain the starting point for your code as well as some metainfo for the engine and will also register your class as a main game class.
 
