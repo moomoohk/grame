@@ -1,6 +1,6 @@
 package com.moomoohk.Grame.Basics;
 
-import com.moomoohk.Grame.Essentials.Coordinates;
+import com.moomoohk.Grame.Core.Coordinates;
 
 /**
  * Represents directions.

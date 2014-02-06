@@ -1,14 +1,14 @@
-
 package com.moomoohk.Grame.test;
 
 import java.awt.Color;
 
-import com.moomoohk.Grame.Interfaces.GrameObject;
+import com.moomoohk.Grame.Core.GrameObject;
 
 public class TestGrameObject extends GrameObject
 {
 	private static final long serialVersionUID = -480851231518169067L;
-	private int time=0;
+	private int time = 0;
+
 	public TestGrameObject(String name, int speed, Color color, boolean paused)
 	{
 		super(name, speed, color, paused);
@@ -21,7 +21,7 @@ public class TestGrameObject extends GrameObject
 	}
 
 	@Override
-	public void tick(int bID)
+	public void tick(int gID)
 	{
 		//this.color=GrameUtils.randomColor();
 		time++;
@@ -33,4 +33,3 @@ public class TestGrameObject extends GrameObject
 	{
 	}
 }
-

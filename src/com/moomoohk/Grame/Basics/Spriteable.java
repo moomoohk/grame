@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import com.moomoohk.Grame.Interfaces.GrameObject;
+import com.moomoohk.Grame.Core.GrameObject;
 
 public abstract class Spriteable extends GrameObject
 {
