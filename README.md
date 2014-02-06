@@ -50,9 +50,11 @@ The engine is split up into two parts:
 
 The two main components of the engine are the `Grid`s and the `GrameObject`s. Every instance of both of those components will automatically get a unique ID number associated with them by the `GrameManager` when they're created. The IDs are created successively. The ID successions for `Grid`s and `GrameObject`s are independent (meaning you can have a `Grid` object with ID:1 and a `GrameObject` object with ID:1).
 
-###GrameManager
+####GrameManager
 
 The `GrameManager` class contains the central engine clock as well as the `GrameObject` and `Base` list. It also keeps tracks of user input so you don't have to.
+
+`GrameObject`s and `Grid`s can be retrieved by ID from the `GrameManager`'s lists using `GrameManager.findGrameObject(int goID)` and `GrameManager.findGrid(int gID)` respectively.
 
 ###GrameObjects
 
@@ -93,12 +95,22 @@ public class Example extends GrameObject
 }
 ```
 
+Adding a `GrameObject` to a `Grid`:
+
+```java
+g.addGrameObject(new Example("example", 2, Color.blue, false, true), new Coordinates(0, 0));
+```
+
+The speed of `GrameObject`s will determine how often the `GrameManager`'s clock will call their `tick(int gID)` method (in 60/ths of a second).
+
+The `tick(int gID)` method should be used to calculate things like movement. The `gID` parameter represents one of the IDs of the `Grid`s that this `GrameObject` has been added to. If your `GrameObject` has been added to more than one `Grid`, the `GrameManager` will call the `tick(int bID)` method using all of the `Grid` IDs one by one.
+
 ###Grids
 
 Grids the map spaces of the engine. They will contain all your GrameObjects.
 
 ```java
-Grid b = new Grid(20, 20);
+Grid g = new Grid(20, 20);
 ```
 
 By default Grids start with one `GrameObjectLayer` but more can be added to create 3 dimensions:
@@ -106,6 +118,8 @@ By default Grids start with one `GrameObjectLayer` but more can be added to crea
 ```java
 g.addGrameObjectLayer(new GrameObjectLayer(20, 20));
 ```
+
+`GrameObjectLayer`s are organized in a list inside the `Grid`. Using the default `addGrameObjectLayer(GrameObjectLayer gol)` method will add the parameterized `GrameObjectLayer` to the end of the list. The overloaded `addGrameObjectLayer(GrameObjectLayer gol, int place)` lets you manually place `GrameObjectLayer`s in specific places in the list. The lowest `GrameObjectLayer` is the one at place 0 and any other ones that get added later get stacked on top of it.
 
 ###Coordinates
 
@@ -138,3 +152,40 @@ Dir right = Dir.RIGHT;
 
 These make coding AI a lot easier.
 
+##The basics
+
+Can be found in the com.moomoohk.Grame.Basics package.
+
+###MovementAI
+
+The `MovementAI` abstract class lets you create AI classes for use with `Entity`s (and other `GrameObject`s).
+
+Grame comes with five ready to use AIs (which can be found at com.moomoohk.Grame.Basics.AI):
+
+* `AStartPathfindingMovementAI` - Implementation of the A* pathfinding algorithm
+* `PlayerMovementAI` - Reads user input from the `GrameManager` and can be used to control `Entity`s using WASD or the arrow keys
+* (Debug) `PlayerSimAI` - Will pick a random direction and move in it for a random number of squares. If it hits an obstacle it will switch directions
+* `SimpleChaseAI` - "Stupid" pathfinding. Will try to move in a straight line between itself and its target. If it hits an obstacle it will attempt to "slide" along it
+* `SimpleStrollAI` - Will move in random directions. Useful for peaceful NPCs
+
+Check out the source code for `PlayerMovementAI` for a simple `MovementAI` implementation.
+
+###Entity
+
+Entities are generic `GrameObject`s which support AI and a few other useful features.
+
+Their AI system works with "stacking". You provide them with a list of `MovementAI`s (in order of preference) and every time they get ticked by the `GrameManager` they will go through the list (in the order of preference) and evaluate their `MovementAI`s using the `isValid` method. The first "valid" `MovementAI` in its list will be used to determine its next movement.
+
+These following lines of code will produce a player `Entity` an `Entity` which will stroll randomly by default but will start chasing the player once the player enters its range:
+
+```java
+Entity player = new Entity("player", 1); //name, speed
+player.addAI(new PlayerMovementAI(1)); //1 for WASD, 2 for arrow keys
+
+Entity monster = new Entity("monster", 2);
+monster.addAI(new SimpleStrollAI());
+monster.setRange(5); //Range is set to a 5 square radius
+monster.addAI(new SimpleChaseAI());
+````
+
+The `EntityGenerator` interface lets you create `Entity` generation classes. These are useful when you'd like to procedurally generate them. Grame comes with one implementation of it. The `DefaultRandomGen` will randomly generate names based on some basic language heuristics and types by picking a random spot in an array containing "human", "orc" and "elf".
