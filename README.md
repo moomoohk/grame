@@ -191,3 +191,9 @@ monster.addAI(new SimpleChaseAI());
 ````
 
 The `EntityGenerator` interface lets you create `Entity` generation classes. These are useful when you'd like to procedurally generate them. Grame comes with one implementation of it. The `DefaultRandomGen` will randomly generate names based on some basic language heuristics and types by picking a random spot in an array containing "human", "orc" and "elf".
+
+
+
+I should probably include a picture of a sheep:
+
+![alt text](http://images.fineartamerica.com/images-medium-large-5/sheep-in-summer-meadow-elena-elisseeva.jpg "Baaaah")
