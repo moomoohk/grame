@@ -95,19 +95,15 @@ public class Example extends GrameObject
 }
 ```
 
-Adding a `GrameObject` to a `Grid`:
-
-```java
-g.addGrameObject(new Example("example", 2, Color.blue, false, true), new Coordinates(0, 0));
-```
-
 The speed of `GrameObject`s will determine how often the `GrameManager`'s clock will call their `tick(int gID)` method (in 60/ths of a second).
 
 The `tick(int gID)` method should be used to calculate things like movement. The `gID` parameter represents one of the IDs of the `Grid`s that this `GrameObject` has been added to. If your `GrameObject` has been added to more than one `Grid`, the `GrameManager` will call the `tick(int bID)` method using all of the `Grid` IDs one by one.
 
+The `consume(GrameObject go)` method dictates to the `GrameObject` what to do in the event that it is collidable and it moves into a square that is occupied by a non collidable `GrameObject`. Leaving this method blank will simply overwrite the old non collidable `GrameObject` with your new collidable `GrameObject`.
+
 ###Grids
 
-Grids the map spaces of the engine. They will contain all your GrameObjects.
+Grids are the map spaces of the engine. They will contain all your GrameObjects.
 
 ```java
 Grid g = new Grid(20, 20);
@@ -120,6 +116,12 @@ g.addGrameObjectLayer(new GrameObjectLayer(20, 20));
 ```
 
 `GrameObjectLayer`s are organized in a list inside the `Grid`. Using the default `addGrameObjectLayer(GrameObjectLayer gol)` method will add the parameterized `GrameObjectLayer` to the end of the list. The overloaded `addGrameObjectLayer(GrameObjectLayer gol, int place)` lets you manually place `GrameObjectLayer`s in specific places in the list. The lowest `GrameObjectLayer` is the one at place 0 and any other ones that get added later get stacked on top of it.
+
+Adding a `GrameObject` to a `Grid`:
+
+```java
+g.addGrameObject(new Example("example", 2, Color.blue, false, true), new Coordinates(0, 0));
+```
 
 ###Coordinates
 
@@ -154,13 +156,13 @@ These make coding AI a lot easier.
 
 ##The basics
 
-Can be found in the com.moomoohk.Grame.Basics package.
+Can be found in the `com.moomoohk.Grame.Basics` package.
 
 ###MovementAI
 
 The `MovementAI` abstract class lets you create AI classes for use with `Entity`s (and other `GrameObject`s).
 
-Grame comes with five ready to use AIs (which can be found at com.moomoohk.Grame.Basics.AI):
+Grame comes with five ready to use AIs (which can be found at `com.moomoohk.Grame.Basics.AI`):
 
 * `AStartPathfindingMovementAI` - Implementation of the A* pathfinding algorithm
 * `PlayerMovementAI` - Reads user input from the `GrameManager` and can be used to control `Entity`s using WASD or the arrow keys
