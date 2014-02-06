@@ -3,11 +3,11 @@ package com.moomoohk.Grame.test;
 import java.awt.Color;
 import java.util.ArrayList;
 
-import com.moomoohk.Grame.Essentials.Coordinates;
-import com.moomoohk.Grame.Essentials.GrameManager;
-import com.moomoohk.Grame.Graphics.RenderManager;
-import com.moomoohk.Grame.Graphics.PostProcessing.Label;
-import com.moomoohk.Grame.Interfaces.GrameObject;
+import com.moomoohk.Grame.Core.Coordinates;
+import com.moomoohk.Grame.Core.GrameManager;
+import com.moomoohk.Grame.Core.GrameObject;
+import com.moomoohk.Grame.Core.Graphics.RenderManager;
+import com.moomoohk.Grame.Core.Graphics.PostProcessing.Label;
 
 public class Dialog implements Runnable
 {
@@ -37,10 +37,10 @@ public class Dialog implements Runnable
 	public void run()
 	{
 		GrameManager.pauseAllGrameObjects(true);
-		int squareWidth = RenderManager.getMainCanvas().getWidth() / GrameManager.findBase(RenderManager.getMainBase()).getColumns(), squareHeight = RenderManager.getMainCanvas().getHeight() / GrameManager.findBase(RenderManager.getMainBase()).getRows();
-		Coordinates goPos = this.go.getPos(RenderManager.getMainBase());
-		this.label.setCenterX(Math.max(50, goPos.getX() * squareWidth + squareWidth / 2));
-		this.label.setCenterY(Math.max(50, goPos.getY() * squareHeight));
+		int squareWidth = RenderManager.getMainCanvas().getWidth() / GrameManager.findGrid(RenderManager.getMainGrid()).getColumns(), squareHeight = RenderManager.getMainCanvas().getHeight() / GrameManager.findGrid(RenderManager.getMainGrid()).getRows();
+		Coordinates goPos = this.go.getPos(RenderManager.getMainGrid());
+		this.label.setCenterX(goPos.getX() * squareWidth + squareWidth / 2);
+		this.label.setCenterY(goPos.getY() * squareHeight);
 		for (String line : this.lines)
 		{
 			for (int i = 0; i <= line.length(); i++)

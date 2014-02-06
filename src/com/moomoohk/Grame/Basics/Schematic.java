@@ -2,10 +2,10 @@ package com.moomoohk.Grame.Basics;
 
 import java.awt.Color;
 
-import com.moomoohk.Grame.Essentials.Base;
-import com.moomoohk.Grame.Essentials.Coordinates;
-import com.moomoohk.Grame.Essentials.GrameUtils;
-import com.moomoohk.Grame.Essentials.GrameUtils.MessageLevel;
+import com.moomoohk.Grame.Core.Coordinates;
+import com.moomoohk.Grame.Core.GrameUtils;
+import com.moomoohk.Grame.Core.GrameUtils.MessageLevel;
+import com.moomoohk.Grame.Core.Grid;
 
 /**
  * This class is a collection of {@link Wall}s which is arranged in a certain pattern.
@@ -46,201 +46,201 @@ public class Schematic
 				this.map[i][j] = null;
 		switch (this.type)
 		{
-		case 0:
-			def(2, 0);
-			def(2, 1);
-			def(1, 2);
-			def(2, 2);
-			def(3, 2);
-			def(2, 3);
-			def(2, 4);
-			break;
-		case 1:
-			def(0, 2);
-			def(1, 2);
-			def(2, 1);
-			def(2, 2);
-			def(2, 3);
-			def(3, 2);
-			def(4, 2);
-			break;
-		case 2:
-			def(0, 0);
-			def(1, 0);
-			def(2, 0);
-			def(0, 1);
-			def(0, 2);
-			break;
-		case 3:
-			def(0, 0);
-			def(0, 1);
-			def(0, 2);
-			def(0, 3);
-			def(1, 0);
-			def(2, 0);
-			def(3, 0);
-			break;
-		case 4:
-			def(0, 0);
-			def(1, 0);
-			def(2, 0);
-			def(4, 0);
-			def(0, 2);
-			def(2, 2);
-			def(3, 2);
-			def(4, 2);
-			def(0, 4);
-			def(1, 4);
-			def(2, 4);
-			def(4, 4);
-			break;
-		case 5:
-			def(0, 0);
-			def(0, 1);
-			def(0, 2);
-			def(0, 4);
-			def(2, 0);
-			def(2, 2);
-			def(2, 3);
-			def(2, 4);
-			def(4, 0);
-			def(4, 1);
-			def(4, 2);
-			def(4, 4);
-			break;
-		case 6:
-			def(0, 0);
-			def(1, 0);
-			def(2, 0);
-			def(3, 0);
-			def(4, 0);
-			def(2, 1);
-			def(2, 2);
-			def(2, 3);
-			def(0, 4);
-			def(1, 4);
-			def(2, 4);
-			def(3, 4);
-			def(4, 4);
-			break;
-		case 7:
-			def(0, 0);
-			def(0, 1);
-			def(0, 2);
-			def(0, 3);
-			def(0, 4);
-			def(1, 2);
-			def(2, 2);
-			def(3, 2);
-			def(4, 0);
-			def(4, 1);
-			def(4, 2);
-			def(4, 3);
-			def(4, 4);
-			break;
-		case 8:
-			def(0, 0);
-			def(1, 0);
-			def(3, 0);
-			def(4, 0);
-			def(1, 1);
-			def(2, 1);
-			def(3, 1);
-			def(1, 3);
-			def(2, 3);
-			def(3, 3);
-			def(0, 4);
-			def(1, 4);
-			def(3, 4);
-			def(4, 4);
-			break;
-		case 9:
-			def(0, 0);
-			def(0, 1);
-			def(0, 3);
-			def(0, 4);
-			def(1, 1);
-			def(1, 2);
-			def(1, 3);
-			def(3, 1);
-			def(3, 2);
-			def(3, 3);
-			def(4, 0);
-			def(4, 1);
-			def(4, 3);
-			def(4, 4);
-			break;
-		case 10:
-			def(1, 0);
-			def(4, 0);
-			def(0, 1);
-			def(1, 1);
-			def(3, 1);
-			def(1, 3);
-			def(3, 3);
-			def(4, 3);
-			def(0, 4);
-			def(3, 4);
-			break;
-		case 11:
-			def(0, 0);
-			def(3, 0);
-			def(1, 1);
-			def(3, 1);
-			def(4, 1);
-			def(0, 3);
-			def(1, 3);
-			def(3, 3);
-			def(1, 4);
-			def(4, 4);
-			break;
-		case 12:
-			def(0, 0);
-			def(1, 0);
-			def(3, 0);
-			def(4, 0);
-			def(0, 1);
-			def(4, 1);
-			def(2, 2);
-			def(0, 3);
-			def(4, 3);
-			def(0, 4);
-			def(1, 4);
-			def(3, 4);
-			def(4, 4);
-			break;
-		case 13:
-			def(0, 0);
-			def(1, 0);
-			trig(2, 0);
-			def(3, 0);
-			def(4, 0);
-			def(0, 1);
-			def(4, 1);
-			trig(0, 2);
-			def(0, 3);
-			def(4, 3);
-			def(0, 4);
-			def(1, 4);
-			trig(2, 4);
-			def(3, 4);
-			def(4, 4);
-			trig(4, 2);
-			break;
-		case 14:
-			def(1, 1);
-			def(2, 1);
-			def(3, 1);
-			def(1, 2);
-			def(3, 2);
-			def(1, 3);
-			def(2, 3);
-			def(3, 3);
-			break;
-		case 15:
-			for (int i = 0; i < this.map.length; i++)
-				for (int j = 0; j < this.map.length; j++)
-					def(i, j);
+			case 0:
+				def(2, 0);
+				def(2, 1);
+				def(1, 2);
+				def(2, 2);
+				def(3, 2);
+				def(2, 3);
+				def(2, 4);
+				break;
+			case 1:
+				def(0, 2);
+				def(1, 2);
+				def(2, 1);
+				def(2, 2);
+				def(2, 3);
+				def(3, 2);
+				def(4, 2);
+				break;
+			case 2:
+				def(0, 0);
+				def(1, 0);
+				def(2, 0);
+				def(0, 1);
+				def(0, 2);
+				break;
+			case 3:
+				def(0, 0);
+				def(0, 1);
+				def(0, 2);
+				def(0, 3);
+				def(1, 0);
+				def(2, 0);
+				def(3, 0);
+				break;
+			case 4:
+				def(0, 0);
+				def(1, 0);
+				def(2, 0);
+				def(4, 0);
+				def(0, 2);
+				def(2, 2);
+				def(3, 2);
+				def(4, 2);
+				def(0, 4);
+				def(1, 4);
+				def(2, 4);
+				def(4, 4);
+				break;
+			case 5:
+				def(0, 0);
+				def(0, 1);
+				def(0, 2);
+				def(0, 4);
+				def(2, 0);
+				def(2, 2);
+				def(2, 3);
+				def(2, 4);
+				def(4, 0);
+				def(4, 1);
+				def(4, 2);
+				def(4, 4);
+				break;
+			case 6:
+				def(0, 0);
+				def(1, 0);
+				def(2, 0);
+				def(3, 0);
+				def(4, 0);
+				def(2, 1);
+				def(2, 2);
+				def(2, 3);
+				def(0, 4);
+				def(1, 4);
+				def(2, 4);
+				def(3, 4);
+				def(4, 4);
+				break;
+			case 7:
+				def(0, 0);
+				def(0, 1);
+				def(0, 2);
+				def(0, 3);
+				def(0, 4);
+				def(1, 2);
+				def(2, 2);
+				def(3, 2);
+				def(4, 0);
+				def(4, 1);
+				def(4, 2);
+				def(4, 3);
+				def(4, 4);
+				break;
+			case 8:
+				def(0, 0);
+				def(1, 0);
+				def(3, 0);
+				def(4, 0);
+				def(1, 1);
+				def(2, 1);
+				def(3, 1);
+				def(1, 3);
+				def(2, 3);
+				def(3, 3);
+				def(0, 4);
+				def(1, 4);
+				def(3, 4);
+				def(4, 4);
+				break;
+			case 9:
+				def(0, 0);
+				def(0, 1);
+				def(0, 3);
+				def(0, 4);
+				def(1, 1);
+				def(1, 2);
+				def(1, 3);
+				def(3, 1);
+				def(3, 2);
+				def(3, 3);
+				def(4, 0);
+				def(4, 1);
+				def(4, 3);
+				def(4, 4);
+				break;
+			case 10:
+				def(1, 0);
+				def(4, 0);
+				def(0, 1);
+				def(1, 1);
+				def(3, 1);
+				def(1, 3);
+				def(3, 3);
+				def(4, 3);
+				def(0, 4);
+				def(3, 4);
+				break;
+			case 11:
+				def(0, 0);
+				def(3, 0);
+				def(1, 1);
+				def(3, 1);
+				def(4, 1);
+				def(0, 3);
+				def(1, 3);
+				def(3, 3);
+				def(1, 4);
+				def(4, 4);
+				break;
+			case 12:
+				def(0, 0);
+				def(1, 0);
+				def(3, 0);
+				def(4, 0);
+				def(0, 1);
+				def(4, 1);
+				def(2, 2);
+				def(0, 3);
+				def(4, 3);
+				def(0, 4);
+				def(1, 4);
+				def(3, 4);
+				def(4, 4);
+				break;
+			case 13:
+				def(0, 0);
+				def(1, 0);
+				trig(2, 0);
+				def(3, 0);
+				def(4, 0);
+				def(0, 1);
+				def(4, 1);
+				trig(0, 2);
+				def(0, 3);
+				def(4, 3);
+				def(0, 4);
+				def(1, 4);
+				trig(2, 4);
+				def(3, 4);
+				def(4, 4);
+				trig(4, 2);
+				break;
+			case 14:
+				def(1, 1);
+				def(2, 1);
+				def(3, 1);
+				def(1, 2);
+				def(3, 2);
+				def(1, 3);
+				def(2, 3);
+				def(3, 3);
+				break;
+			case 15:
+				for (int i = 0; i < this.map.length; i++)
+					for (int j = 0; j < this.map.length; j++)
+						def(i, j);
 		}
 	}
 
@@ -286,13 +286,13 @@ public class Schematic
 	}
 
 	/**
-	 * Shows this Schematic in a {@link Base}.
+	 * Shows this Schematic in a {@link Grid}.
 	 * <p>
 	 * For debug purposes.
 	 */
 	public void show()
 	{
-		Base b = new Base(5, 5, "Schematic " + type);
+		Grid b = new Grid(5, 5, "Schematic " + type);
 		for (int i = 0; i < 5; i++)
 			for (int j = 0; j < 5; j++)
 				b.setFloorColor(new Coordinates(j, i), this.map[i][j]);
@@ -396,14 +396,14 @@ public class Schematic
 	}
 
 	/**
-	 * Loads the Schematic into a given {@link Base} at given {@link Coordinates}.
+	 * Loads the Schematic into a given {@link Grid} at given {@link Coordinates}.
 	 * 
-	 * @param b
-	 *            {@link Base} in which to load this Schematic.
+	 * @param g
+	 *            {@link Grid} in which to load this Schematic.
 	 * @param loc
 	 *            {@link Coordinates} at which to load this Schematic.
 	 */
-	public void load(Base b, Coordinates loc)
+	public void load(Grid g, Coordinates loc)
 	{
 		int sx = 0;
 		int sy = 0;
@@ -415,8 +415,8 @@ public class Schematic
 			for (int j = loc.getX(); j < loc.getX() + this.width; j++)
 			{
 				mapx = j;
-				if (this.map[sy][sx] != null && b.isInBase(new Coordinates(mapx, mapy)) && !b.isOccupied(new Coordinates(mapx, mapy)))
-					b.addGrameObject(new Wall(getColor(new Coordinates(sx, sy))), new Coordinates(mapx, mapy));
+				if (this.map[sy][sx] != null && g.isInGrid(new Coordinates(mapx, mapy)) && !g.isOccupied(new Coordinates(mapx, mapy)))
+					g.addGrameObject(new Wall(getColor(new Coordinates(sx, sy))), new Coordinates(mapx, mapy));
 				sx++;
 			}
 			sx = 0;

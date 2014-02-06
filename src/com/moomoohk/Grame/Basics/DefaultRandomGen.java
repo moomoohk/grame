@@ -1,7 +1,5 @@
 package com.moomoohk.Grame.Basics;
 
-import com.moomoohk.Grame.Interfaces.EntityGenerator;
-
 /**
  * This generator will generate a random name and type.
  * 
@@ -32,10 +30,8 @@ public class DefaultRandomGen implements EntityGenerator
 			if (i == 0)
 				random = random.toUpperCase();
 		}
-		String[] suffixes =
-		{ "tron", "man", "nar", "ram", "berg", "san" };
-		char[] vowels =
-		{ 'a', 'e', 'i', 'o', 'u' };
+		String[] suffixes = { "tron", "man", "nar", "ram", "berg", "san" };
+		char[] vowels = { 'a', 'e', 'i', 'o', 'u' };
 		boolean lastVowel = false;
 		for (int i = 0; i < vowels.length; i++)
 			if (random.charAt(random.length() - 1) == vowels[i])
@@ -53,8 +49,7 @@ public class DefaultRandomGen implements EntityGenerator
 
 	public String typeGen()
 	{
-		String[] types =
-		{ "elf", "orc", "human" };
+		String[] types = { "elf", "orc", "human" };
 		return types[(int) (Math.random() * 3)];
 	}
 

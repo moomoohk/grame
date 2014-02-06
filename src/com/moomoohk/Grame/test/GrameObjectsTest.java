@@ -3,12 +3,12 @@ package com.moomoohk.Grame.test;
 import java.awt.Color;
 
 import com.moomoohk.Grame.Basics.Entity;
-import com.moomoohk.Grame.Essentials.Base;
-import com.moomoohk.Grame.Essentials.Coordinates;
-import com.moomoohk.Grame.Essentials.GrameManager;
-import com.moomoohk.Grame.Graphics.PlainGridRender;
-import com.moomoohk.Grame.Graphics.RenderManager;
-import com.moomoohk.Grame.Interfaces.MainGrameClass;
+import com.moomoohk.Grame.Core.Grid;
+import com.moomoohk.Grame.Core.Coordinates;
+import com.moomoohk.Grame.Core.GrameManager;
+import com.moomoohk.Grame.Core.MainGrameClass;
+import com.moomoohk.Grame.Core.Graphics.CleanGridRender;
+import com.moomoohk.Grame.Core.Graphics.RenderManager;
 
 public class GrameObjectsTest implements MainGrameClass
 {
@@ -24,13 +24,13 @@ public class GrameObjectsTest implements MainGrameClass
 	@Override
 	public void newGame()
 	{
-		Base b = new Base(20, 20);
+		Grid g = new Grid(20, 20);
 		Entity ent = new Entity();
-		b.addGrameObject(ent, new Coordinates(10, 10));
-		b.setWraparound(true);
-		ent.makePlayer(1, true, b.ID);
+		g.addGrameObject(ent, new Coordinates(10, 10));
+		g.setWraparound(true);
+		ent.makePlayer(1, true, g.ID);
 		ent.setSpeed(1);
-		RenderManager.render(b.ID, new PlainGridRender());
+		RenderManager.render(g.ID, new CleanGridRender());
 		RenderManager.setVisible(true);
 	}
 

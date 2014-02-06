@@ -2,7 +2,7 @@ package com.moomoohk.Grame.Basics;
 
 import java.awt.Color;
 
-import com.moomoohk.Grame.Interfaces.GrameObject;
+import com.moomoohk.Grame.Core.GrameObject;
 
 /**
  * Walls are ready to use {@link GrameObject}s which are supposed to represent ordinary walls.
@@ -37,7 +37,7 @@ public class Wall extends GrameObject
 	}
 
 	@Override
-	public void tick(int bID)
+	public void tick(int gID)
 	{
 	}
 

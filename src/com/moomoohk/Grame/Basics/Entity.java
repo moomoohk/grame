@@ -4,15 +4,13 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.moomoohk.Grame.AI.PlayerMovementAI;
-import com.moomoohk.Grame.Essentials.Coordinates;
-import com.moomoohk.Grame.Essentials.GrameManager;
-import com.moomoohk.Grame.Essentials.GrameUtils;
-import com.moomoohk.Grame.Essentials.GrameUtils.MessageLevel;
+import com.moomoohk.Grame.Basics.AI.PlayerMovementAI;
+import com.moomoohk.Grame.Core.Coordinates;
+import com.moomoohk.Grame.Core.GrameManager;
+import com.moomoohk.Grame.Core.GrameObject;
+import com.moomoohk.Grame.Core.GrameUtils;
+import com.moomoohk.Grame.Core.GrameUtils.MessageLevel;
 import com.moomoohk.Grame.GrassMuncher.Coin;
-import com.moomoohk.Grame.Interfaces.EntityGenerator;
-import com.moomoohk.Grame.Interfaces.GrameObject;
-import com.moomoohk.Grame.Interfaces.MovementAI;
 
 public class Entity extends GrameObject
 {
@@ -85,75 +83,75 @@ public class Entity extends GrameObject
 	}
 
 	@Override
-	public void tick(int bID)
+	public void tick(int gID)
 	{
-		determineAI(bID);
-		Coordinates c = getPos(bID);
+		determineAI(gID);
+		Coordinates c = getPos(gID);
 		Coordinates target = null;
 		if (this.targetID != -1)
-			target = GrameManager.findGrameObject(this.targetID).getPos(bID);
-		if (this.activeAI.size() != 0 && this.activeAI.get(bID) != null)
-			c = this.activeAI.get(bID).getNext(getPos(bID), target, GrameManager.findBase(bID), this, (Entity) GrameManager.findGrameObject(targetID));
-		setPos(bID, c);
+			target = GrameManager.findGrameObject(this.targetID).getPos(gID);
+		if (this.activeAI.size() != 0 && this.activeAI.get(gID) != null)
+			c = this.activeAI.get(gID).getNext(getPos(gID), target, GrameManager.findGrid(gID), this, (Entity) GrameManager.findGrameObject(targetID));
+		setPos(gID, c);
 	}
 
-	private void determineAI(int bID)
+	private void determineAI(int gID)
 	{
-		if (!GrameManager.findBase(bID).containsGrameObject(ID) || (this.AI.get(bID) == null && this.overrideAI.get(bID) == null) || (this.AI.get(bID) != null && this.AI.get(bID).size() == 0 && this.overrideAI.get(bID) == null))
+		if (!GrameManager.findGrid(gID).containsGrameObject(ID) || (this.AI.get(gID) == null && this.overrideAI.get(gID) == null) || (this.AI.get(gID) != null && this.AI.get(gID).size() == 0 && this.overrideAI.get(gID) == null))
 		{
-			this.activeAI.remove(bID);
+			this.activeAI.remove(gID);
 			return;
 		}
-		if (this.overrideAI.size() == 0 || this.overrideAI.get(bID) == null)
+		if (this.overrideAI.size() == 0 || this.overrideAI.get(gID) == null)
 		{
 			MovementAI temp = null;
-			for (int i = 0; i < this.AI.get(bID).size(); i++)
+			for (int i = 0; i < this.AI.get(gID).size(); i++)
 			{
 				Coordinates target = null;
 				if (targetID != -1)
-					target = GrameManager.findGrameObject(targetID).getPos(bID);
-				if (!this.AI.get(bID).get(i).isValid(getPos(bID), target, GrameManager.findBase(bID), this, (Entity) GrameManager.findGrameObject(targetID)))
+					target = GrameManager.findGrameObject(targetID).getPos(gID);
+				if (!this.AI.get(gID).get(i).isValid(getPos(gID), target, GrameManager.findGrid(gID), this, (Entity) GrameManager.findGrameObject(targetID)))
 					continue;
-				temp = (MovementAI) this.AI.get(bID).get(i);
+				temp = (MovementAI) this.AI.get(gID).get(i);
 				break;
 			}
-			this.activeAI.put(bID, temp);
+			this.activeAI.put(gID, temp);
 		}
 		else
 		{
-			this.activeAI.put(bID, this.overrideAI.get(bID));
+			this.activeAI.put(gID, this.overrideAI.get(gID));
 		}
 	}
 
-	public void addAI(MovementAI AI, int bID)
+	public void addAI(MovementAI AI, int gID)
 	{
 		if (!AI.isOverride())
 		{
-			if (this.AI.get(bID) == null)
-				this.AI.put(bID, new ArrayList<MovementAI>());
-			this.AI.get(bID).add(AI);
+			if (this.AI.get(gID) == null)
+				this.AI.put(gID, new ArrayList<MovementAI>());
+			this.AI.get(gID).add(AI);
 		}
 		else
 			GrameUtils.print(AI + " is an override AI, it doens't belong in my AI list!", MessageLevel.ERROR);
 	}
-	
+
 	public void printAI()
 	{
 		GrameUtils.print("Override AIs:", MessageLevel.NORMAL);
 		if (overrideAI.size() != 0)
-			for (int bID : overrideAI.keySet())
-				GrameUtils.print(bID + ": " + overrideAI.get(bID) + " (" + overrideAI.get(bID).author() + ")", MessageLevel.NORMAL);
+			for (int gID : overrideAI.keySet())
+				GrameUtils.print(gID + ": " + overrideAI.get(gID) + " (" + overrideAI.get(gID).author() + ")", MessageLevel.NORMAL);
 		else
 			GrameUtils.print("[Empty]", MessageLevel.NORMAL);
 		GrameUtils.print("Active AIs:", MessageLevel.NORMAL);
 		if (activeAI.size() != 0)
-			for (int bID : activeAI.keySet())
-				GrameUtils.print(bID + ": " + activeAI.get(bID) + " (" + activeAI.get(bID).author() + ")", MessageLevel.NORMAL);
+			for (int gID : activeAI.keySet())
+				GrameUtils.print(gID + ": " + activeAI.get(gID) + " (" + activeAI.get(gID).author() + ")", MessageLevel.NORMAL);
 		else
 			GrameUtils.print("[Empty]", MessageLevel.NORMAL);
-		for (int bID : AI.keySet())
+		for (int gID : AI.keySet())
 		{
-			GrameUtils.print("For base ID:" + bID, MessageLevel.NORMAL);
+			GrameUtils.print("For grid ID:" + gID, MessageLevel.NORMAL);
 			String st = "null";
 			if (this.AI.size() == 0)
 				GrameUtils.print("My AI list is empty!", MessageLevel.ERROR);
@@ -162,12 +160,11 @@ public class Entity extends GrameObject
 				{
 					st = "null";
 					if (this.AI.get(i) != null)
-						st = this.AI.get(i) + " (" + ((MovementAI) this.AI.get(bID).get(i)).author() + ")";
+						st = this.AI.get(i) + " (" + ((MovementAI) this.AI.get(gID).get(i)).author() + ")";
 					GrameUtils.print(i + 1 + ") " + st, MessageLevel.NORMAL);
 				}
 		}
-		}
-
+	}
 
 	public void clearAI()
 	{
@@ -176,10 +173,10 @@ public class Entity extends GrameObject
 		this.overrideAI = null;
 	}
 
-	public void setOverrideAI(MovementAI mai, int bID)
+	public void setOverrideAI(MovementAI mai, int gID)
 	{
 		if (mai.isOverride())
-			this.overrideAI.put(bID, mai);
+			this.overrideAI.put(gID, mai);
 		else
 			GrameUtils.print(mai + " is not an override AI!", MessageLevel.ERROR);
 	}
@@ -191,25 +188,25 @@ public class Entity extends GrameObject
 			this.points += ((Coin) go).getWorth();
 	}
 
-	public boolean isPlayer(int bID)
+	public boolean isPlayer(int gID)
 	{
-		if (this.player.get(bID) == null)
+		if (this.player.get(gID) == null)
 			return false;
-		return this.player.get(bID);
+		return this.player.get(gID);
 	}
 
-	public void makePlayer(int player, boolean f, int bID)
+	public void makePlayer(int player, boolean f, int gID)
 	{
 		if (f)
 		{
-			this.player.put(bID, true);
-			this.overrideAI.put(bID, new PlayerMovementAI(player));
+			this.player.put(gID, true);
+			this.overrideAI.put(gID, new PlayerMovementAI(player));
 		}
 		else
-			if (this.player.get(bID))
+			if (this.player.get(gID))
 			{
-				this.player.put(bID, false);
-				this.overrideAI.remove(bID);
+				this.player.put(gID, false);
+				this.overrideAI.remove(gID);
 			}
 			else
 				GrameUtils.print("Not a player!", MessageLevel.ERROR);
