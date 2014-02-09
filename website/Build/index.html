@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  
+        <!-- Hammer reload -->
+          <script>
+            setInterval(function(){
+              try {
+                if(typeof ws != 'undefined' && ws.readyState == 1){return true;}
+                ws = new WebSocket('ws://'+(location.host || 'localhost').split(':')[0]+':35353')
+                ws.onopen = function(){ws.onclose = function(){document.location.reload()}}
+                ws.onmessage = function(){
+                  var links = document.getElementsByTagName('link'); 
+                    for (var i = 0; i < links.length;i++) { 
+                    var link = links[i]; 
+                    if (link.rel === 'stylesheet' && !link.href.match(/typekit/)) { 
+                      href = link.href.replace(/((&|\?)hammer=)[^&]+/,''); 
+                      link.href = href + (href.indexOf('?')>=0?'&':'?') + 'hammer='+(new Date().valueOf());
+                    }
+                  }
+                }
+              }catch(e){}
+            }, 1000)
+          </script>
+        <!-- /Hammer reload -->
+      
+  
+  <link rel='stylesheet' href='assets/css/normalize.css'>
+<link rel='stylesheet' href='assets/css/fonts.css'>
+<link rel='stylesheet' href='assets/css/style.css'>
+  <script src='assets/js/jquery-1.8.3.min.js'></script>
+<script src='assets/js/app.js'></script>
+  
+  <link href="assets/favicon.ico" rel="shortcut icon">
+  <link href="" rel="apple-touch-icon">
+  
+  <title>moomoohk</title>
+  
+</head>
+
+<body>
+
+  <header>
+    <!-- @todo Do mobile styling -->
+
+<nav id="main">
+	<ul>
+		<li><p unselectable="on"> moomoohk</p></li>
+		<li><div class="headerDivider"></div></li>
+		<li class='current'><a class='current' href="index.html">Home</a></li>
+		<li><div class="headerDivider"></div></li>
+		<li><a href="#">Projects</a>
+			<ul>
+				<li class="subitem"><a href="#">Grame</a>
+					<ul>
+						<li><a href="#">JavaDocs</a></li>
+						<li><a href="#">Download</a></li>
+					</ul>
+				</li>
+				<li class="subitem"><a href="#">Reaction Keeper</a>
+					<ul>
+						<li><a href="#">Download</a></li>
+					</ul>
+				</li>
+				<li class="subitem"><a href="#">Tracking Manager</a>
+					<ul>
+						<li><a href="#">Download</a></li>
+					</ul>
+				</li>
+				<li class="subitem"><a href="#">MooCommands</a>
+					<ul>
+						<li><a href="#">JavaDocs</a></li>
+						<li><a href="#">Download</a></li>
+					</ul>
+				</li>
+				<li class="subitem"><a href="#">MooConsole</a>
+					<ul>
+						<li><a href="#">JavaDocs</a></li>
+						<li><a href="#">Download</a></li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+		<li><div class="headerDivider"></div></li>
+		<li><a href="#">Portfolio</a></li>
+		<li><div class="headerDivider"></div></li>
+		<li><a href="#">Contact</a></li>
+	</ul>
+</nav>
+  </header>
+  
+
+  <section>
+  	<p>Hi! Welcome to my site!</p>
+  	<br>
+  	<p>There isn't much to see at the moment (and nothing really works yet) but I'm working on it! Check back for updates.</p>
+  </section>
+  
+
+</body>
+	<footer>
+		© moomoohk 2014
+	</footer>
+</html>
