@@ -1,0 +1,160 @@
+$active: #47515A;
+
+html {
+  height: 100%;
+}
+
+body {
+  //background: url(apple-touch-icon.png) no-repeat center center;
+  background: #909eab;
+  font-family: Conv_PT Sans;
+}
+
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+  
+	/* Styles for mobile */
+}
+
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) {
+
+	/* Styles for tablet */
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5) {
+
+  /* Don't forget your Retina CSS! */
+  
+  body {
+    background-size: 72px 72px;
+  }
+}
+
+body, div, h1, h2, h3, h4, h5, h6, p, ul, ol, li, dl, dt, dd, img, form, fieldset, input, textarea, blockquote {
+	-webkit-font-smoothing: antialiased;
+	margin: 0; 
+	padding: 0; 
+	border: 0;
+}
+
+section {
+	color: #272727;
+	background: #66839f;
+	margin-top: 100px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	box-shadow:  0px 0px 10px #494f69;
+	
+	p {
+	margin-left: 20px;
+	margin-right: 20px;	
+	}
+}
+
+#main {
+	margin-top: 20px;
+	margin-bottom: 40px;
+	text-align: center;
+	
+	ul {
+		background: #efefef; 
+		background: linear-gradient(top, #efefef 0%, #bbbbbb 100%);  
+		background: -moz-linear-gradient(top, #efefef 0%, #bbbbbb 100%); 
+		background: -webkit-linear-gradient(top, #efefef 0%,#bbbbbb 100%);
+		box-shadow: 0px 0px 9px rgba(0,0,0,0.15);
+		padding: 0 20px;
+		border-radius: 10px;  
+		list-style: none;
+		position: relative;
+		display: inline-table;
+		
+		&:after {
+			content: ""; 
+			clear: both; 
+			display: block;
+		}
+	
+		li {
+			float: left;
+		
+			&:hover a {
+				color: #fff;
+				background: #4b545f;
+			}
+			
+			&:active > ul {
+				background: $active;
+			}
+		
+			&:hover > ul {
+				display: block;
+			}
+			
+			p {
+				-webkit-user-select: none;        
+				-moz-user-select: none;
+				-ms-user-select: none;
+				-o-user-select: none;
+				user-select: none;
+				cursor: default;
+			}
+			
+			a, p {
+				display: block; 
+				padding: 25px 40px;
+				color: #484848; 
+				text-decoration: none;
+			}
+		}
+		
+		ul {
+			display: none;
+			background: #5f6975; border-radius: 0px; padding: 0;
+			position: absolute; top: 100%;
+			
+			li {
+				float: none; 
+				border-top: 1px solid #6b727c;
+				border-bottom: 1px solid #575f6a; position: relative;
+				
+				a {
+					padding: 15px 40px;
+					color: #fff;
+					
+					&:hover {
+						background: #4b545f;
+					}
+					
+					&:active {
+						background: $active;
+					}
+				}	
+			}
+			
+			ul {
+				position: absolute; left: 100%; top:0;
+			}
+		}
+	}
+}
+
+.headerDivider {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding-top: 10px;
+	padding-bottom: 40px;
+	border-right: 2px solid #B8B8B8;
+	border-radius: 20px;
+}
+
+footer
+{
+    clear: both;
+    padding: 0;
+    text-align: center;
+    vertical-align: middle;
+    line-height: normal;
+    margin: 0;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+}
