@@ -21,17 +21,27 @@ body, div, h1, h2, h3, h4, h5, h6, p, ul, ol, li, dl, dt, dd, img, form, fieldse
 
 body {
   padding-left: 5%;
-  padding-right: 5%; }
+  padding-right: 5%;
+  height: 100%; }
 
 section {
   color: #272727;
   background: #66839f;
   margin-top: 10px;
-  padding-top: 100px;
-  padding-bottom: 100px;
-  box-shadow: 0px 0px 10px #494f69;
-  margin-left: 20px;
-  margin-right: 20px; }
+  padding: 20px;
+  box-shadow: 0px 0px 10px #494f69; }
+  section p {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-left: 10px; }
+  section ul {
+    padding-left: 30px; }
+  section a {
+    color: #303087;
+    text-decoration: none; }
+  section h2 {
+    margin-top: 10px;
+    padding-left: 10px; }
 
 #main {
   margin-top: 20px;
@@ -70,7 +80,7 @@ section {
         cursor: default; }
       #main ul#topList li a, #main ul#topList li p {
         display: block;
-        padding: 25px 40px;
+        padding: 15px 40px;
         color: #484848;
         text-decoration: none; }
     #main ul#topList ul {
@@ -98,20 +108,29 @@ section {
         top: 0; }
 
 .headerDivider {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   padding-top: 10px;
-  padding-bottom: 40px;
+  padding-bottom: 30px;
   border-right: 2px solid #B8B8B8;
   border-radius: 20px; }
 
-footer {
-  clear: both;
-  padding: 0;
-  text-align: center;
-  vertical-align: middle;
-  line-height: normal;
-  margin: 0;
-  position: fixed;
-  bottom: 0px;
-  width: 100%; }
+#footer {
+  color: #565656;
+  background-color: #7a8996;
+  margin-top: 20px;
+  padding: 5px;
+  box-shadow: 0px 0px 10px #494f69;
+  text-align: center; }
+  #footer p {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-left: 10px; }
+  #footer ul {
+    padding-left: 30px; }
+  #footer a {
+    color: #303087;
+    text-decoration: none; }
+  #footer h2 {
+    margin-top: 10px;
+    padding-left: 10px; }
