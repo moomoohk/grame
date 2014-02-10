@@ -68,6 +68,14 @@ section {
 		margin-top: 10px;
 		padding-left: 10px;
 	}
+	
+	&.announcement {
+		background: #84659e;
+		color: #382c57;
+		padding: 10px;
+		margin-bottom: 25px;
+		text-align: center;
+	}
 }
 
 #main {
@@ -127,6 +135,7 @@ section {
 		}
 		
 		ul {
+			z-index: 10;
 			display: none;
 			background: #5f6975; 
 			border-radius: 0px; 
@@ -154,6 +163,7 @@ section {
 			}
 			
 			ul {
+				z-index: 10;
 				position: absolute; left: 100%; top:0;
 			}
 		}
@@ -199,4 +209,39 @@ section {
 	
 	
     text-align: center;
+}
+
+#widgets {
+	position: relative;
+	z-index: 1;
+	height: 625px;
+		
+	#irc #ircFr {
+		height: 495px;
+		width: 60%;
+		border-radius: 5px;
+		position: absolute;
+		top: 20px;
+		left: 20px;
+		right: 200px;
+	}
+	
+	#twitter .twitter-timeline {
+		height: 500px;
+		width: 35%;
+		position: absolute;
+		right: 20px;
+		top: 20px;
+	}
+	
+	#youtube #youtubeFr {
+		position: absolute;
+		border-radius: 5px;
+		top: 540px;
+		width: 95%;
+		overflow: hidden;
+		height: 105px;
+		border: 0;
+		background-color: #7d93f3;
+	}
 }
