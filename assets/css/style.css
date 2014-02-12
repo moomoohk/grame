@@ -29,12 +29,15 @@ section {
   background: #66839f;
   margin-top: 10px;
   padding: 20px;
-  box-shadow: 0px 0px 10px #494f69; }
+  box-shadow: 0px 0px 10px #494f69;
+  /* THANK YOU http://perishablepress.com/perfect-pre-tags/ */
+  /* no vertical scrollbars for IE 7 */
+  /* no vertical scrollbars for IE 6 */ }
   section p {
     margin-top: 5px;
     margin-bottom: 5px;
     padding-left: 10px; }
-  section ul {
+  section ul, section ol {
     padding-left: 30px; }
   section a {
     color: #303087;
@@ -42,6 +45,39 @@ section {
   section h2 {
     margin-top: 10px;
     padding-left: 10px; }
+  section pre {
+    border-radius: 5px;
+    height: 300px;
+    overflow-x: auto;
+    overflow-y: auto;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-left: 20px;
+    box-shadow: 0px 0px 10px #494f69;
+    background: #44739e;
+    font-family: monospace;
+    font-size: smaller;
+    padding-bottom: expression(this.scrollWidth > this.offsetWidth ? 20 : 0); }
+  section pre code[filename]:before {
+    content: attr(filename);
+    box-shadow: 0px 0px 10px #494f69;
+    display: block;
+    padding: 5px;
+    padding-left: 10px;
+    margin-left: -20px;
+    margin-bottom: 5px;
+    font-family: Conv_PT Sans;
+    font-size: medium;
+    background: #405097; }
+  section *:first-child + html pre {
+    padding-bottom: 20px;
+    overflow-y: hidden;
+    overflow: visible;
+    overflow-x: auto; }
+  section * html pre {
+    padding-bottom: 20px;
+    overflow: visible;
+    overflow-x: auto; }
   section.announcement {
     background: #84659e;
     color: #382c57;
@@ -83,7 +119,8 @@ section {
         -ms-user-select: none;
         -o-user-select: none;
         user-select: none;
-        cursor: default; }
+        cursor: default;
+        font-weight: bold; }
       #main ul#topList li a, #main ul#topList li p {
         display: block;
         padding: 15px 40px;
@@ -124,9 +161,16 @@ section {
   border-radius: 20px; }
 
 #footer {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  cursor: default;
   color: #565656;
   background-color: #7a8996;
   margin-top: 20px;
+  margin-bottom: 20px;
   padding: 5px;
   box-shadow: 0px 0px 10px #494f69;
   text-align: center; }
