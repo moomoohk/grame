@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<!-- @reload -->
+
+		<link href="//fonts.googleapis.com/css?family=PT+Sans:400italic,400,700italic,700" rel="stylesheet" type="text/css">
+
+		<!-- @stylesheet normalize fonts style prettify -->
+		<!-- @javascript jquery-1.8.3.min app prettify -->
+
+		<link href="<!-- @path favicon.ico -->" rel="shortcut icon">
+		<link href="" rel="apple-touch-icon">
+		<title><!-- $title | moomoohk --></title>
+		<script type="application/javascript">
+			function onLoad() {
+				prettyPrint();
+				$("ol.linenums").each(function(index) {
+					if ($(this).children().length == 1)
+						$(this).remove();
+				});
+				var footerBgColor = $("#footer").css("background-color");
+				var textContents = $("#footer").text().trim();
+				$("#footer").on("mouseenter", function() {
+					$(this).text("Return to top");
+					$(this).css("background-color", "#8999A7");
+				}).on("mouseleave", function() {
+					$(this).text(textContents);
+					$(this).css("background-color", footerBgColor);
+				}).mousedown(function(event) {
+					if (event.which == 1)
+						$("html, body").animate({
+							scrollTop : 0
+						}, 400);
+				});
+			}
+		</script>
+		<script type="application/javascript">
+			var selectedIndex = 0;
+			var speed = 5000;
+			var timer;
+
+			$(document).ready(function() {
+				timer = setInterval(function() {
+					changeImage(++selectedIndex);
+				}, speed);
+
+				$("#screenies").after("<p id=\"thumbs\"></p>");
+				$("#screenies img").each(function() {
+					$("#thumbs").append("<img src=\"" + $(this).attr("src") + "\"/>");
+				});
+				$("#screenies img:first-child").addClass("opaque");
+				$("#thumbs img:first-child").addClass("selected");
+				$("#thumbs img").on("click", function() {
+					changeImage( selectedIndex = $(this).index());
+				}).on("mouseenter", function() {
+					$(this).addClass("mouseover");
+					if ($(this).hasClass("selected")) {
+						toggleTimer(false);
+					}
+				}).on("mouseleave", function() {
+					$(this).removeClass("mouseover");
+					if ($(this).hasClass("selected")) {
+						toggleTimer(true);
+					}
+				});
+			});
+
+			function changeImage(index) {
+				toggleTimer(false);
+				$("#screenies img").removeClass("opaque");
+				index = index % $("#thumbs img").length;
+				$("#screenies img:nth(" + index + ")").addClass("opaque");
+				$("#thumbs img").removeClass("selected");
+				$("#thumbs img:nth(" + index + ")").addClass("selected");
+				if (!$("#thumbs img:nth(" + index + ")").hasClass("mouseover")) {
+					toggleTimer(true);
+				}
+			}
+
+			function toggleTimer(f) {
+				if (f) {
+					timer = setInterval(function() {
+						changeImage(++selectedIndex);
+					}, speed);
+				} else {
+					clearInterval(timer);
+				}
+			}
+		</script>
+	</head>
+
+	<body onload="onLoad()">
+		<header>
+			<!-- @include _nav -->
+		</header>
+
+		<section class="announcement">
+			<p>
+				This site is still very much under construction! Sorry for all the empty pages and 404's
+			</p>
+		</section>
