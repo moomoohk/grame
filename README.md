@@ -5,9 +5,9 @@ An easy to use, lightweight 2D grid based game engine!
 
 [Click here](https://github.com/moomoohk/New-Grame/releases/latest) for the latest major release.
 
-The JavaDocs can be downloaded [here](https://github.com/moomoohk/New-Grame/blob/master/JavaDocs.zip?raw=true) and can be viewed online [here](http://moomoohk.minelord.com/Documentation/Grame/) (although the online version might be outdated!).
+The JavaDocs can be downloaded [here](https://github.com/moomoohk/grame/blob/master/JavaDocs.zip?raw=true) and can be viewed online [here](http://moomoohk.github.io/grame/docs/) (although the online version might be outdated!).
 
-My [YouTube channel](http://youtube.com/user/moomoohk) has some old demo videos on it, but they might be outdated.
+My [YouTube channel](http://youtube.com/user/moomoohk) has some [old demo videos](https://www.youtube.com/user/moomoohk/search?query=grame) on it, but they might be outdated.
 
 #Getting started
 
