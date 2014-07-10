@@ -3,6 +3,8 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="Moomoohk's site. Contains all my major Java projects.">
+		<meta name="robots" content="index, follow">
 
 		
         <!-- Hammer reload -->
@@ -28,18 +30,17 @@
         <!-- /Hammer reload -->
       
 
-		<link href="//fonts.googleapis.com/css?family=PT+Sans:400italic,400,700italic,700" rel="stylesheet" type="text/css">
+		<link href="http://fonts.googleapis.com/css?family=PT+Sans:400italic,400,700italic,700" rel="stylesheet" type="text/css">
 
 		<link rel='stylesheet' href='template/assets/css/normalize.css'>
-<link rel='stylesheet' href='template/assets/css/fonts.css'>
 <link rel='stylesheet' href='template/assets/css/style.css'>
-<link rel='stylesheet' href='template/assets/js/google-code-prettify/prettify.css'>
+<link rel='stylesheet' href='template/assets/css/prettify.css'>
 		<script src='template/assets/js/jquery-1.8.3.min.js'></script>
 <script src='template/assets/js/app.js'></script>
 <script src='template/assets/js/google-code-prettify/prettify.js'></script>
+<script src='template/assets/js/snaptortoise-konami-js-93c5489/konami.js'></script>
 
 		<link href="template/assets/favicon.ico" rel="shortcut icon">
-		<link href="" rel="apple-touch-icon">
 		<title>moomoohk/grame</title>
 		<script type="application/javascript">
 			function onLoad() {
@@ -64,62 +65,20 @@
 				});
 			}
 		</script>
-		<script type="application/javascript">
-			var selectedIndex = 0;
-			var speed = 5000;
-			var timer;
-
-			$(document).ready(function() {
-				timer = setInterval(function() {
-					changeImage(++selectedIndex);
-				}, speed);
-
-				$("#screenies").after("<p id=\"thumbs\"></p>");
-				$("#screenies img").each(function() {
-					$("#thumbs").append("<img src=\"" + $(this).attr("src") + "\"/>");
-				});
-				$("#screenies img:first-child").addClass("opaque");
-				$("#thumbs img:first-child").addClass("selected");
-				$("#thumbs img").on("click", function() {
-					changeImage( selectedIndex = $(this).index());
-				}).on("mouseenter", function() {
-					$(this).addClass("mouseover");
-					if ($(this).hasClass("selected")) {
-						toggleTimer(false);
-					}
-				}).on("mouseleave", function() {
-					$(this).removeClass("mouseover");
-					if ($(this).hasClass("selected")) {
-						toggleTimer(true);
-					}
-				});
-			});
-
-			function changeImage(index) {
-				toggleTimer(false);
-				$("#screenies img").removeClass("opaque");
-				index = index % $("#thumbs img").length;
-				$("#screenies img:nth(" + index + ")").addClass("opaque");
-				$("#thumbs img").removeClass("selected");
-				$("#thumbs img:nth(" + index + ")").addClass("selected");
-				if (!$("#thumbs img:nth(" + index + ")").hasClass("mouseover")) {
-					toggleTimer(true);
-				}
-			}
-
-			function toggleTimer(f) {
-				if (f) {
-					timer = setInterval(function() {
-						changeImage(++selectedIndex);
-					}, speed);
-				} else {
-					clearInterval(timer);
-				}
-			}
-		</script>
+		<script type="text/javascript" src="template/assets/js/slideshow.js"></script>
 	</head>
 
 	<body onload="onLoad()">
+		<script>
+			/* Oh what's this */
+			$(document).ready(function() {
+				new Konami(function() {
+					var audioElement = document.createElement("audio");
+					audioElement.setAttribute("src", "template/assets/audio/aristotle.m4a");
+					audioElement.setAttribute("autoplay", "autoplay");
+				});
+			});
+		</script>
 		<header>
 			<!-- @todo Do mobile styling -->
 
@@ -174,7 +133,7 @@
 			</ul>
 		</li>
 		<li><div class="headerDivider"></div></li>
-		<li><a href="/contact.html">Social</a>
+		<li><a href="/contact.html">Contact</a>
 			<ul>
 				<li>
 					<a href="http://twitter.com/moomoohk" target="_blank">Twitter</a>

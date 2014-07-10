@@ -1,3 +1,5 @@
+/* Rob is a massive turdbutt */
+
 $active: #47515A;
 $curvature: 4px;
 
@@ -5,7 +7,7 @@ body {
   //background: url(apple-touch-icon.png) no-repeat center center;
 	-webkit-font-smoothing: antialiased;
 	text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
-  background: #AFC1D1;
+  background: #ffffff;
   //font-family: Conv_PT Sans;
   font-family: 'PT Sans', sans-serif;
 }
@@ -43,9 +45,11 @@ body {
 }
 
 section {
-	color: #ffffff;
-	background: #667AB3;
+	color: #505050;
+	background: #E6E6E6;
 	margin-top: 10px;
+	border: 1px solid #cacaca;
+	box-shadow: 0px 10px 15px #f5f5f5;
 	border-radius: $curvature;
 	padding: 20px;
 	
@@ -66,7 +70,8 @@ section {
 	}
 	
 	a {
-		color: #BBBABA; 
+		color: #444444;
+		font-weight: bold;
 		text-decoration: none;
 		-o-transition: text-decoration ease .2s, color ease .2s;
 		-ms-transition: text-decoration ease .2s, color ease .2s;
@@ -82,12 +87,15 @@ section {
 	
 	h1 {
 		text-decoration: none;
-		border-bottom: 1px solid white;
+		border-bottom: 1px solid #cacaca;
 	}
 	
 	h2 {
 		margin-top: 10px;
-		padding-left: 10px;
+		
+		&.projectName {
+			border-bottom: 1px solid white;
+		}
 	}
 	
 	/* THANK YOU http://perishablepress.com/perfect-pre-tags/ */
@@ -136,8 +144,8 @@ section {
 	}
 	
 	&.announcement {
-		background: #84659e;
-		color: #382c57;
+		background: #d0fba6;
+		color: #545454;
 		padding: 10px;
 		margin-bottom: 25px;
 		text-align: center;
@@ -169,7 +177,7 @@ section {
 		}
 		
 		a {
-			color: #303087;
+			color: #444444;
 			text-decoration: none;
 		}
 		
@@ -177,7 +185,6 @@ section {
 			margin-top: 10px;
 			padding-left: 10px;
 		}
-		
 		
 	    text-align: center;
 	}
@@ -268,7 +275,7 @@ section {
 				a {
 					width: 130px;
 					padding: 15px 40px;
-					color: #fff;
+					color: #444444;
 					
 					&:hover {
 						background: #2f2f2f;
@@ -359,8 +366,15 @@ p#thumbs {
 	border-radius: 5px;
 	background-color: white;
 	position: relative;
-	height: 423px;
-	width: 676px;
+	height: 500px;
+	-webkit-transition: height 0.5s ease-in-out, 
+		width 0.5s ease-in-out;
+	-moz-transition: height 0.5s ease-in-out, 
+	 width 0.5s ease-in-out;
+	-o-transition: height 0.5s ease-in-out, 
+	 width 0.5s ease-in-out;
+	transition: height 0.5s ease-in-out, 
+	 width 0.5s ease-in-out;
 	margin: 0 auto 10px;
 }
 

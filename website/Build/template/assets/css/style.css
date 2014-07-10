@@ -1,7 +1,8 @@
+/* Rob is a massive turdbutt */
 body {
   -webkit-font-smoothing: antialiased;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
-  background: #AFC1D1;
+  background: #ffffff;
   font-family: 'PT Sans', sans-serif; }
 
 @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
@@ -24,9 +25,11 @@ body {
   height: 100%; }
 
 section {
-  color: #ffffff;
-  background: #667AB3;
+  color: #505050;
+  background: #E6E6E6;
   margin-top: 10px;
+  border: 1px solid #cacaca;
+  box-shadow: 0px 10px 15px #f5f5f5;
   border-radius: 4px;
   padding: 20px;
   /* THANK YOU http://perishablepress.com/perfect-pre-tags/ */
@@ -43,7 +46,8 @@ section {
       border-radius: 3px;
       background: #6A80C3; }
   section a {
-    color: #BBBABA;
+    color: #444444;
+    font-weight: bold;
     text-decoration: none;
     -o-transition: text-decoration ease .2s, color ease .2s;
     -ms-transition: text-decoration ease .2s, color ease .2s;
@@ -55,10 +59,11 @@ section {
       text-decoration: underline; }
   section h1 {
     text-decoration: none;
-    border-bottom: 1px solid white; }
+    border-bottom: 1px solid #cacaca; }
   section h2 {
-    margin-top: 10px;
-    padding-left: 10px; }
+    margin-top: 10px; }
+    section h2.projectName {
+      border-bottom: 1px solid white; }
   section pre {
     border-radius: 5px;
     height: 300px;
@@ -94,8 +99,8 @@ section {
     overflow: visible;
     overflow-x: auto; }
   section.announcement {
-    background: #84659e;
-    color: #382c57;
+    background: #d0fba6;
+    color: #545454;
     padding: 10px;
     margin-bottom: 25px;
     text-align: center; }
@@ -121,7 +126,7 @@ section {
     section#footer ul {
       padding-left: 30px; }
     section#footer a {
-      color: #303087;
+      color: #444444;
       text-decoration: none; }
     section#footer h2 {
       margin-top: 10px;
@@ -191,7 +196,7 @@ section {
         #main ul#topList ul li a {
           width: 130px;
           padding: 15px 40px;
-          color: #fff; }
+          color: #444444; }
           #main ul#topList ul li a:hover {
             background: #2f2f2f; }
           #main ul#topList ul li a:active {
@@ -258,8 +263,11 @@ p#thumbs {
   border-radius: 5px;
   background-color: white;
   position: relative;
-  height: 423px;
-  width: 676px;
+  height: 500px;
+  -webkit-transition: height 0.5s ease-in-out,  width 0.5s ease-in-out;
+  -moz-transition: height 0.5s ease-in-out,  width 0.5s ease-in-out;
+  -o-transition: height 0.5s ease-in-out,  width 0.5s ease-in-out;
+  transition: height 0.5s ease-in-out,  width 0.5s ease-in-out;
   margin: 0 auto 10px; }
 
 #screenies img {
