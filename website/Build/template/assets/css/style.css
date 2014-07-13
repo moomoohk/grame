@@ -20,8 +20,8 @@ body, div, h1, h2, h3, h4, h5, h6, p, ul, ol, li, dl, dt, dd, img, form, fieldse
   border: 0; }
 
 body {
-  padding-left: 5%;
-  padding-right: 5%;
+  padding-left: 12.5%;
+  padding-right: 12.5%;
   height: 100%; }
 
 section {
@@ -63,7 +63,8 @@ section {
   section h2 {
     margin-top: 10px; }
     section h2.projectName {
-      border-bottom: 1px solid white; }
+      color: #505050;
+      border-bottom: 1px solid #cacaca; }
   section pre {
     border-radius: 5px;
     height: 300px;
@@ -234,65 +235,3 @@ section {
     height: 105px;
     border: 0;
     background-color: #7d93f3; }
-
-/* THANK YOU http://css3.bradshawenterprises.com/cfimg/ */
-div.container {
-  margin-top: 35px; }
-
-p#thumbs {
-  text-align: center;
-  height: 120px; }
-
-#thumbs img {
-  border: rgba(0, 0, 255, 0) 1px solid;
-  border-radius: 5px;
-  padding: 5px;
-  margin: 2px;
-  cursor: pointer;
-  height: 100px;
-  vertical-align: middle;
-  -webkit-transition: border-color 0.2s ease, height 0.2s ease;
-  -moz-transition: border-color 0.2s ease, height 0.2s ease;
-  -o-transition: border-color 0.2s ease, height 0.2s ease;
-  transition: border-color 0.2s ease, height 0.2s ease; }
-
-#thumbs img:hover {
-  height: 105px; }
-
-#screenies {
-  border-radius: 5px;
-  background-color: white;
-  position: relative;
-  height: 500px;
-  -webkit-transition: height 0.5s ease-in-out,  width 0.5s ease-in-out;
-  -moz-transition: height 0.5s ease-in-out,  width 0.5s ease-in-out;
-  -o-transition: height 0.5s ease-in-out,  width 0.5s ease-in-out;
-  transition: height 0.5s ease-in-out,  width 0.5s ease-in-out;
-  margin: 0 auto 10px; }
-
-#screenies img {
-  border-radius: 5px;
-  position: absolute;
-  left: 0;
-  -webkit-transition: opacity 0.5s ease-in-out;
-  -moz-transition: opacity 0.5s ease-in-out;
-  -o-transition: opacity 0.5s ease-in-out;
-  transition: opacity 0.5s ease-in-out;
-  opacity: 0;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-  filter: alpha(opacity=0); }
-
-#screenies img.opaque {
-  border-radius: 5px;
-  opacity: 1;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
-  filter: alpha(opacity=1); }
-
-#thumbs > img.selected {
-  border-color: blue; }
-
-.centre {
-  width: 200px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto; }
