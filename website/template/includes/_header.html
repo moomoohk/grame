@@ -9,6 +9,7 @@
 		<!-- @reload -->
 
 		<link href="http://fonts.googleapis.com/css?family=PT+Sans:400italic,400,700italic,700" rel="stylesheet" type="text/css">
+		<link href='http://fonts.googleapis.com/css?family=PT+Mono' rel='stylesheet' type='text/css'>
 
 		<!-- @stylesheet normalize style prettify -->
 		<!-- @javascript jquery-1.8.3.min slideshow prettify konami -->
@@ -16,7 +17,13 @@
 		<link href="<!-- @path favicon.ico -->" rel="shortcut icon">
 		<title><!-- $title | moomoohk --></title>
 		<script type="application/javascript">
-			function onLoad() {
+			$(document).ready(function() {
+				/* Oh what's this */
+				new Konami(function() {
+					var audioElement = document.createElement("audio");
+					audioElement.setAttribute("src", "<!-- @path aristotle -->");
+					audioElement.setAttribute("autoplay", "autoplay");
+				});
 				prettyPrint();
 				$("ol.linenums").each(function(index) {
 					if ($(this).children().length == 1)
@@ -36,21 +43,11 @@
 							scrollTop : 0
 						}, 400);
 				});
-			}
+			});
 		</script>
 	</head>
 
-	<body onload="onLoad()">
-		<script>
-			/* Oh what's this */
-			$(document).ready(function() {
-				new Konami(function() {
-					var audioElement = document.createElement("audio");
-					audioElement.setAttribute("src", "<!-- @path aristotle -->");
-					audioElement.setAttribute("autoplay", "autoplay");
-				});
-			});
-		</script>
+	<body>
 		<header>
 			<!-- @include _nav -->
 		</header>

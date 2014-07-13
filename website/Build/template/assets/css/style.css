@@ -3,10 +3,22 @@ body {
   -webkit-font-smoothing: antialiased;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
   background: #ffffff;
-  font-family: 'PT Sans', sans-serif; }
+  font-family: "PT Sans", sans-serif; }
 
 @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
-  /* Styles for mobile */ }
+  /* Styles for mobile */
+  body {
+    padding-left: 5%;
+    padding-right: 5%; }
+
+  div.headerDivider {
+    display: none; }
+
+  #main {
+    height: 100px; }
+
+  #topList {
+    display: none; } }
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
   /* Styles for tablet */ }
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5) {
@@ -39,6 +51,9 @@ section {
     margin-top: 5px;
     margin-bottom: 5px;
     padding-left: 10px; }
+    section p code {
+      font-family: "PT Mono", monospace;
+      word-wrap: break-word; }
   section ul, section ol {
     padding-left: 30px; }
     section ul li code, section ol li code {
@@ -75,7 +90,7 @@ section {
     padding-left: 20px;
     box-shadow: 0px 0px 10px #494f69;
     background: #44739e;
-    font-family: monospace;
+    font-family: "PT Mono", monospace;
     font-size: smaller;
     padding-bottom: expression(this.scrollWidth > this.offsetWidth ? 20 : 0); }
   section pre code[filename]:before {
@@ -86,7 +101,7 @@ section {
     padding-left: 10px;
     margin-left: -20px;
     margin-bottom: 5px;
-    font-family: Conv_PT Sans;
+    font-family: "PT Sans", sans-serif;
     font-size: medium;
     background: #405097;
     color: #978140; }
