@@ -3,7 +3,7 @@ Grame
 
 An easy to use, lightweight 2D grid based game engine!
 
-[Click here](https://github.com/moomoohk/New-Grame/releases/latest) for the latest major release.
+[Click here](https://github.com/moomoohk/grame/releases/latest) for the latest major release.
 
 The JavaDocs can be downloaded [here](https://github.com/moomoohk/grame/blob/master/JavaDocs.zip?raw=true) and can be viewed online [here](http://moomoohk.github.io/grame/docs/) (although the online version might be outdated!).
 
