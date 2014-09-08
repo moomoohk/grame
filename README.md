@@ -46,7 +46,7 @@ public class Game implements MainGrameClass
 }
 ```
 
-Running this code will produce a main menu which will display what the `getGameName()` method returns and will run the `newGame()` method when the player hits play.
+Running this code will produce a main menu which will display what the `getGameName()` method returns and will run the `newGame()` method when the player hits the play button.
 
 The engine is split up into two parts:
 
@@ -215,6 +215,11 @@ ent.makePlayer(1, true, g.ID);
 Wall w1 = new Wall(); //Default wall color is Color.black
 Wall w2 = new Wall(Color.green);
 ```
+
+#TODO
+
+* Add a way for the engine to detect when the game is finished
+* Flesh out the main menu system
 
 
 I should probably include a picture of a sheep:
