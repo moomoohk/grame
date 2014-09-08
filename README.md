@@ -7,8 +7,6 @@ An easy to use, lightweight 2D grid based game engine!
 
 The JavaDocs can be downloaded [here](https://github.com/moomoohk/grame/blob/master/JavaDocs.zip?raw=true) and can be viewed online [here](http://moomoohk.github.io/grame/docs/) (although the online version might be outdated!).
 
-My [YouTube channel](http://youtube.com/user/moomoohk) has some [old demo videos](https://www.youtube.com/user/moomoohk/search?query=grame) on it, but they might be outdated.
-
 #Getting started
 
 On top of reading this documentation, I highly encourage you to have a look at the JavaDocs for a detailed list of classes and methods.
