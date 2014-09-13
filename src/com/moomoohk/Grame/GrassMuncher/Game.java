@@ -16,7 +16,7 @@ import com.moomoohk.Grame.Core.MainGrameClass;
 import com.moomoohk.Grame.Core.Graphics.RenderManager;
 import com.moomoohk.Grame.test.SpriteRender;
 
-public class MainScript implements MainGrameClass
+public class Game implements MainGrameClass
 {
 	public static Grid g;
 	public static Player p;
@@ -25,11 +25,13 @@ public class MainScript implements MainGrameClass
 
 	public static void main(String[] args)
 	{
-		GrameManager.initialize(new MainScript());
+		GrameManager.initialize(new Game());
 	}
 
+	// Until I implement endgame state detection into the engine this will have to do
 	public static void win()
 	{
+		// Without invokeLater this code will run on the game thread (instead of the Swing EDT) which causes graphical sync issues
 		SwingUtilities.invokeLater(new Runnable()
 		{
 			public void run()
