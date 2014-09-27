@@ -7,14 +7,14 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import com.moomoohk.Grame.Basics.Wall;
-import com.moomoohk.Grame.Core.Grid;
 import com.moomoohk.Grame.Core.Coordinates;
 import com.moomoohk.Grame.Core.GrameManager;
 import com.moomoohk.Grame.Core.GrameObjectLayer;
 import com.moomoohk.Grame.Core.GrameUtils;
+import com.moomoohk.Grame.Core.Grid;
 import com.moomoohk.Grame.Core.MainGrameClass;
+import com.moomoohk.Grame.Core.Graphics.CleanGridRender;
 import com.moomoohk.Grame.Core.Graphics.RenderManager;
-import com.moomoohk.Grame.test.SpriteRender;
 
 public class Game implements MainGrameClass
 {
@@ -34,11 +34,12 @@ public class Game implements MainGrameClass
 		// Without invokeLater this code will run on the game thread (instead of the Swing EDT) which causes graphical sync issues
 		SwingUtilities.invokeLater(new Runnable()
 		{
+			@Override
 			public void run()
 			{
 				GrameManager.pauseAllGrameObjects(true);
 				JOptionPane.showMessageDialog(new JFrame(), "You win!", "", JOptionPane.PLAIN_MESSAGE);
-				System.exit(0);
+				GrameManager.reset();
 			}
 		});
 	}
@@ -47,11 +48,12 @@ public class Game implements MainGrameClass
 	{
 		SwingUtilities.invokeLater(new Runnable()
 		{
+			@Override
 			public void run()
 			{
 				GrameManager.pauseAllGrameObjects(true);
 				JOptionPane.showMessageDialog(new JFrame(), "You lose!\nYour score: " + p.getPoints(), "", JOptionPane.PLAIN_MESSAGE);
-				System.exit(0);
+				GrameManager.reset();
 			}
 		});
 	}
@@ -86,9 +88,10 @@ public class Game implements MainGrameClass
 			g.addGrameObject(new Wall(), temp, 0);
 			g.addGrameObject(new Wall(), temp, 1);
 		}
-		SpriteRender.objects.put(p.ID, "player");
-		SpriteRender.objects.put(c.ID, "monster");
-		RenderManager.render(g.ID, new SpriteRender());
+		//		SpriteRender.objects.put(p.ID, "player");
+		//		SpriteRender.objects.put(c.ID, "monster");
+		//		RenderManager.render(g.ID, new SpriteRender());
+		RenderManager.render(g.ID, new CleanGridRender());
 		RenderManager.setVisible(true);
 		JOptionPane.showMessageDialog(new JFrame(), "Ready to begin?", "Grass Muncher!", JOptionPane.PLAIN_MESSAGE);
 		GrameManager.pauseAllGrameObjects(false);

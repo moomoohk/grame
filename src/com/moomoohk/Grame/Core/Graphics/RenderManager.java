@@ -118,13 +118,11 @@ public class RenderManager
 		for (int x = 0; x < GrameManager.findGrid(gID).getColumns(); x++)
 			for (int y = 0; y < GrameManager.findGrid(gID).getRows(); y++)
 				if (text.get(gID) != null)
-				{
 					if (text.get(gID).getText(new Coordinates(x, y)) != null && text.get(gID).getText(new Coordinates(x, y)).trim().length() != 0)
 					{
 						g2.setColor(text.get(gID).getColor(new Coordinates(x, y)));
 						g2.drawString(text.get(gID).getText(new Coordinates(x, y)), y * squaresize, (x + 1) * (squaresize) - ((squaresize / 2) - 5));
 					}
-				}
 		if (!GrameManager.paused)
 			g2.drawImage(img, 0, 0, mainCanvas.getWidth(), mainCanvas.getHeight(), null);
 		else
@@ -144,7 +142,7 @@ public class RenderManager
 				for (int y = 0; y < GrameManager.findGrid(gID).getRows(); y++)
 					g2.drawString("(" + y + ", " + x + ")", y * squaresize, (x + 1) * (squaresize) - ((squaresize / 2) - 5));
 		}
-		drawLabel(new Label(500, 500, "Testing really long string", new Font("LucidaTypewriter", Font.BOLD, 20), Color.white, Color.black, 10, 10, 10, 10));
+		//		drawLabel(new Label(500, 500, "Testing really long string", new Font("LucidaTypewriter", Font.BOLD, 20), Color.white, Color.black, 10, 10, 10, 10));
 		g2.dispose();
 		bs.show();
 	}
@@ -221,12 +219,14 @@ public class RenderManager
 			mainFrame.addFocusListener(new FocusListener()
 			{
 
+				@Override
 				public void focusLost(FocusEvent paramFocusEvent)
 				{
 					GrameManager.getInputHandler().resetKeys();
 					//					GrameManager.pauseAllGrameObjects(true);
 				}
 
+				@Override
 				public void focusGained(FocusEvent paramFocusEvent)
 				{
 					//					GrameManager.pauseAllGrameObjects(false);
@@ -362,8 +362,8 @@ public class RenderManager
 
 	private static class TextLayer
 	{
-		private String[][] text;
-		private Color[][] color;
+		private final String[][] text;
+		private final Color[][] color;
 
 		public TextLayer(int row, int col)
 		{

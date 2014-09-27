@@ -96,6 +96,7 @@ public class GrameManager implements Runnable
 	private static Render defaultRender = new DefaultGridRender();
 	private static File savePath;
 	private static MainMenu mainMenu;
+	private static MainGrameClass mainClass;
 	private static MenuConfiguration menuConfiguration;
 
 	public static void initialize(MainGrameClass mainClass)
@@ -113,15 +114,17 @@ public class GrameManager implements Runnable
 		input = new InputHandler();
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler()
 		{
+			@Override
 			public void uncaughtException(Thread t, Throwable e)
 			{
-				GrameUtils.console.addText("Unhandled exception!\n");
+				GrameUtils.console.addText("Unhandled exception!\n" + e.toString(), Color.red);
 				e.printStackTrace();
 			}
 		});
 
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable()
 		{
+			@Override
 			public void run()
 			{
 				GrameUtils.print("Exiting...", MessageLevel.NORMAL);
@@ -145,6 +148,7 @@ public class GrameManager implements Runnable
 		if (!savePath.exists())
 			savePath.mkdirs();
 		menuConfiguration = menuConfig;
+		GrameManager.mainClass = mainClass;
 		mainMenu = new MainMenu(mainClass);
 		mainMenu.setVisible(true);
 	}
@@ -172,6 +176,7 @@ public class GrameManager implements Runnable
 	 * <p>
 	 * This method should never be called by the user as doing that might create issues.
 	 */
+	@Override
 	public void run()
 	{
 		int frames = 0;
@@ -659,6 +664,12 @@ public class GrameManager implements Runnable
 		return save;
 	}
 
+	public static void reset()
+	{
+		mainMenu = new MainMenu(mainClass);
+		mainMenu.setVisible(true);
+	}
+
 	private static class MainMenu extends JFrame
 	{
 		private static final long serialVersionUID = -2989260620184596791L;
@@ -668,11 +679,13 @@ public class GrameManager implements Runnable
 		public static JScrollPane sidePanel;
 		public static MouseListener helpTextListener = (new MouseAdapter()
 		{
+			@Override
 			public void mouseEntered(MouseEvent me)
 			{
 				lblMadeWithGrame.setText(((MenuButton) me.getSource()).getHelpText());
 			}
 
+			@Override
 			public void mouseExited(MouseEvent me)
 			{
 				lblMadeWithGrame.setText("");
@@ -703,6 +716,7 @@ public class GrameManager implements Runnable
 			btnResume = new MenuButton("Resume Game", menuConfiguration.menuButtonStartColor, menuConfiguration.menuButtonEndColor, menuConfiguration.menuButtonClickColor, "Unpause the game");
 			btnResume.addActionListener(new ActionListener()
 			{
+				@Override
 				public void actionPerformed(ActionEvent arg0)
 				{
 					dispose();
@@ -715,6 +729,7 @@ public class GrameManager implements Runnable
 			btnNewGame.setBounds(BUTTON1);
 			btnNewGame.addActionListener(new ActionListener()
 			{
+				@Override
 				public void actionPerformed(ActionEvent arg0)
 				{
 					dispose();
@@ -734,6 +749,7 @@ public class GrameManager implements Runnable
 			btnSaveGame = new MenuButton("Save Game", menuConfiguration.menuButtonStartColor, menuConfiguration.menuButtonEndColor, menuConfiguration.menuButtonClickColor, "Save your game to file");
 			btnSaveGame.addActionListener(new ActionListener()
 			{
+				@Override
 				public void actionPerformed(ActionEvent arg0)
 				{
 					saveGamePanel.loadInfo();
@@ -747,6 +763,7 @@ public class GrameManager implements Runnable
 			btnLoadGame.setBounds(BUTTON2);
 			btnLoadGame.addActionListener(new ActionListener()
 			{
+				@Override
 				public void actionPerformed(ActionEvent arg0)
 				{
 					if (sidePanel.getViewport().getView() == null || sidePanel.getViewport().getView() != null && !sidePanel.getViewport().getView().equals(loadGamePanel))
@@ -767,6 +784,7 @@ public class GrameManager implements Runnable
 			btnEndGame = new MenuButton("End Game", menuConfiguration.menuButtonStartColor, menuConfiguration.menuButtonEndColor, menuConfiguration.menuButtonClickColor, "Abandon the current game");
 			btnEndGame.addActionListener(new ActionListener()
 			{
+				@Override
 				public void actionPerformed(ActionEvent arg0)
 				{
 					sidePanel.setViewportView(null);
@@ -785,11 +803,13 @@ public class GrameManager implements Runnable
 			lblMadeWithGrame = new JLabel();
 			lblMadeWithGrame.addMouseListener(new MouseAdapter()
 			{
+				@Override
 				public void mouseEntered(MouseEvent me)
 				{
 					lblMadeWithGrame.setText("Made with moomoohk's Grame (v" + GrameManager.VERSION_NUMBER + ")");
 				}
 
+				@Override
 				public void mouseExited(MouseEvent me)
 				{
 					lblMadeWithGrame.setText("");
@@ -804,6 +824,7 @@ public class GrameManager implements Runnable
 			btnQuit.setBounds(10, 500, 130, 40);
 			btnQuit.addActionListener(new ActionListener()
 			{
+				@Override
 				public void actionPerformed(ActionEvent arg0)
 				{
 					System.exit(0);
@@ -822,6 +843,7 @@ public class GrameManager implements Runnable
 			new FrameDragger().applyTo(this);
 		}
 
+		@Override
 		public void dispose()
 		{
 			super.dispose();
@@ -851,6 +873,7 @@ public class GrameManager implements Runnable
 			}
 		}
 
+		@Override
 		public void setVisible(boolean f)
 		{
 			updateButtons();
@@ -865,12 +888,13 @@ public class GrameManager implements Runnable
 			private double animTime = 0;
 			private Color startColor, endColor, clickColor, fill;
 			private String helpText;
-			private Timer t = new Timer(10, new ActionListener()
+			private final Timer t = new Timer(10, new ActionListener()
 			{
+				@Override
 				public void actionPerformed(ActionEvent arg0)
 				{
 					repaint();
-					animTime += 0.03;
+					MenuButton.this.animTime += 0.03;
 				}
 			});
 
@@ -889,36 +913,37 @@ public class GrameManager implements Runnable
 				this.helpText = helpText;
 				addMouseListener(new MouseAdapter()
 				{
+					@Override
 					public void mouseReleased(MouseEvent arg0)
 					{
-						mouseDown = false;
+						MenuButton.this.mouseDown = false;
 						repaint();
-						t.stop();
+						MenuButton.this.t.stop();
 					}
 
 					@Override
 					public void mousePressed(MouseEvent arg0)
 					{
-						mouseDown = true;
+						MenuButton.this.mouseDown = true;
 						repaint();
-						animTime = 0;
-						t.start();
+						MenuButton.this.animTime = 0;
+						MenuButton.this.t.start();
 					}
 
 					@Override
 					public void mouseExited(MouseEvent arg0)
 					{
-						mouseOn = false;
+						MenuButton.this.mouseOn = false;
 						repaint();
 					}
 
 					@Override
 					public void mouseEntered(MouseEvent arg0)
 					{
-						mouseOn = true;
+						MenuButton.this.mouseOn = true;
 						repaint();
-						animTime = 0;
-						t.start();
+						MenuButton.this.animTime = 0;
+						MenuButton.this.t.start();
 					}
 				});
 			}
@@ -948,6 +973,7 @@ public class GrameManager implements Runnable
 				return this.helpText;
 			}
 
+			@Override
 			protected void paintComponent(Graphics g)
 			{
 				super.paintComponent(g);
@@ -955,32 +981,32 @@ public class GrameManager implements Runnable
 				g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 				if (isEnabled())
 				{
-					if (mouseDown && mouseOn)
-						fill = clickColor;
+					if (this.mouseDown && this.mouseOn)
+						this.fill = this.clickColor;
 					else
-						if (mouseOn)
-							fill = new Color((int) (endColor.getRed() * Math.abs(Math.sin(animTime)) + startColor.getRed() * (1 - Math.abs(Math.sin(animTime)))), (int) (endColor.getGreen() * Math.abs(Math.sin(animTime)) + startColor.getGreen() * (1 - Math.abs(Math.sin(animTime)))),
-									(int) (endColor.getBlue() * Math.abs(Math.sin(animTime)) + startColor.getBlue() * (1 - Math.abs(Math.sin(animTime)))));
+						if (this.mouseOn)
+							this.fill = new Color((int) (this.endColor.getRed() * Math.abs(Math.sin(this.animTime)) + this.startColor.getRed() * (1 - Math.abs(Math.sin(this.animTime)))), (int) (this.endColor.getGreen() * Math.abs(Math.sin(this.animTime)) + this.startColor.getGreen()
+									* (1 - Math.abs(Math.sin(this.animTime)))), (int) (this.endColor.getBlue() * Math.abs(Math.sin(this.animTime)) + this.startColor.getBlue() * (1 - Math.abs(Math.sin(this.animTime)))));
 						else
 						{
-							fill = new Color((int) (fill.getRed() * Math.abs(Math.sin(animTime)) + startColor.getRed() * (1 - Math.abs(Math.sin(animTime)))), (int) (fill.getGreen() * Math.abs(Math.sin(animTime)) + startColor.getGreen() * (1 - Math.abs(Math.sin(animTime)))), (int) (fill.getBlue()
-									* Math.abs(Math.sin(animTime)) + startColor.getBlue() * (1 - Math.abs(Math.sin(animTime)))));
-							if (fill.equals(startColor))
+							this.fill = new Color((int) (this.fill.getRed() * Math.abs(Math.sin(this.animTime)) + this.startColor.getRed() * (1 - Math.abs(Math.sin(this.animTime)))), (int) (this.fill.getGreen() * Math.abs(Math.sin(this.animTime)) + this.startColor.getGreen()
+									* (1 - Math.abs(Math.sin(this.animTime)))), (int) (this.fill.getBlue() * Math.abs(Math.sin(this.animTime)) + this.startColor.getBlue() * (1 - Math.abs(Math.sin(this.animTime)))));
+							if (this.fill.equals(this.startColor))
 							{
-								t.stop();
-								if (mouseDown)
-									fill = clickColor;
+								this.t.stop();
+								if (this.mouseDown)
+									this.fill = this.clickColor;
 								else
-									fill = startColor;
+									this.fill = this.startColor;
 							}
 						}
-					g2.setPaint(fill);
+					g2.setPaint(this.fill);
 				}
 				else
 					g2.setPaint(menuConfiguration.disabledButtonColor);
 				g2.fillRoundRect(0, 0, getWidth(), getHeight(), 6, 6);
 				g2.setPaint(Color.black);
-				if (mouseOn && isEnabled())
+				if (this.mouseOn && isEnabled())
 					g2.fillRoundRect(2, 2, getWidth() - 4, getHeight() - 4, 6, 6);
 				else
 					g2.fillRoundRect(3, 3, getWidth() - 6, getHeight() - 6, 6, 6);
@@ -1018,54 +1044,56 @@ public class GrameManager implements Runnable
 				springLayout.putConstraint(SpringLayout.EAST, lblSelectSaveFile, -20, SpringLayout.EAST, this);
 				add(lblSelectSaveFile);
 
-				scrollPane = new JScrollPane();
-				scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-				springLayout.putConstraint(SpringLayout.NORTH, scrollPane, 10, SpringLayout.SOUTH, lblSelectSaveFile);
-				springLayout.putConstraint(SpringLayout.WEST, scrollPane, 20, SpringLayout.WEST, this);
-				springLayout.putConstraint(SpringLayout.SOUTH, scrollPane, -100, SpringLayout.SOUTH, this);
-				springLayout.putConstraint(SpringLayout.EAST, scrollPane, -20, SpringLayout.EAST, this);
-				add(scrollPane);
+				this.scrollPane = new JScrollPane();
+				this.scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+				springLayout.putConstraint(SpringLayout.NORTH, this.scrollPane, 10, SpringLayout.SOUTH, lblSelectSaveFile);
+				springLayout.putConstraint(SpringLayout.WEST, this.scrollPane, 20, SpringLayout.WEST, this);
+				springLayout.putConstraint(SpringLayout.SOUTH, this.scrollPane, -100, SpringLayout.SOUTH, this);
+				springLayout.putConstraint(SpringLayout.EAST, this.scrollPane, -20, SpringLayout.EAST, this);
+				add(this.scrollPane);
 
-				btnConfirm = new MenuButton();
-				springLayout.putConstraint(SpringLayout.SOUTH, btnConfirm, -20, SpringLayout.SOUTH, this);
-				springLayout.putConstraint(SpringLayout.EAST, btnConfirm, 0, SpringLayout.EAST, lblSelectSaveFile);
-				springLayout.putConstraint(SpringLayout.SOUTH, scrollPane, -20, SpringLayout.NORTH, btnConfirm);
-				btnConfirm.setPreferredSize(new Dimension(100, 30));
-				btnConfirm.addActionListener(new ActionListener()
+				this.btnConfirm = new MenuButton();
+				springLayout.putConstraint(SpringLayout.SOUTH, this.btnConfirm, -20, SpringLayout.SOUTH, this);
+				springLayout.putConstraint(SpringLayout.EAST, this.btnConfirm, 0, SpringLayout.EAST, lblSelectSaveFile);
+				springLayout.putConstraint(SpringLayout.SOUTH, this.scrollPane, -20, SpringLayout.NORTH, this.btnConfirm);
+				this.btnConfirm.setPreferredSize(new Dimension(100, 30));
+				this.btnConfirm.addActionListener(new ActionListener()
 				{
+					@Override
 					public void actionPerformed(ActionEvent paramActionEvent)
 					{
 						confirm();
 					}
 				});
-				add(btnConfirm);
+				add(this.btnConfirm);
 
-				btnCancel = new MenuButton("Cancel", menuConfiguration.cancelButtonStartColor, menuConfiguration.cancelButtonEndColor, menuConfiguration.cancelButtonClickColor, "Close this panel");
-				springLayout.putConstraint(SpringLayout.WEST, btnCancel, 0, SpringLayout.WEST, lblSelectSaveFile);
-				springLayout.putConstraint(SpringLayout.SOUTH, btnCancel, 0, SpringLayout.SOUTH, btnConfirm);
-				btnCancel.setPreferredSize(new Dimension(100, 30));
-				btnCancel.addActionListener(new ActionListener()
+				this.btnCancel = new MenuButton("Cancel", menuConfiguration.cancelButtonStartColor, menuConfiguration.cancelButtonEndColor, menuConfiguration.cancelButtonClickColor, "Close this panel");
+				springLayout.putConstraint(SpringLayout.WEST, this.btnCancel, 0, SpringLayout.WEST, lblSelectSaveFile);
+				springLayout.putConstraint(SpringLayout.SOUTH, this.btnCancel, 0, SpringLayout.SOUTH, this.btnConfirm);
+				this.btnCancel.setPreferredSize(new Dimension(100, 30));
+				this.btnCancel.addActionListener(new ActionListener()
 				{
+					@Override
 					public void actionPerformed(ActionEvent arg0)
 					{
 						sidePanel.setViewportView(null);
 						lblMadeWithGrame.setText("");
 					}
 				});
-				add(btnCancel);
+				add(this.btnCancel);
 
-				btnConfirm.addMouseListener(helpTextListener);
-				btnCancel.addMouseListener(helpTextListener);
+				this.btnConfirm.addMouseListener(helpTextListener);
+				this.btnCancel.addMouseListener(helpTextListener);
 
 				initGUI();
 			}
 
 			public void loadInfo()
 			{
-				File f = new File(savePath);
+				File f = new File(this.savePath);
 				if (!f.exists())
 					return;
-				saves = new HashMap<String, EngineState>();
+				this.saves = new HashMap<String, EngineState>();
 				for (File child : f.listFiles(new FilenameFilter()
 				{
 					@Override
@@ -1122,20 +1150,21 @@ public class GrameManager implements Runnable
 				RenderManager.dispose();
 				RenderManager.initialize();
 				RenderManager.clearAllText();
-				engineState = saves.get(selectedEngineStateName);
+				engineState = this.saves.get(this.selectedEngineStateName);
 				RenderManager.render(engineState.getMainGrid(), engineState.getMainRender());
 				RenderManager.setVisible(true);
 				start();
 				paused = false;
 			}
 
+			@Override
 			protected void initGUI()
 			{
-				btnConfirm.setText("Load");
-				btnConfirm.setStartColor(menuConfiguration.confirmButtonStartColor);
-				btnConfirm.setEndColor(menuConfiguration.confirmButtonEndColor);
-				btnConfirm.setClickColor(menuConfiguration.confirmButtonClickColor);
-				btnConfirm.setHelpText("Load the selected save");
+				this.btnConfirm.setText("Load");
+				this.btnConfirm.setStartColor(menuConfiguration.confirmButtonStartColor);
+				this.btnConfirm.setEndColor(menuConfiguration.confirmButtonEndColor);
+				this.btnConfirm.setClickColor(menuConfiguration.confirmButtonClickColor);
+				this.btnConfirm.setHelpText("Load the selected save");
 
 				JLabel lblSelectSaveFile = new JLabel("Select save file to load:");
 				lblSelectSaveFile.setFont(new Font("Lucida Grande", Font.BOLD, 13));
@@ -1144,21 +1173,22 @@ public class GrameManager implements Runnable
 				getSpringLayout().putConstraint(SpringLayout.EAST, lblSelectSaveFile, -20, SpringLayout.EAST, this);
 				add(lblSelectSaveFile);
 
-				getSpringLayout().putConstraint(SpringLayout.NORTH, scrollPane, 10, SpringLayout.SOUTH, lblSelectSaveFile);
+				getSpringLayout().putConstraint(SpringLayout.NORTH, this.scrollPane, 10, SpringLayout.SOUTH, lblSelectSaveFile);
 
-				btnDeleteSave = new MenuButton("Delete", menuConfiguration.otherButtonStartColor, menuConfiguration.otherButtonEndColor, menuConfiguration.otherButtonClickColor, "Delete selected save");
-				getSpringLayout().putConstraint(SpringLayout.SOUTH, btnDeleteSave, 0, SpringLayout.SOUTH, btnConfirm);
-				getSpringLayout().putConstraint(SpringLayout.WEST, btnDeleteSave, 20, SpringLayout.EAST, btnCancel);
-				getSpringLayout().putConstraint(SpringLayout.EAST, btnDeleteSave, -20, SpringLayout.WEST, btnConfirm);
-				getSpringLayout().putConstraint(SpringLayout.NORTH, btnDeleteSave, 0, SpringLayout.NORTH, btnConfirm);
-				btnDeleteSave.addActionListener(new ActionListener()
+				this.btnDeleteSave = new MenuButton("Delete", menuConfiguration.otherButtonStartColor, menuConfiguration.otherButtonEndColor, menuConfiguration.otherButtonClickColor, "Delete selected save");
+				getSpringLayout().putConstraint(SpringLayout.SOUTH, this.btnDeleteSave, 0, SpringLayout.SOUTH, this.btnConfirm);
+				getSpringLayout().putConstraint(SpringLayout.WEST, this.btnDeleteSave, 20, SpringLayout.EAST, this.btnCancel);
+				getSpringLayout().putConstraint(SpringLayout.EAST, this.btnDeleteSave, -20, SpringLayout.WEST, this.btnConfirm);
+				getSpringLayout().putConstraint(SpringLayout.NORTH, this.btnDeleteSave, 0, SpringLayout.NORTH, this.btnConfirm);
+				this.btnDeleteSave.addActionListener(new ActionListener()
 				{
+					@Override
 					public void actionPerformed(ActionEvent arg0)
 					{
 						if (JOptionPane.showConfirmDialog(mainMenu, "Delete this save?", "Are you sure?", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.YES_OPTION)
 							try
 							{
-								FileUtils.delete(new File(GrameManager.savePath.toString() + "/" + selectedEngineStateName + ".GrameSave"));
+								FileUtils.delete(new File(GrameManager.savePath.toString() + "/" + LoadGamePanel.this.selectedEngineStateName + ".GrameSave"));
 								loadInfo();
 								updateGUI();
 							}
@@ -1168,24 +1198,25 @@ public class GrameManager implements Runnable
 							}
 					}
 				});
-				add(btnDeleteSave);
-				btnDeleteSave.addMouseListener(helpTextListener);
+				add(this.btnDeleteSave);
+				this.btnDeleteSave.addMouseListener(helpTextListener);
 			}
 
+			@Override
 			public void updateGUI()
 			{
 				if (this.saves.size() == 0)
 				{
 					this.btnConfirm.setEnabled(false);
 					this.btnDeleteSave.setEnabled(false);
-					scrollPane.setViewportView(noSaves);
+					this.scrollPane.setViewportView(this.noSaves);
 				}
 				else
 				{
-					selectedPanel = new JPanel();
+					this.selectedPanel = new JPanel();
 					JPanel savesListPanel = new JPanel();
 					savesListPanel.setLayout(new GridBagLayout());
-					for (final String key : saves.keySet())
+					for (final String key : this.saves.keySet())
 						try
 						{
 							GridBagConstraints gbc = new GridBagConstraints();
@@ -1201,7 +1232,7 @@ public class GrameManager implements Runnable
 								@Override
 								public void mouseExited(MouseEvent paramMouseEvent)
 								{
-									if (!selectedPanel.equals(savePanel))
+									if (!LoadGamePanel.this.selectedPanel.equals(savePanel))
 										savePanel.setBorder(BorderFactory.createLineBorder(Color.black));
 									else
 										savePanel.setBorder(BorderFactory.createMatteBorder(2, 5, 2, 2, Color.gray.darker().darker()));
@@ -1213,14 +1244,15 @@ public class GrameManager implements Runnable
 									savePanel.setBorder(BorderFactory.createMatteBorder(2, 5, 2, 2, Color.black));
 								}
 
+								@Override
 								public void mousePressed(MouseEvent arg0)
 								{
-									selectedPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-									selectedPanel = savePanel;
-									selectedEngineStateName = key;
+									LoadGamePanel.this.selectedPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+									LoadGamePanel.this.selectedPanel = savePanel;
+									LoadGamePanel.this.selectedEngineStateName = key;
 									savePanel.setBorder(BorderFactory.createMatteBorder(2, 5, 2, 2, Color.gray.darker().darker()));
-									btnConfirm.setEnabled(true);
-									btnDeleteSave.setEnabled(true);
+									LoadGamePanel.this.btnConfirm.setEnabled(true);
+									LoadGamePanel.this.btnDeleteSave.setEnabled(true);
 								}
 							});
 
@@ -1237,7 +1269,7 @@ public class GrameManager implements Runnable
 							lblSavedTitle.setBounds(10, 25, 80, 30);
 							savePanel.add(lblSavedTitle);
 
-							JLabel lblSaved = new JLabel("" + saves.get(key).getSaved());
+							JLabel lblSaved = new JLabel("" + this.saves.get(key).getSaved());
 							lblSaved.setBounds(90, 25, 230, 30);
 							savePanel.add(lblSaved);
 
@@ -1245,7 +1277,7 @@ public class GrameManager implements Runnable
 							lblCreatedTitle.setBounds(10, 50, 80, 30);
 							savePanel.add(lblCreatedTitle);
 
-							JLabel lblCreated = new JLabel("" + saves.get(key).getDateCreated().getTime());
+							JLabel lblCreated = new JLabel("" + this.saves.get(key).getDateCreated().getTime());
 							lblCreated.setBounds(90, 50, 240, 30);
 							savePanel.add(lblCreated);
 
@@ -1255,9 +1287,9 @@ public class GrameManager implements Runnable
 						{
 							System.out.println("Conflict"); //TODO: Handle conflicts
 						}
-					btnConfirm.setEnabled(false);
-					btnDeleteSave.setEnabled(false);
-					scrollPane.setViewportView(savesListPanel);
+					this.btnConfirm.setEnabled(false);
+					this.btnDeleteSave.setEnabled(false);
+					this.scrollPane.setViewportView(savesListPanel);
 				}
 			}
 		}
@@ -1276,15 +1308,15 @@ public class GrameManager implements Runnable
 
 			public void showPanel()
 			{
-				saveField.setText("");
+				this.saveField.setText("");
 				updateGUI();
 			}
 
 			@Override
 			protected void confirm()
 			{
-				if (saveEngineState(saveField.getText(), false, mainMenu))
-					saveField.setText("");
+				if (saveEngineState(this.saveField.getText(), false, mainMenu))
+					this.saveField.setText("");
 				loadInfo();
 				updateGUI();
 			}
@@ -1292,63 +1324,61 @@ public class GrameManager implements Runnable
 			@Override
 			protected void initGUI()
 			{
-				btnConfirm.setText("Save");
-				btnConfirm.setStartColor(menuConfiguration.confirmButtonStartColor);
-				btnConfirm.setEndColor(menuConfiguration.confirmButtonEndColor);
-				btnConfirm.setClickColor(menuConfiguration.confirmButtonClickColor);
-				btnConfirm.setHelpText("Save your game");
+				this.btnConfirm.setText("Save");
+				this.btnConfirm.setStartColor(menuConfiguration.confirmButtonStartColor);
+				this.btnConfirm.setEndColor(menuConfiguration.confirmButtonEndColor);
+				this.btnConfirm.setClickColor(menuConfiguration.confirmButtonClickColor);
+				this.btnConfirm.setHelpText("Save your game");
 
-				lblSelectSaveFile = new JLabel("Name your save:");
-				lblSelectSaveFile.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-				getSpringLayout().putConstraint(SpringLayout.NORTH, lblSelectSaveFile, 20, SpringLayout.NORTH, this);
-				getSpringLayout().putConstraint(SpringLayout.WEST, lblSelectSaveFile, 20, SpringLayout.WEST, this);
-				getSpringLayout().putConstraint(SpringLayout.EAST, lblSelectSaveFile, -20, SpringLayout.EAST, this);
-				add(lblSelectSaveFile);
+				this.lblSelectSaveFile = new JLabel("Name your save:");
+				this.lblSelectSaveFile.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+				getSpringLayout().putConstraint(SpringLayout.NORTH, this.lblSelectSaveFile, 20, SpringLayout.NORTH, this);
+				getSpringLayout().putConstraint(SpringLayout.WEST, this.lblSelectSaveFile, 20, SpringLayout.WEST, this);
+				getSpringLayout().putConstraint(SpringLayout.EAST, this.lblSelectSaveFile, -20, SpringLayout.EAST, this);
+				add(this.lblSelectSaveFile);
 
-				saveField = new JTextField();
-				getSpringLayout().putConstraint(SpringLayout.WEST, saveField, 0, SpringLayout.WEST, lblSelectSaveFile);
-				getSpringLayout().putConstraint(SpringLayout.EAST, saveField, 0, SpringLayout.EAST, lblSelectSaveFile);
-				getSpringLayout().putConstraint(SpringLayout.NORTH, saveField, 10, SpringLayout.SOUTH, lblSelectSaveFile);
-				saveField.addKeyListener(new KeyAdapter()
+				this.saveField = new JTextField();
+				getSpringLayout().putConstraint(SpringLayout.WEST, this.saveField, 0, SpringLayout.WEST, this.lblSelectSaveFile);
+				getSpringLayout().putConstraint(SpringLayout.EAST, this.saveField, 0, SpringLayout.EAST, this.lblSelectSaveFile);
+				getSpringLayout().putConstraint(SpringLayout.NORTH, this.saveField, 10, SpringLayout.SOUTH, this.lblSelectSaveFile);
+				this.saveField.addKeyListener(new KeyAdapter()
 				{
 					@Override
 					public void keyReleased(KeyEvent arg0)
 					{
-						if (saveField.getText().trim().length() == 0)
-							btnConfirm.setEnabled(false);
+						if (SaveGamePanel.this.saveField.getText().trim().length() == 0)
+							SaveGamePanel.this.btnConfirm.setEnabled(false);
 						else
-							btnConfirm.setEnabled(true);
+							SaveGamePanel.this.btnConfirm.setEnabled(true);
 					}
 
 					@Override
 					public void keyPressed(KeyEvent arg0)
 					{
 						if (arg0.getKeyCode() == 27)
-							saveField.setText("");
+							SaveGamePanel.this.saveField.setText("");
 						if (arg0.getKeyCode() == 10)
-							btnConfirm.doClick();
+							SaveGamePanel.this.btnConfirm.doClick();
 					}
 				});
-				add(saveField);
+				add(this.saveField);
 
-				getSpringLayout().putConstraint(SpringLayout.NORTH, scrollPane, 10, SpringLayout.SOUTH, saveField);
-				getSpringLayout().putConstraint(SpringLayout.WEST, scrollPane, 20, SpringLayout.WEST, this);
-				getSpringLayout().putConstraint(SpringLayout.SOUTH, scrollPane, -10, SpringLayout.NORTH, btnConfirm);
-				getSpringLayout().putConstraint(SpringLayout.EAST, scrollPane, -20, SpringLayout.EAST, this);
+				getSpringLayout().putConstraint(SpringLayout.NORTH, this.scrollPane, 10, SpringLayout.SOUTH, this.saveField);
+				getSpringLayout().putConstraint(SpringLayout.WEST, this.scrollPane, 20, SpringLayout.WEST, this);
+				getSpringLayout().putConstraint(SpringLayout.SOUTH, this.scrollPane, -10, SpringLayout.NORTH, this.btnConfirm);
+				getSpringLayout().putConstraint(SpringLayout.EAST, this.scrollPane, -20, SpringLayout.EAST, this);
 			}
 
 			@Override
 			protected void updateGUI()
 			{
 				if (this.saves.size() == 0)
-				{
-					scrollPane.setViewportView(noSaves);
-				}
+					this.scrollPane.setViewportView(this.noSaves);
 				else
 				{
 					JPanel savesListPanel = new JPanel();
 					savesListPanel.setLayout(new GridBagLayout());
-					for (final String key : saves.keySet())
+					for (final String key : this.saves.keySet())
 						try
 						{
 							GridBagConstraints gbc = new GridBagConstraints();
@@ -1372,10 +1402,11 @@ public class GrameManager implements Runnable
 									savePanel.setBorder(BorderFactory.createMatteBorder(1, 5, 1, 1, Color.black));
 								}
 
+								@Override
 								public void mousePressed(MouseEvent arg0)
 								{
-									saveField.setText(key);
-									btnConfirm.setEnabled(true);
+									SaveGamePanel.this.saveField.setText(key);
+									SaveGamePanel.this.btnConfirm.setEnabled(true);
 								}
 							});
 
@@ -1392,7 +1423,7 @@ public class GrameManager implements Runnable
 							lblSavedTitle.setBounds(10, 25, 80, 30);
 							savePanel.add(lblSavedTitle);
 
-							JLabel lblSaved = new JLabel("" + saves.get(key).getSaved());
+							JLabel lblSaved = new JLabel("" + this.saves.get(key).getSaved());
 							lblSaved.setBounds(90, 25, 230, 30);
 							savePanel.add(lblSaved);
 
@@ -1400,7 +1431,7 @@ public class GrameManager implements Runnable
 							lblCreatedTitle.setBounds(10, 50, 80, 30);
 							savePanel.add(lblCreatedTitle);
 
-							JLabel lblCreated = new JLabel("" + saves.get(key).getDateCreated().getTime());
+							JLabel lblCreated = new JLabel("" + this.saves.get(key).getDateCreated().getTime());
 							lblCreated.setBounds(90, 50, 240, 30);
 							savePanel.add(lblCreated);
 
@@ -1410,11 +1441,11 @@ public class GrameManager implements Runnable
 						{
 							System.out.println("Conflict");
 						}
-					btnConfirm.setEnabled(false);
-					scrollPane.setViewportView(savesListPanel);
+					this.btnConfirm.setEnabled(false);
+					this.scrollPane.setViewportView(savesListPanel);
 				}
-				if (saveField.getText().trim().length() == 0)
-					btnConfirm.setEnabled(false);
+				if (this.saveField.getText().trim().length() == 0)
+					this.btnConfirm.setEnabled(false);
 			}
 		}
 	}
