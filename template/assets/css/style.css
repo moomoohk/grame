@@ -38,7 +38,7 @@ body {
 
 section {
   color: #505050;
-  background: #E6E6E6;
+  background-color: #E6E6E6;
   margin-top: 10px;
   border: 1px solid #cacaca;
   box-shadow: 0px 10px 15px #f5f5f5;
@@ -56,10 +56,14 @@ section {
       word-wrap: break-word; }
   section ul, section ol {
     padding-left: 30px; }
-    section ul li code, section ol li code {
-      border: #6CA5B6 solid 1px;
-      border-radius: 3px;
-      background: #6A80C3; }
+  section code {
+    border-radius: 3px;
+    background: #FFFFFF;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-bottom: 1px;
+    padding-top: 1px;
+    font-size: 14px; }
   section a {
     color: #444444;
     font-weight: bold;
@@ -78,33 +82,24 @@ section {
   section h2 {
     margin-top: 10px; }
     section h2.projectName {
-      color: #505050;
-      border-bottom: 1px solid #cacaca; }
+      color: #505050; }
   section pre {
     border-radius: 5px;
-    height: 300px;
-    overflow-x: auto;
-    overflow-y: auto;
+    padding: 5px;
+    overflow: auto;
+    white-space: pre;
+    word-break: normal;
+    word-wrap: normal;
     margin-left: 10px;
     margin-right: 10px;
-    padding-left: 20px;
     box-shadow: 0px 0px 10px #494f69;
-    background: #44739e;
+    background: #ffffff;
     font-family: "PT Mono", monospace;
-    font-size: smaller;
-    padding-bottom: expression(this.scrollWidth > this.offsetWidth ? 20 : 0); }
-  section pre code[filename]:before {
-    content: attr(filename);
-    box-shadow: 0px 0px 10px #494f69;
-    display: block;
-    padding: 5px;
-    padding-left: 10px;
-    margin-left: -20px;
-    margin-bottom: 5px;
-    font-family: "PT Sans", sans-serif;
-    font-size: medium;
-    background: #405097;
-    color: #978140; }
+    font-size: smaller; }
+    section pre code {
+      border: none;
+      background: none;
+      padding: 0px; }
   section *:first-child + html pre {
     padding-bottom: 20px;
     overflow-y: hidden;
@@ -114,6 +109,8 @@ section {
     padding-bottom: 20px;
     overflow: visible;
     overflow-x: auto; }
+  section img {
+    max-width: 100%; }
   section.announcement {
     background: #d0fba6;
     color: #545454;
@@ -127,14 +124,21 @@ section {
     -ms-user-select: none;
     -o-user-select: none;
     user-select: none;
-    color: #565656;
-    background-color: #7a8996;
+    border: 1px solid #cacaca;
+    background-color: #d0fba6;
     margin-top: 20px;
     margin-bottom: 20px;
     padding: 5px;
     /*box-shadow:  0px 0px 10px #494f69;*/
     border-radius: 4px;
+    -o-transition: background-color ease .2s;
+    -ms-transition: background-color ease .2s;
+    -moz-transition: background-color ease .2s;
+    -webkit-transition: background-color ease .2s;
+    transition: background-color ease .2s;
     text-align: center; }
+    section#footer:hover {
+      background-color: #B1EB78; }
     section#footer p {
       margin-top: 5px;
       margin-bottom: 5px;

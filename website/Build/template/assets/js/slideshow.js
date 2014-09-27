@@ -57,7 +57,7 @@ $(document).ready(function() {
 		thumbSlide.hover(function() {
 			$(this).addClass("mouseover");
 			if ($(this).hasClass("selected")) {
-				toggleTimer(false);
+				setTimer(false);
 			}
 			$(this).animate({
 				"height" : ($(this).parent().height() - 5) + "px",
@@ -65,7 +65,7 @@ $(document).ready(function() {
 		}, function() {
 			$(this).removeClass("mouseover");
 			if ($(this).hasClass("selected")) {
-				toggleTimer(true);
+				setTimer(true);
 			}
 			$(this).animate({
 				"height" : ($(this).parent().height() - 10) + "px",
@@ -78,6 +78,21 @@ $(document).ready(function() {
 		$(this).height(Math.min(300, ($("body").width - 10)));
 	});
 
+	$(".slides").prepend("<div class=\"slideshowControl left\"></div>");
+	$(".slides").append("<div class=\"slideshowControl right\"></div>");
+
+	$(".slideshowControl").css({
+		"width" : "30px",
+		"height" : "90px",
+		"display" : "inline-block",
+		"vertical-align" : "middle",
+		"margin-left" : "2px",
+		"margin-right" : "2px",
+		"background-color" : "#E6E6E6",
+		"border-radius" : "5px",
+		"cursor" : "pointer"
+	});
+
 	changeImage($(".slide:nth(0)"));
 });
 
@@ -85,13 +100,13 @@ function changeImage(thumbnail) {
 	if (thumbnail.hasClass("selected")) {
 		return;
 	}
-	toggleTimer(false);
+	setTimer(false);
 	$(".currSlide").fadeOut(100, function() {
 		$(".currSlide").attr("src", thumbnail.attr("src"));
 	});
 	$(".currSlide").fadeIn(100);
 	if (!thumbnail.hasClass("mouseover")) {
-		toggleTimer(true);
+		setTimer(true);
 	}
 
 	$(".selected").animate({
@@ -106,7 +121,7 @@ function changeImage(thumbnail) {
 	}, 100);
 }
 
-function toggleTimer(f) {
+function setTimer(f) {
 	if (f) {
 		timer = setInterval(function() {
 			if (selectedIndex == $(".slide").length - 1) {

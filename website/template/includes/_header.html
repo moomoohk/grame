@@ -29,14 +29,11 @@
 					if ($(this).children().length == 1)
 						$(this).remove();
 				});
-				var footerBgColor = $("#footer").css("background-color");
 				var textContents = $("#footer").text().trim();
 				$("#footer").on("mouseenter", function() {
 					$(this).text("Return to top");
-					$(this).css("background-color", "#8999A7");
 				}).on("mouseleave", function() {
 					$(this).text(textContents);
-					$(this).css("background-color", footerBgColor);
 				}).mousedown(function(event) {
 					if (event.which == 1)
 						$("html, body").animate({
@@ -51,9 +48,3 @@
 		<header>
 			<!-- @include _nav -->
 		</header>
-
-		<section class="announcement">
-			<p>
-				This site is still very much under construction! Sorry for all the empty pages and 404's
-			</p>
-		</section>
