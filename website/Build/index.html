@@ -10,7 +10,7 @@
 		<meta name="twitter:site" content="@moomoohk" />
 		<meta name="twitter:title" content="moomoohk/grame" />
 		<meta name="twitter:description" content="Moomoohk's personal site" />
-		<meta name="twitter:image" content="template/assets/image/avatar.png" />
+		<meta name="twitter:image" content="website-template/assets/image/avatar.png" />
 
 		
         <!-- Hammer reload -->
@@ -39,22 +39,22 @@
 		<link href="http://fonts.googleapis.com/css?family=PT+Sans:400italic,400,700italic,700" rel="stylesheet" type="text/css">
 		<link href='http://fonts.googleapis.com/css?family=PT+Mono' rel='stylesheet' type='text/css'>
 
-		<link rel='stylesheet' href='template/assets/css/normalize.css'>
-<link rel='stylesheet' href='template/assets/css/style.css'>
-<link rel='stylesheet' href='template/assets/dart/slideshow/slideshow.css'>
-		<script src='template/assets/js/jquery-1.8.3.min.js'></script>
-<script src='template/assets/js/snaptortoise-konami-js-93c5489/konami.js'></script>
-		<script async type="application/dart" src="template/assets/dart/slideshow/slideshow.dart"></script>
-		<script async src="template/assets/dart/slideshow/packages/browser/dart.js"></script>
+		<link rel='stylesheet' href='website-template/assets/css/normalize.css'>
+<link rel='stylesheet' href='website-template/assets/css/style.css'>
+<link rel='stylesheet' href='website-template/assets/dart/slideshow/slideshow.css'>
+		<script src='website-template/assets/js/jquery-1.8.3.min.js'></script>
+<script src='website-template/assets/js/snaptortoise-konami-js-93c5489/konami.js'></script>
+		<script async type="application/dart" src="website-template/assets/dart/slideshow/slideshow.dart"></script>
+		<script async src="website-template/assets/dart/slideshow/packages/browser/dart.js"></script>
 
-		<link href="template/assets/image/favicon.ico" rel="shortcut icon">
+		<link href="website-template/assets/image/favicon.ico" rel="shortcut icon">
 		<title>moomoohk/grame</title>
 		<script type="application/javascript">
 			$(document).ready(function() {
 				/* Oh what's this */
 				new Konami(function() {
 					var audioElement = document.createElement("audio");
-					audioElement.setAttribute("src", "template/assets/audio/aristotle.m4a");
+					audioElement.setAttribute("src", "website-template/assets/audio/aristotle.m4a");
 					audioElement.setAttribute("autoplay", "autoplay");
 				});
 
@@ -100,7 +100,10 @@
 	<body>
 		<header>
 			<nav id="main">
-	<span id="menu-icon">moomoohk</span>
+	<div id="mobileMenu">
+		<img src="website-template/assets/image/menu.png" id="menuIcon"/>
+		<span id="title">moomoohk</span>
+	</div>
 	<ul id="topList">
 		<li class="title"><p unselectable="on">moomoohk</p></li>
 		<li><a href="/index.html">Home</a></li>
