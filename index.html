@@ -3,8 +3,14 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="description" content="Moomoohk's site. Contains all my major Java projects.">
+		<meta name="description" content="Moomoohk's personal site">
 		<meta name="robots" content="index, follow">
+
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:site" content="@moomoohk" />
+		<meta name="twitter:title" content="moomoohk/grame" />
+		<meta name="twitter:description" content="Moomoohk's personal site" />
+		<meta name="twitter:image" content="template/assets/image/avatar.png" />
 
 		
         <!-- Hammer reload -->
@@ -35,13 +41,13 @@
 
 		<link rel='stylesheet' href='template/assets/css/normalize.css'>
 <link rel='stylesheet' href='template/assets/css/style.css'>
-<link rel='stylesheet' href='template/assets/css/prettify.css'>
+<link rel='stylesheet' href='template/assets/dart/slideshow/slideshow.css'>
 		<script src='template/assets/js/jquery-1.8.3.min.js'></script>
-<script src='template/assets/js/slideshow.js'></script>
-<script src='template/assets/js/google-code-prettify/prettify.js'></script>
 <script src='template/assets/js/snaptortoise-konami-js-93c5489/konami.js'></script>
+		<script async type="application/dart" src="template/assets/dart/slideshow/slideshow.dart"></script>
+		<script async src="template/assets/dart/slideshow/packages/browser/dart.js"></script>
 
-		<link href="template/assets/favicon.ico" rel="shortcut icon">
+		<link href="template/assets/image/favicon.ico" rel="shortcut icon">
 		<title>moomoohk/grame</title>
 		<script type="application/javascript">
 			$(document).ready(function() {
@@ -51,36 +57,53 @@
 					audioElement.setAttribute("src", "template/assets/audio/aristotle.m4a");
 					audioElement.setAttribute("autoplay", "autoplay");
 				});
-				prettyPrint();
-				$("ol.linenums").each(function(index) {
-					if ($(this).children().length == 1)
-						$(this).remove();
-				});
+
+				if ($("body").height() > $(window).height()) {
+					$("#footer").addClass("returnToTop");
+				}
+
 				var textContents = $("#footer").text().trim();
-				$("#footer").on("mouseenter", function() {
-					$(this).text("Return to top");
+				$("#footer")
+				/*.on("mouseenter", function() {
+					if ($(this).hasClass("returnToTop"))
+						$(this).text("Return to top");
 				}).on("mouseleave", function() {
-					$(this).text(textContents);
-				}).mousedown(function(event) {
-					if (event.which == 1)
-						$("html, body").animate({
-							scrollTop : 0
-						}, 400);
+					if ($(this).hasClass("returnToTop"))
+						$(this).text(textContents);
+				})*/
+				.on("click", function(event) {
+					if ($(this).hasClass("returnToTop"))
+						if (event.which == 1)
+							$("html, body").animate({
+								scrollTop : 0
+							}, 400);
 				});
+
+				var eventHandle = function() {
+					if ($("body").height() > $(window).height()) {
+						$("#footer").addClass("returnToTop");
+					} else {
+						$("#footer").removeClass("returnToTop");
+					}
+				};
+				if (window.addEventListener) {
+					window.addEventListener("resize", eventHandle, false);
+				} else if (window.attachEvent) {
+					window.attachEvent("onresize", eventHandle);
+				} else {
+					window["onresize"] = eventHandle;
+				}
 			});
 		</script>
 	</head>
 
 	<body>
 		<header>
-			<!-- @todo Do mobile styling -->
-
-<nav id="main">
+			<nav id="main">
+	<span id="menu-icon">moomoohk</span>
 	<ul id="topList">
-		<li><p unselectable="on">moomoohk</p></li>
-		<li><div class="headerDivider"></div></li>
+		<li class="title"><p unselectable="on">moomoohk</p></li>
 		<li><a href="/index.html">Home</a></li>
-		<li><div class="headerDivider"></div></li>
 		<li><a href="/projects.html">Projects</a>
 			<ul>
 				<li><a href="/grame/">Grame</a>
@@ -101,50 +124,47 @@
 				</li>
 				<li><a href="/moocommands/">MooCommands</a>
 					<ul>
-						<li><a href="/moocommands/docs">JavaDocs</a></li>
+						<li><a href="/moocommands/docs/">JavaDocs</a></li>
 						<li><a href="/moocommands/#downloads">Download</a></li>
 					</ul>
 				</li>
 				<li><a href="/mooconsole/">MooConsole</a>
 					<ul>
-						<li><a href="/mooconsole/docs">JavaDocs</a></li>
+						<li><a href="/mooconsole/docs/">JavaDocs</a></li>
 						<li><a href="/mooconsole/#downloads">Download</a></li>
 					</ul>
 				</li>
 				<li><a href="/mootilities/">Mootilities</a>
 					<ul>
-						<li><a href="/mootilities/docs">JavaDocs</a></li>
+						<li><a href="/mootilities/docs/">JavaDocs</a></li>
 						<li><a href="/mootilities/#downloads">Download</a></li>
 					</ul>
 				</li>
 				<li><a href="/moobootstrap/">MooBootstrap</a>
 					<ul>
-						<li><a href="/moobootstrap/docs">JavaDocs</a></li>
+						<li><a href="/moobootstrap/docs/">JavaDocs</a></li>
 						<li><a href="/moobootstrap/#downloads">Download</a></li>
 					</ul>
 				</li>
 			</ul>
 		</li>
-		<li><div class="headerDivider"></div></li>
 		<li><a href="/snippets.html">Snippets</a></li>
-		<li><div class="headerDivider"></div></li>
 		<li><a href="/contact.html">Contact</a>
 			<ul>
 				<li>
-					<a href="http://twitter.com/moomoohk" target="_blank">Twitter</a>
+					<a href="http://twitter.com/moomoohk/" target="_blank">Twitter</a>
 				</li>
 				<li>
-					<a href="http://youtube.com/moomoohk" target="_blank">YouTube</a>
+					<a href="http://youtube.com/moomoohk/" target="_blank">YouTube</a>
 				</li>
 				<li>
-					<a href="http://webchat.freenode.net?channels=%23moomoohk&uio=Mj10cnVlJjQ9dHJ1ZSYxMT0yMzYff" target="_blank">IRC</a>
+					<a href="http://webchat.freenode.net?channels=%23moomoohk&uio=Mj10cnVlJjQ9dHJ1ZSYxMT0yMzYff/" target="_blank">IRC</a>
 				</li>
 				<li>
-					<a href="http://github.com/moomoohk" target="_blank">GitHub</a>
+					<a href="http://github.com/moomoohk/" target="_blank">GitHub</a>
 				</li>
 			</ul>
 		</li>
-		<li><div class="headerDivider"></div></li>
 	</ul>
 </nav>
 		</header>
@@ -170,7 +190,7 @@
 	</p>
 </section>
 		<section id="footer">
-			© moomoohk 2014
+			<span>© moomoohk 2014</span>
 		</section>
 	</body>
 </html>

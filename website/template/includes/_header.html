@@ -3,16 +3,24 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="description" content="Moomoohk's site. Contains all my major Java projects.">
+		<meta name="description" content="<!-- $metaDescription | Moomoohk's personal site -->">
 		<meta name="robots" content="index, follow">
+
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:site" content="@moomoohk" />
+		<meta name="twitter:title" content="<!-- $title | moomoohk -->" />
+		<meta name="twitter:description" content="<!-- $metaDescription | Moomoohk's personal site -->" />
+		<meta name="twitter:image" content="<!-- @path avatar.png -->" />
 
 		<!-- @reload -->
 
 		<link href="http://fonts.googleapis.com/css?family=PT+Sans:400italic,400,700italic,700" rel="stylesheet" type="text/css">
 		<link href='http://fonts.googleapis.com/css?family=PT+Mono' rel='stylesheet' type='text/css'>
 
-		<!-- @stylesheet normalize style prettify -->
-		<!-- @javascript jquery-1.8.3.min slideshow prettify konami -->
+		<!-- @stylesheet normalize style slideshow -->
+		<!-- @javascript jquery-1.8.3.min konami -->
+		<script async type="application/dart" src="<!-- @path slideshow.dart -->"></script>
+		<script async src="<!-- @path dart.js -->"></script>
 
 		<link href="<!-- @path favicon.ico -->" rel="shortcut icon">
 		<title><!-- $title | moomoohk --></title>
@@ -24,22 +32,42 @@
 					audioElement.setAttribute("src", "<!-- @path aristotle -->");
 					audioElement.setAttribute("autoplay", "autoplay");
 				});
-				prettyPrint();
-				$("ol.linenums").each(function(index) {
-					if ($(this).children().length == 1)
-						$(this).remove();
-				});
+
+				if ($("body").height() > $(window).height()) {
+					$("#footer").addClass("returnToTop");
+				}
+
 				var textContents = $("#footer").text().trim();
-				$("#footer").on("mouseenter", function() {
-					$(this).text("Return to top");
+				$("#footer")
+				/*.on("mouseenter", function() {
+					if ($(this).hasClass("returnToTop"))
+						$(this).text("Return to top");
 				}).on("mouseleave", function() {
-					$(this).text(textContents);
-				}).mousedown(function(event) {
-					if (event.which == 1)
-						$("html, body").animate({
-							scrollTop : 0
-						}, 400);
+					if ($(this).hasClass("returnToTop"))
+						$(this).text(textContents);
+				})*/
+				.on("click", function(event) {
+					if ($(this).hasClass("returnToTop"))
+						if (event.which == 1)
+							$("html, body").animate({
+								scrollTop : 0
+							}, 400);
 				});
+
+				var eventHandle = function() {
+					if ($("body").height() > $(window).height()) {
+						$("#footer").addClass("returnToTop");
+					} else {
+						$("#footer").removeClass("returnToTop");
+					}
+				};
+				if (window.addEventListener) {
+					window.addEventListener("resize", eventHandle, false);
+				} else if (window.attachEvent) {
+					window.attachEvent("onresize", eventHandle);
+				} else {
+					window["onresize"] = eventHandle;
+				}
 			});
 		</script>
 	</head>

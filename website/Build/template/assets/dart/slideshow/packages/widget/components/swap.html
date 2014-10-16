@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <element name="x-swap" extends="div" constructor="Swap" apply-author-styles>
+      <template>
+        <style scoped>
+          @host {
+            * {
+              display: block;
+            }
+          }
+          .content {
+            position: relative;
+            overflow: hidden;
+            & > * {
+              position: absolute;
+              top: 0;
+              left: 0;
+              display: none;
+              margin: 0 auto;
+              width: 100%;
+            }
+            & > .active {
+              position: relative;
+              display: block;
+            }
+            & > .prev {
+              display: block;
+            }
+          }
+        </style>
+        <div class='content'>
+          <content></content>
+        </div>
+      </template>
+      <script type="application/dart" src='swap.dart'></script>
+    </element>
+  </body>
+</html>
