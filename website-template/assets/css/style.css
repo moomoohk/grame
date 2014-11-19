@@ -135,11 +135,22 @@ body {
     margin-top: 10px;
     padding-top: 10px;
     padding-bottom: 10px; }
-    #main span#menu-icon {
-      display: block;
-      text-align: center;
-      text-decoration: none;
-      cursor: default; }
+    #main div#mobileMenu {
+      display: -webkit-box;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex; }
+      #main div#mobileMenu span#title {
+        width: 100%;
+        display: inline-block;
+        text-align: center;
+        text-decoration: none;
+        margin-left: -30px; }
+      #main div#mobileMenu img#menuIcon {
+        display: inline-block;
+        height: 20px;
+        margin-left: 10px; }
     #main ul#topList {
       display: none;
       margin-left: 25px; }
@@ -155,7 +166,7 @@ body {
         padding-bottom: 5px; }
     #main:hover {
       padding-bottom: 5px; }
-      #main:hover > span#menu-icon {
+      #main:hover > div#mobileMenu > span#title {
         padding-bottom: 10px;
         border-bottom: 1px solid #cacaca; }
       #main:hover > ul#topList {
@@ -247,5 +258,5 @@ body {
           position: absolute;
           left: 100%;
           top: -1px; }
-    #main span#menu-icon {
+    #main div#mobileMenu {
       display: none; } }
