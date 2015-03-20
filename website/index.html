@@ -1,6 +1,225 @@
-<!-- @include _header -->
-<!-- $title moomoohk/grame -->
-<!-- $projectname grame -->
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="Moomoohk's personal site">
+		<meta name="robots" content="index, follow">
+
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:site" content="@moomoohk" />
+		<meta name="twitter:title" content="moomoohk/grame" />
+		<meta name="twitter:description" content="Moomoohk's personal site" />
+		<meta name="twitter:image" content="website-template/assets/image/avatar.png" />
+
+		<title>moomoohk/grame</title>
+		<link href="website-template/assets/image/favicon.ico" rel="shortcut icon">
+
+		<link href="http://fonts.googleapis.com/css?family=PT+Sans:400italic,400,700italic,700" rel="stylesheet" type="text/css">
+		<link href='http://fonts.googleapis.com/css?family=PT+Mono' rel='stylesheet' type='text/css'>
+
+		<link rel='stylesheet' href='website-template/assets/css/normalize.css'>
+<link rel='stylesheet' href='website-template/assets/css/style.css'>
+<link rel='stylesheet' href='website-template/assets/dart/slideshow/slideshow.css'>
+<link rel='stylesheet' href='website-template/assets/lib/highlight/styles/xcode.css'>
+		<script src='website-template/assets/js/jquery-1.8.3.min.js'></script>
+<script src='website-template/assets/js/snaptortoise-konami-js-93c5489/konami.js'></script>
+<script src='website-template/assets/lib/highlight/highlight.pack.js'></script>
+		<script async type="application/dart" src="website-template/assets/dart/slideshow/slideshow.dart"></script>
+		<script async src="website-template/assets/dart/slideshow/packages/browser/dart.js"></script>
+		<script>hljs.initHighlightingOnLoad();</script>
+
+		<script type="application/javascript">
+			$(document).ready(function() {
+				/* Oh what's this */
+				new Konami(function() {
+					var audioElement = document.createElement("audio");
+					audioElement.setAttribute("src", "website-template/assets/audio/aristotle.m4a");
+					audioElement.setAttribute("autoplay", "autoplay");
+				});
+
+				if ($("body").height() > $(window).height()) {
+					$("#footer").addClass("returnToTop");
+				}
+
+				var textContents = $("#footer").text().trim();
+				$("#footer")
+				/*.on("mouseenter", function() {
+					if ($(this).hasClass("returnToTop"))
+						$(this).text("Return to top");
+				}).on("mouseleave", function() {
+					if ($(this).hasClass("returnToTop"))
+						$(this).text(textContents);
+				})*/
+				.on("click", function(event) {
+					if ($(this).hasClass("returnToTop"))
+						if (event.which == 1)
+							$("html, body").animate({
+								scrollTop : 0
+							}, 400);
+				});
+
+				var eventHandle = function() {
+					if ($("body").height() > $(window).height()) {
+						$("#footer").addClass("returnToTop");
+					} else {
+						$("#footer").removeClass("returnToTop");
+					}
+				};
+				if (window.addEventListener) {
+					window.addEventListener("resize", eventHandle, false);
+				} else if (window.attachEvent) {
+					window.attachEvent("onresize", eventHandle);
+				} else {
+					window["onresize"] = eventHandle;
+				}
+			});
+		</script>
+		
+        <!-- Hammer reload -->
+          <script>
+            setInterval(function(){
+              try {
+                if(typeof ws != 'undefined' && ws.readyState == 1){return true;}
+                ws = new WebSocket('ws://'+(location.host || 'localhost').split(':')[0]+':35353')
+                ws.onopen = function(){ws.onclose = function(){document.location.reload()}}
+                ws.onmessage = function(){
+                  var links = document.getElementsByTagName('link'); 
+                    for (var i = 0; i < links.length;i++) { 
+                    var link = links[i]; 
+                    if (link.rel === 'stylesheet' && !link.href.match(/typekit/)) { 
+                      href = link.href.replace(/((&|\?)hammer=)[^&]+/,''); 
+                      link.href = href + (href.indexOf('?')>=0?'&':'?') + 'hammer='+(new Date().valueOf());
+                    }
+                  }
+                }
+              }catch(e){}
+            }, 1000)
+          </script>
+        <!-- /Hammer reload -->
+      
+	</head>
+
+	<body>
+		<header>
+			<nav id="main">
+	<div id="mobileMenu">
+		<img src="website-template/assets/image/menu.png" id="menuIcon"/>
+		<span id="title">moomoohk</span>
+	</div>
+	<ul id="topList">
+		<li class="title">
+			<p unselectable="on">
+				moomoohk
+			</p>
+		</li>
+		<li>
+			<a href="/index.html">Home</a>
+		</li>
+		<li>
+			<a href="/projects.html">Projects</a>
+			<ul>
+				<li>
+					<a href="/grame/">Grame</a>
+					<ul>
+						<li>
+							<a href="/grame/docs/">JavaDocs</a>
+						</li>
+						<li>
+							<a href="/grame/#downloads">Download</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="/marketmaven.html">Market Maven</a>
+				</li>
+				<li>
+					<a href="/reactionkeeper.html">Reaction Keeper</a>
+					<ul>
+						<li>
+							<a href="/reactionkeeper.html#downloads">Download</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="/trackingmanager.html">Tracking Manager</a>
+					<ul>
+						<li>
+							<a href="/trackingmanager.html#downloads">Download</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="/moocommands/">MooCommands</a>
+					<ul>
+						<li>
+							<a href="/moocommands/docs/">JavaDocs</a>
+						</li>
+						<li>
+							<a href="/moocommands/#downloads">Download</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="/mooconsole/">MooConsole</a>
+					<ul>
+						<li>
+							<a href="/mooconsole/docs/">JavaDocs</a>
+						</li>
+						<li>
+							<a href="/mooconsole/#downloads">Download</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="/mootilities/">Mootilities</a>
+					<ul>
+						<li>
+							<a href="/mootilities/docs/">JavaDocs</a>
+						</li>
+						<li>
+							<a href="/mootilities/#downloads">Download</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="/moobootstrap/">MooBootstrap</a>
+					<ul>
+						<li>
+							<a href="/moobootstrap/docs/">JavaDocs</a>
+						</li>
+						<li>
+							<a href="/moobootstrap/#downloads">Download</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<a href="/snippets.html">Snippets</a>
+		</li>
+		<li>
+			<a href="/contact.html">Contact</a>
+			<ul>
+				<li>
+					<a href="http://twitter.com/moomoohk/" target="_blank">Twitter</a>
+				</li>
+				<li>
+					<a href="http://youtube.com/moomoohk/" target="_blank">YouTube</a>
+				</li>
+				<li>
+					<a href="http://webchat.freenode.net?channels=%23moomoohk&uio=Mj10cnVlJjQ9dHJ1ZSYxMT0yMzYff/" target="_blank">IRC</a>
+				</li>
+				<li>
+					<a href="http://github.com/moomoohk/" target="_blank">GitHub</a>
+				</li>
+			</ul>
+		</li>
+	</ul>
+</nav>
+		</header>
+
+
 
 	<section>
 		<h1>Grame</h1>
@@ -11,5 +230,17 @@
 			Check out the <a href="https://github.com/moomoohk/grame/blob/master/README.md">README.md</a> for an overview.
 		</p>
 	</section>
- <!-- @include _links -->
-<!-- @include _footer -->
+ <section id="links">
+	<h1>Links</h1>
+	<p>
+		<ul>
+			<li><a href="https://github.com/moomoohk/grame">GitHub repo</a></li>
+			<li><a href="https://github.com/moomoohk/grame/releases/latest">Latest release on GitHub</a></li>
+		</ul>
+	</p>
+</section>
+		<section id="footer">
+			<span>© moomoohk 2014</span>
+		</section>
+	</body>
+</html>
