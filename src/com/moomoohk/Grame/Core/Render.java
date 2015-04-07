@@ -5,7 +5,7 @@ package com.moomoohk.Grame.Core;
 /**
  * Objects to render {@link Grid}s.
  * 
- * @author Meshulam Silk <moomoohk@ymail.com>
+ * @author Meshulam Silk (moomoohk@ymail.com)
  * @version 1.0
  * @since 2013-04-05
  */

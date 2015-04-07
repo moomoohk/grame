@@ -31,7 +31,7 @@ import com.moomoohk.Grame.Core.Graphics.PostProcessing.Label;
 /**
  * Manages all the rendering operations.
  * 
- * @author Meshulam Silk <moomoohk@ymail.com>
+ * @author Meshulam Silk (moomoohk@ymail.com)
  * @version 1.0
  * @since 2013-04-05
  */

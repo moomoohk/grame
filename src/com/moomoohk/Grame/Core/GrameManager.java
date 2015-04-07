@@ -57,8 +57,8 @@ import com.moomoohk.Mootilities.ObjectUtils.ObjectUtils;
  * The Grame Manager takes care of all the internal Grame operations.
  * <p>
  * Indexes and ticks any {@link GrameObject}s and {@link Grid}s that are created automatically.
- * 
- * @author Meshulam Silk <moomoohk@ymail.com>
+ *
+ * @author Meshulam Silk (moomoohk@ymail.com)
  * @version 1.0
  * @since 2013-04-05
  */
@@ -330,7 +330,7 @@ public class GrameManager implements Runnable
 	 * Adds a {@link GrameObject} to the Grame Object list.
 	 * <p>
 	 * The user should never have to call this method.
-	 * 
+	 *
 	 * @param go
 	 *            {@link GrameObject} to add.
 	 * @return The ID number for the object.
@@ -356,7 +356,7 @@ public class GrameManager implements Runnable
 	 * Adds a {@link Grid} to the Grid list.
 	 * <p>
 	 * The user should never have to call this method.
-	 * 
+	 *
 	 * @param g
 	 *            {@link Grid} to add.
 	 * @return The ID number for the Grid.
@@ -381,7 +381,7 @@ public class GrameManager implements Runnable
 	/**
 	 * Finds and returns a {@link GrameObject} from the Grame Objects list.<br>
 	 * If the object is not found, null will be returned.
-	 * 
+	 *
 	 * @param id
 	 *            The ID of the object to find.
 	 * @return The {@link GrameObject} with that ID. If not in the list, null will be returned.
@@ -403,7 +403,7 @@ public class GrameManager implements Runnable
 	/**
 	 * Finds and returns a {@link Grid} from the Grid list.<br>
 	 * If the {@link Grid} is not found, null will be returned.
-	 * 
+	 *
 	 * @param id
 	 *            The ID of the {@link Grid} to find.
 	 * @return The {@link Grid} with that ID. If not in the list, null will be returned.
@@ -423,7 +423,7 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Sets the default {@link Render}.
-	 * 
+	 *
 	 * @param render
 	 *            {@link Render} to set.
 	 */
@@ -434,7 +434,7 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Gets the default {@link Render}.
-	 * 
+	 *
 	 * @return The default {@link Render}.
 	 */
 	public static Render getDefaultRender()
@@ -444,7 +444,7 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Indexes a {@link Render}.
-	 * 
+	 *
 	 * @param render
 	 *            {@link Render} to index.
 	 */
@@ -462,7 +462,7 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Indexes a {@link MovementAI}.
-	 * 
+	 *
 	 * @param ai
 	 *            {@link MovementAI} to index.
 	 */
@@ -480,7 +480,7 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Pauses or unpauses all the {@link GrameObject}s.
-	 * 
+	 *
 	 * @param f
 	 *            True to pause, false to unpause all the {@link GrameObject}.
 	 */
@@ -492,7 +492,7 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Sets whether debug prints will be visible or not.
-	 * 
+	 *
 	 * @param debug
 	 *            True to enable debug prints, else false.
 	 */
@@ -503,7 +503,7 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Returns whether or not debug prints are enabled.
-	 * 
+	 *
 	 * @return True if debug prints are enabled, else false.
 	 */
 	public static boolean isDebug()
@@ -523,7 +523,7 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Completely disable prints.
-	 * 
+	 *
 	 * @param disablePrints
 	 *            True to disable all prints, else false.
 	 */
@@ -534,7 +534,7 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Returns whether or not prints are completely disabled.
-	 * 
+	 *
 	 * @return True if prints are completely disabled, else false.
 	 */
 	public static boolean isDisablePrints()
@@ -544,7 +544,7 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Sets whether spam prints will be visible or not.
-	 * 
+	 *
 	 * @param spam
 	 *            True to enable spam prints, else false.
 	 */
@@ -555,7 +555,7 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Returns whether or not spam prints are enabled.
-	 * 
+	 *
 	 * @return True if spam prints are enabled, else false.
 	 */
 	public static boolean isSpam()
@@ -565,7 +565,7 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Gets the {@link InputHandler} that is currently being used.
-	 * 
+	 *
 	 * @return The {@link InputHandler} that is currently being used.
 	 */
 	public static InputHandler getInputHandler()
@@ -574,9 +574,9 @@ public class GrameManager implements Runnable
 	}
 
 	/**
-	 * Gets all the loaded {@link MovementAI}s sorted in a HashMap<String, {@link MovementAI}> where the names (spaces replaced with '-') are the keys.
-	 * 
-	 * @return A HashMap<String, {@link MovementAI}> of all loaded {@link MovementAI}s.
+	 * Gets all the loaded {@link MovementAI}s sorted in a HashMap&lt;String, {@link MovementAI}&gt; where the names (spaces replaced with '-') are the keys.
+	 *
+	 * @return A HashMap&lt;String, {@link MovementAI}&gt; of all loaded {@link MovementAI}s.
 	 */
 	public static HashMap<String, MovementAI> getAIs()
 	{
@@ -584,9 +584,9 @@ public class GrameManager implements Runnable
 	}
 
 	/**
-	 * Gets all the loaded {@link Render}s sorted in a HashMap<String, {@link Render}> where the names (spaces replaced with '-') are the keys.
-	 * 
-	 * @return A HashMap<String, {@link Render}> of all loaded {@link Render}s.
+	 * Gets all the loaded {@link Render}s sorted in a HashMap&lt;String, {@link Render}&gt; where the names (spaces replaced with '-') are the keys.
+	 *
+	 * @return A HashMap&lt;String, {@link Render}&gt; of all loaded {@link Render}s.
 	 */
 	public static HashMap<String, Render> getRenders()
 	{
@@ -595,7 +595,7 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Gets the size of the {@link GrameObject} list.
-	 * 
+	 *
 	 * @return The size of the {@link GrameObject} list.
 	 */
 	public static int getObjectListLength()
@@ -610,7 +610,7 @@ public class GrameManager implements Runnable
 
 	/**
 	 * Gets the current FPS (Frames Per Second) count.
-	 * 
+	 *
 	 * @return The current FPS (Frames Per Second) count.
 	 */
 	public static int getFPS()
@@ -650,16 +650,16 @@ public class GrameManager implements Runnable
 				save = true;
 		if (save)
 			try
-			{
+		{
 				engineState.setSaved(new GregorianCalendar().getTime());
 				ObjectUtils.save(engineState, savePath.toString(), saveName, "GrameSave");
-			}
-			catch (IOException e)
-			{
-				System.out.println("There was a problem saving!");
-				new File(savePath.toString() + "/" + saveName + ".GrameSave").delete();
-				e.printStackTrace();
-			}
+		}
+		catch (IOException e)
+		{
+			System.out.println("There was a problem saving!");
+			new File(savePath.toString() + "/" + saveName + ".GrameSave").delete();
+			e.printStackTrace();
+		}
 		paused = isPaused;
 		return save;
 	}
@@ -1187,15 +1187,15 @@ public class GrameManager implements Runnable
 					{
 						if (JOptionPane.showConfirmDialog(mainMenu, "Delete this save?", "Are you sure?", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.YES_OPTION)
 							try
-							{
+						{
 								FileUtils.delete(new File(GrameManager.savePath.toString() + "/" + LoadGamePanel.this.selectedEngineStateName + ".GrameSave"));
 								loadInfo();
 								updateGUI();
-							}
-							catch (IOException e)
-							{
-								e.printStackTrace();
-							}
+						}
+						catch (IOException e)
+						{
+							e.printStackTrace();
+						}
 					}
 				});
 				add(this.btnDeleteSave);
@@ -1218,7 +1218,7 @@ public class GrameManager implements Runnable
 					savesListPanel.setLayout(new GridBagLayout());
 					for (final String key : this.saves.keySet())
 						try
-						{
+					{
 							GridBagConstraints gbc = new GridBagConstraints();
 							gbc.gridwidth = GridBagConstraints.REMAINDER;
 							gbc.anchor = GridBagConstraints.NORTH;
@@ -1282,11 +1282,11 @@ public class GrameManager implements Runnable
 							savePanel.add(lblCreated);
 
 							savesListPanel.add(savePanel, gbc);
-						}
-						catch (Exception e)
-						{
-							System.out.println("Conflict"); //TODO: Handle conflicts
-						}
+					}
+					catch (Exception e)
+					{
+						System.out.println("Conflict"); //TODO: Handle conflicts
+					}
 					this.btnConfirm.setEnabled(false);
 					this.btnDeleteSave.setEnabled(false);
 					this.scrollPane.setViewportView(savesListPanel);
@@ -1380,7 +1380,7 @@ public class GrameManager implements Runnable
 					savesListPanel.setLayout(new GridBagLayout());
 					for (final String key : this.saves.keySet())
 						try
-						{
+					{
 							GridBagConstraints gbc = new GridBagConstraints();
 							gbc.gridwidth = GridBagConstraints.REMAINDER;
 							gbc.insets = new Insets(3, 0, 3, 0);
@@ -1436,11 +1436,11 @@ public class GrameManager implements Runnable
 							savePanel.add(lblCreated);
 
 							savesListPanel.add(savePanel, gbc);
-						}
-						catch (Exception e)
-						{
-							System.out.println("Conflict");
-						}
+					}
+					catch (Exception e)
+					{
+						System.out.println("Conflict");
+					}
 					this.btnConfirm.setEnabled(false);
 					this.scrollPane.setViewportView(savesListPanel);
 				}

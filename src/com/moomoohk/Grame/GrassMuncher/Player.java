@@ -29,10 +29,10 @@ public class Player extends GrameObject
 	public void tick(int gID)
 	{
 		setPos(gID, getNext(gID));
-		if (this.points + 1 == MainScript.maxCoins)
-			MainScript.win();
-		if (getPos(gID).distance(MainScript.c.getPos(gID)) == 1)
-			MainScript.lose();
+		if (this.points + 1 == Game.maxCoins)
+			Game.win();
+		if (getPos(gID).distance(Game.c.getPos(gID)) == 1)
+			Game.lose();
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class Player extends GrameObject
 		if (!(go instanceof Coin))
 			return;
 		Coin coin = (Coin) go;
-		points += coin.getWorth();
+		this.points += coin.getWorth();
 	}
 
 	private Coordinates getNext(int gID)

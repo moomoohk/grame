@@ -7,7 +7,7 @@ import com.moomoohk.Grame.Core.GrameUtils.MessageLevel;
 /**
  * GrameObjectLayers provide an easy way to store {@link GrameObject}s.
  * 
- * @author Meshulam Silk <moomoohk@ymail.com>
+ * @author Meshulam Silk (moomoohk@ymail.com)
  * @version 3.0
  * @since 2013-04-05
  */

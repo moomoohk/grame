@@ -10,7 +10,7 @@ import com.moomoohk.Grame.Core.Render;
  * <p>
  * This {@link Render} was made for debug and testing purposes.
  * 
- * @author Meshulam Silk <moomoohk@ymail.com>
+ * @author Meshulam Silk (moomoohk@ymail.com)
  * @version 1.0
  * @since 2013-04-05
  */

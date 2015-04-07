@@ -8,7 +8,7 @@ import com.moomoohk.Grame.Basics.Dir;
 /**
  * This class massively simplifies the way coordinates are processed.
  * 
- * @author Meshulam Silk <moomoohk@ymail.com>
+ * @author Meshulam Silk (moomoohk@ymail.com)
  * @version 1.0
  * @since 2013-04-05
  */

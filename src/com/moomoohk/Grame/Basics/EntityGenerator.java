@@ -3,7 +3,7 @@ package com.moomoohk.Grame.Basics;
 /**
  * This interface is used to create generators which generate names and types for Entities.
  * 
- * @author Meshulam Silk <moomoohk@ymail.com>
+ * @author Meshulam Silk (moomoohk@ymail.com)
  * @version 1.0
  * @since 2013-04-05
  */

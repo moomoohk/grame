@@ -56,8 +56,8 @@ import com.moomoohk.MooConsole.HelpCommand;
 
 /**
  * The Grame Utils class provides useful utilities.
- * 
- * @author Meshulam Silk <moomoohk@ymail.com>
+ *
+ * @author Meshulam Silk (moomoohk@ymail.com)
  * @version 1.0
  * @since 2013-04-05
  */
@@ -97,7 +97,7 @@ public class GrameUtils
 
 	/**
 	 * Writes a {@link String} out to a {@link File}.
-	 * 
+	 *
 	 * @param f
 	 *            {@link File} to write to.
 	 * @param s
@@ -127,7 +127,7 @@ public class GrameUtils
 
 	/**
 	 * Reads a {@link File} and returns a {@link String} array where each place is a segment of text separated by a delimiter.
-	 * 
+	 *
 	 * @param st
 	 *            Path to file.
 	 * @param delimiter
@@ -154,6 +154,7 @@ public class GrameUtils
 				String val = isolate(scanner.nextLine(), scanner.delimiter().toString());
 				contents[i] = val;
 			}
+			scanner.close();
 			return contents;
 		}
 		catch (Exception e)
@@ -171,9 +172,10 @@ public class GrameUtils
 		{
 			scanner.next();
 			String value = scanner.next();
+			scanner.close();
 			return value.trim();
 		}
-
+		scanner.close();
 		System.out.println("Empty or invalid line. Unable to process.");
 
 		return "oops";
@@ -181,7 +183,7 @@ public class GrameUtils
 
 	/**
 	 * Creates and returns a random color.
-	 * 
+	 *
 	 * @return A random color.
 	 */
 	public static Color randomColor()
@@ -192,7 +194,7 @@ public class GrameUtils
 
 	/**
 	 * Will generate a random set of {@link Coordinates} which exist in the given {@link Grid}.
-	 * 
+	 *
 	 * @param b
 	 *            The {@link Grid} in which to get {@link Coordinates}.
 	 * @return A random set of {@link Coordinates} which exist in the given {@link Grid}.
@@ -218,14 +220,12 @@ public class GrameUtils
 				System.err.println("Error in deleting entity folder");
 		}
 		else
-		{
 			System.err.println("Entity folder not found");
-		}
 	}
 
 	/**
 	 * Deletes a {@link File} and all its children files.
-	 * 
+	 *
 	 * @param f
 	 *            {@link File} to delete.
 	 * @return True if the operation was successful, else false.
@@ -235,10 +235,10 @@ public class GrameUtils
 		if (f.isDirectory())
 		{
 			String[] subs = f.list();
-			for (int i = 0; i < subs.length; i++)
+			for (String sub : subs)
 			{
-				System.err.println("-Deleting " + subs[i]);
-				boolean success = delete(new File(f, subs[i]));
+				System.err.println("-Deleting " + sub);
+				boolean success = delete(new File(f, sub));
 				if (!success)
 					return false;
 			}
@@ -248,7 +248,7 @@ public class GrameUtils
 
 	/**
 	 * Creates a dialog with buttons.
-	 * 
+	 *
 	 * @param paneText
 	 *            Text to show in the dialog.
 	 * @param options
@@ -285,7 +285,7 @@ public class GrameUtils
 
 	/**
 	 * Plays a sound.
-	 * 
+	 *
 	 * @param file
 	 *            The path to the sound file.
 	 */
@@ -347,9 +347,7 @@ public class GrameUtils
 				e.printStackTrace();
 			}
 			if (nBytesRead < 0)
-			{
 				continue;
-			}
 		}
 
 		sourceLine.drain();
@@ -358,7 +356,7 @@ public class GrameUtils
 
 	/**
 	 * Capitalizes a word.
-	 * 
+	 *
 	 * @param word
 	 *            Word to capitalize.
 	 * @return The capitalized word.
@@ -372,7 +370,7 @@ public class GrameUtils
 
 	/**
 	 * Prints messages out into the console.
-	 * 
+	 *
 	 * @param st
 	 *            The message to print.
 	 * @param level
@@ -397,7 +395,7 @@ public class GrameUtils
 
 	/**
 	 * Will create a clickable JLabel which opens a URL.
-	 * 
+	 *
 	 * @param text
 	 *            JLabel text.
 	 * @param URL
@@ -425,28 +423,29 @@ public class GrameUtils
 		link.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		link.addMouseListener(new MouseAdapter()
 		{
+			@Override
 			public void mouseExited(MouseEvent arg0)
 			{
 				link.setText("<HTML><FONT color=\"#000099\">" + text + "</FONT></HTML>");
 			}
 
+			@Override
 			public void mouseEntered(MouseEvent arg0)
 			{
 				link.setText("<HTML><FONT color=\"#000099\"><U>" + text + "</U></FONT></HTML>");
 			}
 
+			@Override
 			public void mouseClicked(MouseEvent arg0)
 			{
 				if (Desktop.isDesktopSupported())
-				{
 					try
-					{
+				{
 						Desktop.getDesktop().browse(uri);
-					}
-					catch (Exception e)
-					{
-						CrashManager.showException(e);
-					}
+				}
+				catch (Exception e)
+				{
+					CrashManager.showException(e);
 				}
 				else
 				{
@@ -503,8 +502,8 @@ public class GrameUtils
 
 	/**
 	 * Used to denote print types.
-	 * 
-	 * @author Meshulam Silk <moomoohk@ymail.com>
+	 *
+	 * @author Meshulam Silk (moomoohk@ymail.com)
 	 * @version 1.0
 	 * @since 2013-04-05
 	 */

@@ -10,7 +10,7 @@ import com.moomoohk.Grame.Core.Grid;
 /**
  * This class is a collection of {@link Wall}s which is arranged in a certain pattern.
  * 
- * @author Meshulam Silk <moomoohk@ymail.com>
+ * @author Meshulam Silk (moomoohk@ymail.com)
  * @version 1.0
  * @since 2013-04-05
  */

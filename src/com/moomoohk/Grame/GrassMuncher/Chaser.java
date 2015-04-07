@@ -26,9 +26,9 @@ public class Chaser extends GrameObject
 	@Override
 	public void tick(int gID)
 	{
-		if (getPos(gID).distance(target.getPos(gID)) == 1)
-			MainScript.lose();
-		GrameManager.findGrid(gID).moveGrameObject(ID, getNext(gID));
+		if (getPos(gID).distance(this.target.getPos(gID)) == 1)
+			Game.lose();
+		GrameManager.findGrid(gID).moveGrameObject(this.ID, getNext(gID));
 	}
 
 	@Override

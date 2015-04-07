@@ -41,8 +41,8 @@ import com.moomoohk.Grame.Core.GrameUtils.MessageLevel;
 
 /**
  * Manages crashes and exceptions.
- * 
- * @author Meshulam Silk <moomoohk@ymail.com>
+ *
+ * @author Meshulam Silk (moomoohk@ymail.com)
  * @version 1.0
  * @since 2013-04-05
  */
@@ -60,7 +60,7 @@ public class CrashManager
 
 	/**
 	 * Displays an {@link Exception} and any relevant info about it in a window.
-	 * 
+	 *
 	 * @param e
 	 *            The {@link Exception} to show.
 	 * @param reason
@@ -122,6 +122,7 @@ public class CrashManager
 
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public boolean getScrollableTracksViewportWidth()
 			{
 				return getUI().getPreferredSize(this).width <= getParent().getSize().width;
@@ -135,6 +136,7 @@ public class CrashManager
 		final JButton quit = new JButton("Quit");
 		quit.addActionListener(new ActionListener()
 		{
+			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				System.exit(0);
@@ -145,11 +147,13 @@ public class CrashManager
 		copy = new JButton("Copy to clipboard");
 		copy.addActionListener(new ActionListener()
 		{
+			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				GrameUtils.print("Copying...", MessageLevel.DEBUG);
 				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(message), new ClipboardOwner()
 				{
+					@Override
 					public void lostOwnership(Clipboard paramClipboard, Transferable paramTransferable)
 					{
 
@@ -167,6 +171,7 @@ public class CrashManager
 		email = new JButton("E-Mail log");
 		email.addActionListener(new ActionListener()
 		{
+			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
 				GrameUtils.print("Passing to emailer...", MessageLevel.DEBUG);
@@ -176,12 +181,14 @@ public class CrashManager
 		email.addFocusListener(new FocusListener()
 		{
 
+			@Override
 			public void focusLost(FocusEvent arg0)
 			{
 				if (email.isEnabled() && crashF.hasFocus())
 					email.requestFocus();
 			}
 
+			@Override
 			public void focusGained(FocusEvent arg0)
 			{
 
@@ -191,6 +198,7 @@ public class CrashManager
 		email.registerKeyboardAction(email.getActionForKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, true)), KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true), JComponent.WHEN_FOCUSED);
 		crashF.addFocusListener(new FocusListener()
 		{
+			@Override
 			public void focusGained(FocusEvent arg0)
 			{
 				if (email.isEnabled())
@@ -200,6 +208,7 @@ public class CrashManager
 				}
 			}
 
+			@Override
 			public void focusLost(FocusEvent e)
 			{
 
@@ -222,7 +231,7 @@ public class CrashManager
 
 	/**
 	 * Displays an {@link Exception} and any relevant info about it in a window.
-	 * 
+	 *
 	 * @param e
 	 *            The {@link Exception} to show.
 	 */
@@ -243,10 +252,12 @@ public class CrashManager
 		field.addKeyListener(new KeyListener()
 		{
 
+			@Override
 			public void keyTyped(KeyEvent paramKeyEvent)
 			{
 			}
 
+			@Override
 			public void keyReleased(KeyEvent paramKeyEvent)
 			{
 				if (isValidEmailAddress(field.getText()) || field.getText().length() == 0)
@@ -255,6 +266,7 @@ public class CrashManager
 					done.setEnabled(false);
 			}
 
+			@Override
 			public void keyPressed(KeyEvent paramKeyEvent)
 			{
 			}
@@ -263,6 +275,7 @@ public class CrashManager
 		JLabel label2 = new JLabel("<HTML><center>(I will under no circustances give it away. If you don't believe me, leave it blank)</center></HTML>");
 		done.addActionListener(new ActionListener()
 		{
+			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
 				GrameUtils.print("Emailing...", MessageLevel.DEBUG);
@@ -298,10 +311,9 @@ public class CrashManager
 			parser.useDelimiter(":");
 			String newReason = "";
 			while (parser.hasNext())
-			{
 				if (exception.toString().equals(parser.next().trim()))
 					newReason += parser.next() + "\n";
-			}
+			parser.close();
 			if (newReason.equals(""))
 				return "Unknown";
 			return newReason;
@@ -316,9 +328,7 @@ public class CrashManager
 				cause += "Tried to reference null\n";
 			}
 			if (exception.toString().equals("java.lang.InterruptedException"))
-			{
 				cause += "Problem with joining thread\n";
-			}
 			if (exception.toString().equals("java.lang.ArrayIndexOutOfBoundsException"))
 			{
 				cause += "Entity not in Entity list\n";
@@ -326,19 +336,11 @@ public class CrashManager
 			}
 		}
 		if (className.contains("//GrameManager"))
-		{
 			if (exception.toString().equals("java.lang.NullPointerException"))
-			{
 				cause += "//Grame Manager not initialized\n";
-			}
-		}
 		if (className.contains("Dir"))
-		{
 			if (exception.toString().equals("java.lang.NullPointerException"))
-			{
 				cause += "Passed a null set of Coordinates\n";
-			}
-		}
 		if (className.contains("//GrameUtils"))
 		{
 			if (exception.toString().equals("java.io.IOException"))
@@ -347,13 +349,9 @@ public class CrashManager
 				cause += "Couldn't open connection\n";
 			}
 			if (exception.toString().equals("java.net.MalformedURLException"))
-			{
 				cause += "Invalid URI\n";
-			}
 			if (exception.toString().equals("java.io.FileNotFoundException"))
-			{
 				cause += "Bad file\n";
-			}
 		}
 		if (cause.equals(""))
 			cause = "Unknown";
@@ -386,8 +384,8 @@ public class CrashManager
 		private JDialog progD;
 		private JPanel progP;
 		private JProgressBar progBar;
-		private String message, from, pass, to;
-		private boolean visible;
+		private final String message, from, pass, to;
+		private final boolean visible;
 
 		public Emailer(String message, String from, String pass, String to, boolean visible)
 		{
@@ -398,51 +396,52 @@ public class CrashManager
 			this.visible = visible;
 		}
 
+		@Override
 		public void run()
 		{
 
-			if (visible)
-			{
+			if (this.visible)
 				EventQueue.invokeLater(new Runnable()
 				{
+					@Override
 					public void run()
 					{
 						JButton cancel = new JButton("Cancel");
 						cancel.addActionListener(new ActionListener()
 						{
+							@Override
 							public void actionPerformed(ActionEvent arg0)
 							{
 								t.interrupt();
 							}
 						});
 						// cancel.setEnabled(false);
-						progD = new JDialog();
-						progD.setTitle("Sending...");
-						progD.setModal(true);
-						progD.setResizable(false);
-						progD.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-						progD.setLayout(new FlowLayout());
-						progP = new JPanel(new FlowLayout());
-						progBar = new JProgressBar();
-						progBar.setIndeterminate(true);
-						progP.add(progBar, "Center");
-						progP.add(cancel, "South");
-						progBar.setVisible(true);
-						progD.add(progP, "South");
-						progD.setSize(300, 80);
-						progP.setSize(250, 100);
-						progD.setLocationRelativeTo(null);
-						progD.setVisible(true);
+						Emailer.this.progD = new JDialog();
+						Emailer.this.progD.setTitle("Sending...");
+						Emailer.this.progD.setModal(true);
+						Emailer.this.progD.setResizable(false);
+						Emailer.this.progD.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+						Emailer.this.progD.setLayout(new FlowLayout());
+						Emailer.this.progP = new JPanel(new FlowLayout());
+						Emailer.this.progBar = new JProgressBar();
+						Emailer.this.progBar.setIndeterminate(true);
+						Emailer.this.progP.add(Emailer.this.progBar, "Center");
+						Emailer.this.progP.add(cancel, "South");
+						Emailer.this.progBar.setVisible(true);
+						Emailer.this.progD.add(Emailer.this.progP, "South");
+						Emailer.this.progD.setSize(300, 80);
+						Emailer.this.progP.setSize(250, 100);
+						Emailer.this.progD.setLocationRelativeTo(null);
+						Emailer.this.progD.setVisible(true);
 					}
 				});
-			}
 			GrameUtils.print("Emailing to " + this.to + ".", MessageLevel.DEBUG);
 			final String host = "smtp.gmail.com";
 			Properties props = System.getProperties();
 			props.put("mail.smtp.starttls.enable", "true");
 			props.put("mail.smtp.host", host);
-			props.put("mail.smtp.user", from);
-			props.put("mail.smtp.password", pass);
+			props.put("mail.smtp.user", this.from);
+			props.put("mail.smtp.password", this.pass);
 			props.put("mail.smtp.port", "587");
 			props.put("mail.smtp.auth", "true");
 
@@ -450,7 +449,7 @@ public class CrashManager
 			final MimeMessage message = new MimeMessage(session);
 			try
 			{
-				message.setFrom(new InternetAddress(from));
+				message.setFrom(new InternetAddress(this.from));
 			}
 			catch (AddressException e)
 			{
@@ -464,16 +463,17 @@ public class CrashManager
 			final String m = this.message;
 			t = new Thread(new Runnable()
 			{
+				@Override
 				public void run()
 				{
 					try
 					{
-						InternetAddress toAddress = new InternetAddress(to);
+						InternetAddress toAddress = new InternetAddress(Emailer.this.to);
 						message.addRecipient(Message.RecipientType.TO, toAddress);
 						message.setSubject("Crash log");
 						message.setText(m);
 						Transport transport = session.getTransport("smtp");
-						transport.connect(host, from, pass);
+						transport.connect(host, Emailer.this.from, Emailer.this.pass);
 						transport.sendMessage(message, message.getAllRecipients());
 						transport.close();
 					}
@@ -481,8 +481,8 @@ public class CrashManager
 					{
 						GrameUtils.print("Email failed. (" + e.getMessage() + ")", MessageLevel.DEBUG);
 						e.printStackTrace();
-						progD.setVisible(false);
-						progD.dispose();
+						Emailer.this.progD.setVisible(false);
+						Emailer.this.progD.dispose();
 						System.err.println("Failed email");
 						JOptionPane.showMessageDialog(new JFrame(), "Something broke while trying to email log.\nI would recommend copying the log and sending it manually to:\nmoomoohkscrashbot@gmail.com\nOr saving it and trying again later.", "Uh Oh", JOptionPane.PLAIN_MESSAGE);
 						email.setText("Failed :(");
@@ -494,14 +494,15 @@ public class CrashManager
 					}
 				}
 			});
-			if (visible)
+			if (this.visible)
 			{
 				EventQueue.invokeLater(new Runnable()
 				{
+					@Override
 					public void run()
 					{
-						progD.setVisible(false);
-						progD.dispose();
+						Emailer.this.progD.setVisible(false);
+						Emailer.this.progD.dispose();
 					}
 				});
 				JOptionPane.showMessageDialog(new JFrame(), "Crash log sent successfully!", "Thanks!", JOptionPane.PLAIN_MESSAGE);

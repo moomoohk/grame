@@ -8,7 +8,7 @@ import com.moomoohk.Grame.Core.GrameUtils.MessageLevel;
 /**
  * Grame Objects are objects which are placed in {@link Grid}s.
  * 
- * @author Meshulam Silk <moomoohk@ymail.com>
+ * @author Meshulam Silk (moomoohk@ymail.com)
  * @version 1.0
  * @since 2013-04-05
  */

@@ -13,7 +13,7 @@ import com.moomoohk.Grame.Core.Grid;
  * <p>
  * The algorithm will try to follow a straight line between point A and point B with no regard for obstacles.
  * 
- * @author Meshulam Silk <moomoohk@ymail.com>
+ * @author Meshulam Silk (moomoohk@ymail.com)
  * @version 1.0
  * @since 2013-04-05
  */

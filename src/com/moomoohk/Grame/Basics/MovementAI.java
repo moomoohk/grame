@@ -9,8 +9,8 @@ import com.moomoohk.Grame.Core.Grid;
 
 /**
  * Class to calculate the AIs of {@link GrameObject}s.
- * 
- * @author Meshulam Silk <moomoohk@ymail.com>
+ *
+ * @author Meshulam Silk (moomoohk@ymail.com)
  * @version 1.0
  * @since 2013-04-05
  */
@@ -28,7 +28,7 @@ public abstract class MovementAI implements Serializable
 
 	/**
 	 * Wraps {@link Coordinates} around a "wraparound" {@link Grid}.
-	 * 
+	 *
 	 * @param g
 	 *            The "wraparound" {@link Grid}.
 	 * @param pos
@@ -61,13 +61,15 @@ public abstract class MovementAI implements Serializable
 
 	/**
 	 * Slides {@link Coordinates} on obstacles in a {@link Grid}.
-	 * 
+	 *
 	 * @param g
 	 *            The {@link Grid}.
 	 * @param pos
 	 *            The {@link Coordinates} to slide.
 	 * @param d
 	 *            The {@link Dir} to apply.
+	 * @param layer
+	 *            The layer to use.
 	 * @return The slided {@link Coordinates}.
 	 */
 	public static Coordinates slide(Grid g, Coordinates pos, Dir d, int layer)
@@ -95,14 +97,14 @@ public abstract class MovementAI implements Serializable
 
 	/**
 	 * The author of this AI.
-	 * 
+	 *
 	 * @return The author of this AI.
 	 */
 	public abstract String author();
 
 	/**
 	 * The AI calculation method.
-	 * 
+	 *
 	 * @param pos
 	 *            The current {@link Coordinates} of the {@link GrameObject}.
 	 * @param targetPos
@@ -119,7 +121,7 @@ public abstract class MovementAI implements Serializable
 
 	/**
 	 * Checks whether this AI is valid.
-	 * 
+	 *
 	 * @param pos
 	 *            The current {@link Coordinates} of the {@link GrameObject}.
 	 * @param targetPos
@@ -136,7 +138,7 @@ public abstract class MovementAI implements Serializable
 
 	/**
 	 * Checks whether this AI is an override AI.
-	 * 
+	 *
 	 * @return True if this AI is an override AI, else false.
 	 */
 	public abstract boolean isOverride();

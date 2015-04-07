@@ -8,7 +8,7 @@ import com.moomoohk.Grame.Core.GrameUtils.MessageLevel;
 /**
  * ColorLayers provide an easy way to implement a color matrix.
  * 
- * @author Meshulam Silk <moomoohk@ymail.com>
+ * @author Meshulam Silk (moomoohk@ymail.com)
  * @version 1.0
  * @since 2013-04-05
  */

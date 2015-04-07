@@ -9,7 +9,7 @@ import com.moomoohk.Grame.Core.Render;
 /**
  * Renders {@link Grid}s in a grid without grouting lines.
  * 
- * @author Meshulam Silk <moomoohk@ymail.com>
+ * @author Meshulam Silk (moomoohk@ymail.com)
  * @version 1.0
  * @since 2013-04-05
  */

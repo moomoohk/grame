@@ -13,7 +13,7 @@ import com.moomoohk.Grame.Core.Grid;
  * <p>
  * Made for debug and testing purposes.
  * 
- * @author Meshulam Silk <moomoohk@ymail.com>
+ * @author Meshulam Silk (moomoohk@ymail.com)
  * @version 1.0
  * @since 2013-04-05
  */

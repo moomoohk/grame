@@ -9,7 +9,7 @@ import com.moomoohk.Grame.Core.GrameUtils.MessageLevel;
 /**
  * Grids are the backbone of Grame. They serve as the map in which objects move around and interact with each other.
  * 
- * @author Meshulam Silk <moomoohk@ymail.com>
+ * @author Meshulam Silk (moomoohk@ymail.com)
  * @version 1.0
  * @since 2013-04-05
  */

@@ -3,7 +3,7 @@ package com.moomoohk.Grame.Basics;
 /**
  * This generator will generate a random name and type.
  * 
- * @author Meshulam Silk <moomoohk@ymail.com>
+ * @author Meshulam Silk (moomoohk@ymail.com)
  * @version 1.0
  * @since 2013-04-05
  */
