@@ -1,6 +1,6 @@
-bin/*
+bin/
 *.class
-JavaDoc/*
 .classpath
 .DS_Store
 .settings/
+Build/
